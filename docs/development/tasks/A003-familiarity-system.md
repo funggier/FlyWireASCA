@@ -35,8 +35,8 @@ Out of scope:
 
 - Records and normalization: DONE.
 - Exact/exhaustive engines: DONE.
-- Benchmark and CI qualification: ACTIVE.
-- Exact qualification and closure: PLANNED.
+- Benchmark and CI qualification: DONE.
+- Exact qualification and closure: ACTIVE.
 
 ## Acceptance Criteria
 
@@ -75,8 +75,8 @@ Further evidence is appended only after fresh verification.
 
 ## Current Action
 
-Implement Task 3 deterministic controlled benchmark and explicit CI qualification gate.
+Run Task 4 exact local qualification and publish the A003 branch for exact CI.
 
 ## Next Action
 
-After benchmark qualification is GREEN and committed, run exact branch qualification and closure evidence without touching FlyWireLLM training.
+After exact branch CI is GREEN, write closure evidence, transition A004 to PLANNED, qualify the closure commit, then fast-forward main.

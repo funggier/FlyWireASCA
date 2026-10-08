@@ -16,3 +16,7 @@ def test_ci_fetches_parent_commit_for_diff_check():
 def test_ci_runs_architecture_contract_audit_explicitly():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "python scripts/audit_architecture_contract.py" in text
+
+def test_ci_runs_a003_familiarity_benchmark_qualification():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert "python scripts/run_familiarity_benchmark_a003.py --qualify" in text
