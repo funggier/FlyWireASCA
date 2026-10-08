@@ -2,7 +2,7 @@
 
 | Task | Milestone | Status |
 | --- | --- | --- |
-| A001 | Repository & Research Foundation | ACTIVE |
+| A001 | Repository & Research Foundation | DONE |
 | A002 | ASCA Architecture Contract | PLANNED |
 | A003 | Familiarity System | PLANNED |
 | A004 | Associative Memory & Recall | PLANNED |

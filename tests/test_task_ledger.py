@@ -13,16 +13,16 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_exactly_one_active_task_a001():
+def test_current_points_to_exactly_one_next_planned_task_a002():
     text = _read("CURRENT.md")
-    assert "Current task: A001" in text
-    assert "Status: ACTIVE" in text
+    assert "Current task: A002" in text
+    assert "Status: PLANNED" in text
     assert text.count("Current task:") == 1
 
 
 def test_a001_contains_recovery_and_evidence_sections():
     text = _read("A001-repository-research-foundation.md")
-    assert "Status: ACTIVE" in text
+    assert "Status: DONE" in text
     for heading in (
         "## Goal",
         "## Scope",
@@ -47,3 +47,14 @@ def test_task_readme_documents_states_and_authoritative_source_rule():
     lower = text.lower()
     assert "git/github/runtime" in lower
     assert "stale" in lower
+
+
+def test_a001_closure_report_records_exact_qualification():
+    report = ROOT / "docs" / "development" / "reports" / "ASCA-20261008-A001-repository-foundation.md"
+    assert report.exists(), "A001 closure report must exist"
+    text = report.read_text(encoding="utf-8")
+    assert "08868b099da4ae2bd31154201dd3ac9d0568fe5d" in text
+    assert "14 passed" in text
+    assert "37759237750" in text
+    assert "PUBLIC" in text
+    assert "FlyWireLLM" in text

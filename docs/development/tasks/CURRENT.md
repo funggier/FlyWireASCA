@@ -1,18 +1,19 @@
 # Current Development Task
 
-Current task: A001
-Status: ACTIVE
-GitHub Issue: #1
+Current task: A002
+Status: PLANNED
+GitHub Issue: not created
 
 ## Current Action
 
-Synchronize the GitHub Issue #1 metadata commit to public `main` after fresh
-local verification.
+No implementation task is active. A001 is closed GREEN and A002 is the next
+planned milestone.
 
 ## Next Action
 
-Verify GitHub Actions for the exact commit, create A001 qualification evidence,
-and close A001 only after the final repository state is GREEN.
+Before starting implementation, activate A002, create/update its GitHub task,
+and define its exact interface/benchmark acceptance contract from the approved
+ASCA architecture design.
 
 ## Resume Rule
 

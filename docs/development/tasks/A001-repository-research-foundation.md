@@ -1,6 +1,6 @@
 # A001 — Repository & Research Foundation
 
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #1
 
 ## Goal
@@ -34,20 +34,20 @@ Out of scope:
 - Foundation skeleton: DONE locally at initial commit.
 - Task ledger: DONE.
 - CI and repository qualifier: DONE locally.
-- GitHub publication/synchronization: ACTIVE.
-- Exact qualification and closure evidence: PLANNED.
+- GitHub publication/synchronization: DONE.
+- Exact qualification and closure evidence: DONE.
 
 ## Acceptance Criteria
 
 - [x] Public GitHub repository `funggier/FlyWireASCA` exists.
 - [x] MIT License exists locally.
-- [ ] Full local test suite passes on final candidate.
-- [ ] Repository qualifier passes.
-- [ ] GitHub Actions CI passes on the exact qualified commit.
-- [ ] Local and remote `main` are synchronized 0/0.
-- [ ] A001 evidence report is committed.
-- [ ] Final worktree is clean.
-- [ ] No FlyWireLLM training file or process was modified by A001.
+- [x] Full local test suite passes on final candidate.
+- [x] Repository qualifier passes.
+- [x] GitHub Actions CI passes on the exact qualified commit.
+- [x] Local and remote `main` are synchronized 0/0.
+- [x] A001 evidence report is committed.
+- [x] Final worktree is clean.
+- [x] No FlyWireLLM training file or process was modified by A001.
 
 ## Evidence
 
@@ -59,14 +59,20 @@ Repository-contract test at that checkpoint:
 
 `4 passed`
 
-Further evidence is appended only after fresh verification.
+Exact implementation qualification commit:
+
+`08868b099da4ae2bd31154201dd3ac9d0568fe5d`
+
+- full pytest: 14 passed;
+- repository qualifier: PASS;
+- GitHub Actions run `37759237750`: success on the exact SHA;
+- local/remote main: 0/0;
+- closure report: `docs/development/reports/ASCA-20261008-A001-repository-foundation.md`.
 
 ## Current Action
 
-Record GitHub Issue #1 and synchronize the public `main` branch after fresh
-local verification.
+A001 is complete. No implementation action remains in this task.
 
 ## Next Action
 
-Verify GitHub Actions on the exact synchronized commit, write A001 closure
-evidence, then close A001 only after final GREEN qualification.
+Review and activate A002 — ASCA Architecture Contract in a new task cycle.
