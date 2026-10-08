@@ -58,3 +58,9 @@ def test_a001_closure_report_records_exact_qualification():
     assert "37759237750" in text
     assert "PUBLIC" in text
     assert "FlyWireLLM" in text
+
+
+def test_a001_closure_report_has_no_trailing_whitespace():
+    report = ROOT / "docs" / "development" / "reports" / "ASCA-20261008-A001-repository-foundation.md"
+    lines = report.read_text(encoding="utf-8").splitlines()
+    assert [index for index, line in enumerate(lines, 1) if line != line.rstrip()] == []

@@ -1,7 +1,7 @@
 # FlyWireASCA A001 Repository Foundation Qualification
 
-Date: 2026-10-08  
-Task: A001 — Repository & Research Foundation  
+Date: 2026-10-08
+Task: A001 — Repository & Research Foundation
 GitHub Issue: #1
 
 ## Decision
@@ -69,6 +69,16 @@ The failure was reproduced with a regression test,
 `test_ci_fetches_parent_commit_for_diff_check`, which failed before the fix.
 The workflow now pins `fetch-depth: 2`; the regression test passed, the full
 suite passed 14/14, and exact GitHub Actions run `37759237750` passed.
+
+## Closure-report whitespace correction
+
+The first closure-report commit
+`e0b5f5a5e4a424f7d0daca5fd1690f2561c6c75f` failed only the CI whitespace
+step because two Markdown header lines intentionally used two trailing spaces
+for hard line breaks. The repository CI contract rejects trailing whitespace,
+so the report was normalized instead of weakening CI. Regression test
+`test_a001_closure_report_has_no_trailing_whitespace` reproduced the two bad
+lines before the fix.
 
 ## A001 deliverables
 
