@@ -77,7 +77,10 @@ Exact implementation candidate: `6c9534cb743123c60184e9e00244f836c3e901e1`
 - benchmark qualification: PASS;
 - classification accuracy: 1.0;
 - exact/exhaustive semantic mismatch count: 0;
-- branch CI run `37803237340`: success on exact candidate;
+- initial branch CI run `37803237340`: success on exact candidate;
+- whole-branch review fix commit: `3a70afa07475d86ea523d0dfe1433c2006bb683f`;
+- post-review full pytest: 68 passed;
+- post-review branch CI run `37804356820`: success;
 - closure report: `docs/development/reports/ASCA-20261008-A003-familiarity-system.md`.
 
 ## Current Action

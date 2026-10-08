@@ -7,12 +7,18 @@ Branch: research/a003-familiarity-system
 
 ## Decision
 
-A003 implementation candidate is GREEN on exact commit
-`6c9534cb743123c60184e9e00244f836c3e901e1`.
+The initial A003 implementation candidate was GREEN on exact commit
+`6c9534cb743123c60184e9e00244f836c3e901e1` and branch CI run
+`37803237340`.
+
+Whole-branch review then found one Important qualification gap. The reviewed
+implementation after the RED→GREEN fix is exact commit
+`3a70afa07475d86ea523d0dfe1433c2006bb683f`, which passed branch CI run
+`37804356820`.
 
 This report and task transition form the documentation closure layer. The
-closure commit itself must also pass exact branch CI before fast-forward
-integration to `main`.
+closure documentation commit itself must also pass exact branch CI before
+fast-forward integration to `main`.
 
 ## Delivered subsystem
 
@@ -133,6 +139,39 @@ At A003 candidate publication:
 
 A003 did not stop, restart, signal, import, invoke, or inspect checkpoints from
 the FlyWireLLM training workload.
+
+## Whole-branch review and fix pass
+
+Native execution used an author self-review because no separate subagent
+reviewer tool/template was available in the installed skill bundle.
+
+The review found one Important issue: `qualify_a003_report` could accept a
+non-ambiguity benchmark case where exact and exhaustive engines agreed with
+each other but both returned the wrong candidate region. The controlled
+fixture happened to be correct, but the qualifier itself did not enforce that
+all `regions_correct` flags were true.
+
+Regression test
+`test_qualifier_rejects_wrong_candidate_regions_even_when_engines_agree`
+was observed RED before the fix. The qualifier now rejects any such case with
+`region mismatch cases must be 0`.
+
+Post-review fix evidence:
+
+- fix commit: `3a70afa07475d86ea523d0dfe1433c2006bb683f`
+- focused regression: 2 passed
+- full suite: 68 passed
+- benchmark qualification: PASS
+- architecture audit: PASS
+- repository qualifier: PASS
+- diff check: PASS
+- exact fix branch CI run: `37804356820`
+- CI conclusion: success
+
+Two minor review notes are deferred because they do not affect the qualified
+controlled path: the internal exact-index bucket annotation is broader than
+necessary, and hand-crafted external benchmark reports are only partially
+cross-validated beyond the CLI-generated report path.
 
 ## Deferred research
 
