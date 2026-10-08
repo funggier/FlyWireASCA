@@ -1,0 +1,49 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+TASKS = ROOT / "docs" / "development" / "tasks"
+
+
+def _read(name: str) -> str:
+    path = TASKS / name
+    assert path.exists(), f"{name} must exist"
+    return path.read_text(encoding="utf-8")
+
+
+def test_current_points_to_exactly_one_active_task_a001():
+    text = _read("CURRENT.md")
+    assert "Current task: A001" in text
+    assert "Status: ACTIVE" in text
+    assert text.count("Current task:") == 1
+
+
+def test_a001_contains_recovery_and_evidence_sections():
+    text = _read("A001-repository-research-foundation.md")
+    assert "Status: ACTIVE" in text
+    for heading in (
+        "## Goal",
+        "## Scope",
+        "## Acceptance Criteria",
+        "## Evidence",
+        "## Current Action",
+        "## Next Action",
+    ):
+        assert heading in text
+
+
+def test_roadmap_lists_a001_through_a010_exactly_once():
+    text = _read("ROADMAP.md")
+    for number in range(1, 11):
+        task_id = f"A{number:03d}"
+        assert text.count(task_id) == 1, task_id
+
+
+def test_task_readme_documents_states_and_authoritative_source_rule():
+    text = _read("README.md")
+    assert "PLANNED / ACTIVE / BLOCKED / DONE" in text
+    lower = text.lower()
+    assert "git/github/runtime" in lower
+    assert "stale" in lower
