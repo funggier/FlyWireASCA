@@ -42,3 +42,20 @@ class RetrievalState(str, Enum):
     RECALLED = "RECALLED"
     CONFLICTING_RECALL = "CONFLICTING_RECALL"
     INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
+
+
+class WorkingSetKind(str, Enum):
+    MEMORY = "memory"
+    PROCEDURE = "procedure"
+    OBSERVATION = "observation"
+    HYPOTHESIS = "hypothesis"
+    GOAL = "goal"
+
+
+class ObservationKind(str, Enum):
+    STATE = "state"
+    RESULT = "result"
+    ERROR = "error"
+    TOOL = "tool"
+    PERCEPTION = "perception"
+    EXTERNAL = "external"
