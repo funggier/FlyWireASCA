@@ -1,7 +1,7 @@
 # A001 — Repository & Research Foundation
 
 Status: ACTIVE
-GitHub Issue: pending creation
+GitHub Issue: #1
 
 ## Goal
 
@@ -32,14 +32,14 @@ Out of scope:
 ## Phases
 
 - Foundation skeleton: DONE locally at initial commit.
-- Task ledger: ACTIVE.
-- CI and repository qualifier: PLANNED.
-- GitHub publication/synchronization: PLANNED.
+- Task ledger: DONE.
+- CI and repository qualifier: DONE locally.
+- GitHub publication/synchronization: ACTIVE.
 - Exact qualification and closure evidence: PLANNED.
 
 ## Acceptance Criteria
 
-- [ ] Public GitHub repository `funggier/FlyWireASCA` exists.
+- [x] Public GitHub repository `funggier/FlyWireASCA` exists.
 - [x] MIT License exists locally.
 - [ ] Full local test suite passes on final candidate.
 - [ ] Repository qualifier passes.
@@ -63,9 +63,10 @@ Further evidence is appended only after fresh verification.
 
 ## Current Action
 
-Implement and verify the persistent task ledger.
+Record GitHub Issue #1 and synchronize the public `main` branch after fresh
+local verification.
 
 ## Next Action
 
-Add repository qualification tooling and CI under TDD, then create the public
-GitHub repository only after local qualification is green.
+Verify GitHub Actions on the exact synchronized commit, write A001 closure
+evidence, then close A001 only after final GREEN qualification.

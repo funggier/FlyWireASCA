@@ -2,18 +2,17 @@
 
 Current task: A001
 Status: ACTIVE
-GitHub Issue: pending creation
+GitHub Issue: #1
 
 ## Current Action
 
-Build and qualify the task-driven repository foundation on the local `main`
-branch according to
-`docs/superpowers/plans/2026-10-08-a001-repository-foundation.md`.
+Synchronize the GitHub Issue #1 metadata commit to public `main` after fresh
+local verification.
 
 ## Next Action
 
-Complete the task ledger checkpoint, then add CI/repository qualification
-before creating and synchronizing the public GitHub repository.
+Verify GitHub Actions for the exact commit, create A001 qualification evidence,
+and close A001 only after the final repository state is GREEN.
 
 ## Resume Rule
 
