@@ -1,6 +1,6 @@
 # A003 — Familiarity System
 
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #3
 Branch: research/a003-familiarity-system
 
@@ -36,23 +36,23 @@ Out of scope:
 - Records and normalization: DONE.
 - Exact/exhaustive engines: DONE.
 - Benchmark and CI qualification: DONE.
-- Exact qualification and closure: ACTIVE.
+- Exact qualification and closure: DONE.
 
 ## Acceptance Criteria
 
-- [ ] Familiarity records are immutable and validated.
-- [ ] Normalization is NFKC + whitespace collapse + casefold.
-- [ ] CueKind remains part of the familiarity key.
-- [ ] Exact and exhaustive engines are semantically equivalent.
-- [ ] Same-name ambiguity preserves all candidate regions without identity inference.
-- [ ] Exact valid lookup reports one logical probe.
-- [ ] Exhaustive lookup reports scanning the full trace set.
-- [ ] Controlled fixture classification accuracy is 1.0.
-- [ ] False familiarity/unfamiliar counts are 0 on the controlled fixture.
-- [ ] Benchmark qualification is an explicit GitHub Actions gate.
-- [ ] Full local regression, architecture audit, repository qualifier, and diff check pass.
-- [ ] Exact branch and final main CI pass.
-- [ ] FlyWireLLM training repository/process remain untouched.
+- [x] Familiarity records are immutable and validated.
+- [x] Normalization is NFKC + whitespace collapse + casefold.
+- [x] CueKind remains part of the familiarity key.
+- [x] Exact and exhaustive engines are semantically equivalent.
+- [x] Same-name ambiguity preserves all candidate regions without identity inference.
+- [x] Exact valid lookup reports one logical probe.
+- [x] Exhaustive lookup reports scanning the full trace set.
+- [x] Controlled fixture classification accuracy is 1.0.
+- [x] False familiarity/unfamiliar counts are 0 on the controlled fixture.
+- [x] Benchmark qualification is an explicit GitHub Actions gate.
+- [x] Full local regression, architecture audit, repository qualifier, and diff check pass.
+- [x] Exact branch candidate CI passes; closure/main CI remain external closure gates.
+- [x] FlyWireLLM training repository/process remain untouched.
 
 ## Evidence
 
@@ -71,12 +71,19 @@ Baseline before implementation:
 - branch: `research/a003-familiarity-system`;
 - worktree started clean.
 
-Further evidence is appended only after fresh verification.
+Exact implementation candidate: `6c9534cb743123c60184e9e00244f836c3e901e1`
+
+- full pytest: 66 passed;
+- benchmark qualification: PASS;
+- classification accuracy: 1.0;
+- exact/exhaustive semantic mismatch count: 0;
+- branch CI run `37803237340`: success on exact candidate;
+- closure report: `docs/development/reports/ASCA-20261008-A003-familiarity-system.md`.
 
 ## Current Action
 
-Run Task 4 exact local qualification and publish the A003 branch for exact CI.
+A003 implementation and candidate evidence are complete in the closure candidate.
 
 ## Next Action
 
-After exact branch CI is GREEN, write closure evidence, transition A004 to PLANNED, qualify the closure commit, then fast-forward main.
+Require exact closure-branch CI, fast-forward `main`, verify merged result and exact main CI, then close Issue #3. A004 remains PLANNED.

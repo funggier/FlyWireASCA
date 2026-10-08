@@ -13,18 +13,17 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_exactly_one_active_task_a003():
+def test_current_points_to_exactly_one_next_planned_task_a004():
     text = _read("CURRENT.md")
-    assert "Current task: A003" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #3" in text
-    assert "Branch: research/a003-familiarity-system" in text
+    assert "Current task: A004" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert text.count("Current task:") == 1
 
 
 def test_a003_contains_recovery_and_evidence_sections():
     text = _read("A003-familiarity-system.md")
-    assert "Status: ACTIVE" in text
+    assert "Status: DONE" in text
     for heading in (
         "## Goal",
         "## Scope",
@@ -103,4 +102,17 @@ def test_a002_closure_report_records_exact_qualification():
     assert "41 passed" in text
     assert "37793506259" in text
     assert "architecture_contract_audit=PASS" in text
+    assert "FlyWireLLM" in text
+
+def test_a003_closure_report_records_exact_qualification():
+    report = ROOT / "docs" / "development" / "reports" / "ASCA-20261008-A003-familiarity-system.md"
+    assert report.exists(), "A003 closure report must exist"
+    text = report.read_text(encoding="utf-8")
+    assert "6c9534cb743123c60184e9e00244f836c3e901e1" in text
+    assert "66 passed" in text
+    assert "37803237340" in text
+    assert "classification_accuracy: 1.0" in text
+    assert "exact_logical_probes: 9" in text
+    assert "exhaustive_logical_probes: 2367" in text
+    assert "same-name ambiguity" in text.lower()
     assert "FlyWireLLM" in text

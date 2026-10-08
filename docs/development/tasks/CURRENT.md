@@ -1,23 +1,21 @@
 # Current Development Task
 
-Current task: A003
-Status: ACTIVE
-GitHub Issue: #3
-Branch: research/a003-familiarity-system
+Current task: A004
+Status: PLANNED
+GitHub Issue: not created
 
 ## Current Action
 
-Implement A003 — Familiarity System in the isolated worktree using the approved
-design and implementation plan.
+No implementation task is active. A003 has a qualified closure candidate and
+must complete its external integration gates before any A004 implementation.
 
 ## Next Action
 
-Complete records/normalization first, then exact/exhaustive engines, controlled
-benchmark qualification, and exact branch/main closure gates.
+After A003 final main CI and synchronization are GREEN, design and activate
+A004 — Associative Memory & Recall as a separate task/branch.
 
 ## Resume Rule
 
-Read this file, `A003-familiarity-system.md`, the approved A003 spec/plan, and
-live Git/GitHub/runtime state before taking action. FlyWireLLM training is a
-separate live workload and must not be stopped, restarted, imported, or
-modified by A003.
+Read this file, the A003 closure report, live Git/GitHub state, and the active
+FlyWireLLM runtime state before taking action. Do not start or restart
+FlyWireLLM training from FlyWireASCA.
