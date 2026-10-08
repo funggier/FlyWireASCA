@@ -75,3 +75,7 @@ def test_audit_rejects_missing_contract_document(tmp_path: Path):
     root = _copy_fixture(tmp_path)
     (root / "docs" / "architecture" / "ASCA-CONTRACT-v0.1.md").unlink(missing_ok=True)
     assert any("contract document" in error for error in audit(root))
+
+def test_contract_document_has_no_trailing_whitespace():
+    lines = DOC.read_text(encoding="utf-8").splitlines()
+    assert [index for index, line in enumerate(lines, 1) if line != line.rstrip()] == []

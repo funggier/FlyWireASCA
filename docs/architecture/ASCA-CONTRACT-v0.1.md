@@ -1,7 +1,7 @@
 # ASCA Contract v0.1
 
-Status: A002 architecture contract  
-Project: FlyWireASCA  
+Status: A002 architecture contract
+Project: FlyWireASCA
 Contract version: 0.1
 
 ## Purpose
