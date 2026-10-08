@@ -36,8 +36,8 @@ Out of scope:
 - Core memory/provenance contracts: DONE.
 - Bounded control/procedure contracts: DONE.
 - Serialization and benchmark definitions: DONE.
-- Architecture audit/documentation: ACTIVE.
-- Exact qualification and closure: PLANNED.
+- Architecture audit/documentation: DONE.
+- Exact qualification and closure: ACTIVE.
 
 ## Acceptance Criteria
 
@@ -66,9 +66,10 @@ Further evidence is appended only after fresh verification.
 
 ## Current Action
 
-Implement Task 4 contract documentation and architecture audit under TDD.
+Run Task 5 exact local qualification and push the A002 branch for exact CI.
 
 ## Next Action
 
-Run full architecture qualification, push the A002 branch, require exact CI,
-then prepare closure evidence without touching FlyWireLLM training.
+After exact branch CI is GREEN, write A002 closure evidence, transition A003 to
+PLANNED, qualify the closure commit, then fast-forward main without touching
+FlyWireLLM training.

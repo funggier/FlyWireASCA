@@ -27,6 +27,9 @@ jobs:
       - name: Test
         run: python -m pytest -q
 
+      - name: Audit architecture contract
+        run: python scripts/audit_architecture_contract.py
+
       - name: Qualify repository
         run: python scripts/qualify_repository.py
 

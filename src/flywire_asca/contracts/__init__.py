@@ -1,3 +1,5 @@
+CONTRACT_VERSION = "0.1"
+
 from .benchmark import (
     BaselineMode,
     BenchmarkDefinition,
@@ -24,6 +26,7 @@ from .memory import AssociationEdge, Cue, EvidenceRef, MemoryRecord
 from .procedure import Observation, ProcedureRef
 
 __all__ = [
+    "CONTRACT_VERSION",
     "ActivationBudget",
     "ActivationState",
     "AssociationEdge",
