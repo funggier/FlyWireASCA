@@ -33,9 +33,9 @@ Out of scope:
 
 ## Phases
 
-- Records and normalization: ACTIVE.
-- Exact/exhaustive engines: PLANNED.
-- Benchmark and CI qualification: PLANNED.
+- Records and normalization: DONE.
+- Exact/exhaustive engines: DONE.
+- Benchmark and CI qualification: ACTIVE.
 - Exact qualification and closure: PLANNED.
 
 ## Acceptance Criteria
@@ -75,9 +75,8 @@ Further evidence is appended only after fresh verification.
 
 ## Current Action
 
-Complete Task 1 records, normalization, and A003 ledger activation under TDD.
+Implement Task 3 deterministic controlled benchmark and explicit CI qualification gate.
 
 ## Next Action
 
-After Task 1 is GREEN and committed, implement exact/exhaustive familiarity
-engines under TDD without adding recall or identity logic.
+After benchmark qualification is GREEN and committed, run exact branch qualification and closure evidence without touching FlyWireLLM training.
