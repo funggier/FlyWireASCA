@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | A001 | Repository & Research Foundation | DONE |
 | A002 | ASCA Architecture Contract | DONE |
-| A003 | Familiarity System | PLANNED |
+| A003 | Familiarity System | ACTIVE |
 | A004 | Associative Memory & Recall | PLANNED |
 | A005 | Working Set / Selective Activation | PLANNED |
 | A006 | Surprise, Uncertainty & Expansion | PLANNED |
