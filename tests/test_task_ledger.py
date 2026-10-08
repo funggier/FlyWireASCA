@@ -13,17 +13,17 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_exactly_one_active_task_a002():
+def test_current_points_to_exactly_one_next_planned_task_a003():
     text = _read("CURRENT.md")
-    assert "Current task: A002" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #2" in text
+    assert "Current task: A003" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert text.count("Current task:") == 1
 
 
 def test_a002_contains_recovery_and_evidence_sections():
     text = _read("A002-asca-architecture-contract.md")
-    assert "Status: ACTIVE" in text
+    assert "Status: DONE" in text
     for heading in (
         "## Goal",
         "## Scope",
@@ -79,3 +79,13 @@ def test_a001_closure_report_has_no_trailing_whitespace():
     report = ROOT / "docs" / "development" / "reports" / "ASCA-20261008-A001-repository-foundation.md"
     lines = report.read_text(encoding="utf-8").splitlines()
     assert [index for index, line in enumerate(lines, 1) if line != line.rstrip()] == []
+
+def test_a002_closure_report_records_exact_qualification():
+    report = ROOT / "docs" / "development" / "reports" / "ASCA-20261008-A002-architecture-contract.md"
+    assert report.exists(), "A002 closure report must exist"
+    text = report.read_text(encoding="utf-8")
+    assert "c70e11f1af9cf652b8526f300a9c1d7317e5b6de" in text
+    assert "41 passed" in text
+    assert "37793506259" in text
+    assert "architecture_contract_audit=PASS" in text
+    assert "FlyWireLLM" in text

@@ -1,6 +1,6 @@
 # A002 — ASCA Architecture Contract
 
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #2
 Branch: research/a002-architecture-contract
 
@@ -37,21 +37,21 @@ Out of scope:
 - Bounded control/procedure contracts: DONE.
 - Serialization and benchmark definitions: DONE.
 - Architecture audit/documentation: DONE.
-- Exact qualification and closure: ACTIVE.
+- Exact qualification and closure: DONE.
 
 ## Acceptance Criteria
 
-- [ ] Public contracts are importable and immutable where practical.
-- [ ] Required retrieval states and typed relation vocabulary are frozen.
-- [ ] Confidence/proposition confidence are validated independently of activation strength.
-- [ ] Activation/working-set budgets are explicit and validated.
-- [ ] Supported contract records serialize deterministically and round-trip.
-- [ ] Required non-selective/selective benchmark modes are defined.
-- [ ] Architecture audit passes with no mandatory runtime dependency or FlyWireLLM import.
-- [ ] Full local test suite passes on exact candidate.
-- [ ] GitHub Actions passes on exact candidate and final closure commit.
-- [ ] Branch/main synchronization evidence is recorded.
-- [ ] FlyWireLLM training process and repository are not modified by A002.
+- [x] Public contracts are importable and immutable where practical.
+- [x] Required retrieval states and typed relation vocabulary are frozen.
+- [x] Confidence/proposition confidence are validated independently of activation strength.
+- [x] Activation/working-set budgets are explicit and validated.
+- [x] Supported contract records serialize deterministically and round-trip.
+- [x] Required non-selective/selective benchmark modes are defined.
+- [x] Architecture audit passes with no mandatory runtime dependency or FlyWireLLM import.
+- [x] Full local test suite passes on exact candidate.
+- [x] GitHub Actions passes on exact candidate; final closure commit must pass before issue closure.
+- [x] Branch candidate synchronization evidence is recorded; final main synchronization is an external closure gate.
+- [x] FlyWireLLM training process and repository are not modified by A002.
 
 ## Evidence
 
@@ -62,14 +62,19 @@ Baseline at A002 start:
 - worktree: clean;
 - FlyWireLLM training observed running separately and left untouched.
 
-Further evidence is appended only after fresh verification.
+Exact implementation candidate: `c70e11f1af9cf652b8526f300a9c1d7317e5b6de`
+
+- full pytest: 41 passed;
+- architecture contract audit: PASS;
+- repository qualifier: PASS;
+- GitHub Actions run `37793506259`: success on exact candidate;
+- closure report: `docs/development/reports/ASCA-20261008-A002-architecture-contract.md`.
 
 ## Current Action
 
-Run Task 5 exact local qualification and push the A002 branch for exact CI.
+A002 implementation and evidence are complete in the closure candidate.
 
 ## Next Action
 
-After exact branch CI is GREEN, write A002 closure evidence, transition A003 to
-PLANNED, qualify the closure commit, then fast-forward main without touching
-FlyWireLLM training.
+Require CI on the closure commit, fast-forward `main`, verify exact main CI and
+0/0 synchronization, then close GitHub Issue #2. A003 remains PLANNED.

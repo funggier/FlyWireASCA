@@ -1,22 +1,21 @@
 # Current Development Task
 
-Current task: A002
-Status: ACTIVE
-GitHub Issue: #2
-Branch: research/a002-architecture-contract
+Current task: A003
+Status: PLANNED
+GitHub Issue: not created
 
 ## Current Action
 
-Implement the ASCA v0.1 architecture contract in the isolated A002 worktree
-using the approved design and implementation plan.
+No implementation task is active. A002 has a qualified closure candidate and
+must complete its external integration gates before any A003 implementation.
 
 ## Next Action
 
-Complete A002 Task 1 under TDD, then proceed sequentially through bounded
-control, serialization/benchmarks, audit/documentation, and exact qualification.
+After A002 final main CI and synchronization are GREEN, design and activate
+A003 — Familiarity System as a separate task/branch.
 
 ## Resume Rule
 
-Read this file, `A002-asca-architecture-contract.md`, the A002 implementation
-plan, and live Git/GitHub/runtime state before taking action. FlyWireLLM
-training is a separate live workload and must not be modified or restarted.
+Read this file, the A002 closure report, live Git/GitHub state, and the active
+FlyWireLLM runtime state before taking action. Do not start or restart
+FlyWireLLM training from FlyWireASCA.
