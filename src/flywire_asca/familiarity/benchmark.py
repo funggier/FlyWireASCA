@@ -391,6 +391,8 @@ def qualify_a003_report(report: FamiliarityBenchmarkReport) -> list[str]:
         errors.append("false_familiarity_count must be 0")
     if report.false_unfamiliar_count != 0:
         errors.append("false_unfamiliar_count must be 0")
+    if any(not result.regions_correct for result in report.case_results):
+        errors.append("region mismatch cases must be 0")
     if report.ambiguity_failure_count != 0:
         errors.append("ambiguity_failure_count must be 0")
     if report.semantic_mismatch_count != 0:

@@ -178,6 +178,7 @@ def test_qualifier_rejects_nonqualifying_report_deterministically():
     assert errors == [
         "classification_accuracy must be 1.0",
         "false_unfamiliar_count must be 0",
+        "region mismatch cases must be 0",
     ]
 
 
@@ -220,3 +221,38 @@ def test_cli_is_byte_deterministic_and_qualifies_builtin_fixture():
     assert payload["scope"] == "controlled_fixture_only"
     assert payload["classification_accuracy"] == 1.0
     assert payload["semantic_mismatch_count"] == 0
+
+def test_qualifier_rejects_wrong_candidate_regions_even_when_engines_agree():
+    result = FamiliarityBenchmarkCaseResult(
+        case_id="wrong-region",
+        expected_state=RetrievalState.FAMILIAR,
+        actual_state=RetrievalState.FAMILIAR,
+        expected_region_ids=("region-expected",),
+        actual_region_ids=("region-wrong",),
+        classification_correct=True,
+        regions_correct=False,
+        ambiguity_preserved=True,
+        candidate_region_count=1,
+        candidate_region_fraction=1.0,
+        matched_trace_count=1,
+        exact_logical_probes=1,
+        exhaustive_logical_probes=1,
+        semantic_equivalent=True,
+    )
+    report = FamiliarityBenchmarkReport(
+        scope="controlled_fixture_only",
+        total_trace_count=1,
+        case_results=(result,),
+        case_count=1,
+        correct_classification_count=1,
+        classification_accuracy=1.0,
+        false_familiarity_count=0,
+        false_unfamiliar_count=0,
+        ambiguity_failure_count=0,
+        semantic_mismatch_count=0,
+        exact_logical_probes=1,
+        exhaustive_logical_probes=1,
+    )
+    assert qualify_a003_report(report) == [
+        "region mismatch cases must be 0",
+    ]
