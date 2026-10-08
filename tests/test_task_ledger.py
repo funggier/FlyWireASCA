@@ -13,11 +13,26 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_exactly_one_next_planned_task_a002():
+def test_current_points_to_exactly_one_active_task_a002():
     text = _read("CURRENT.md")
     assert "Current task: A002" in text
-    assert "Status: PLANNED" in text
+    assert "Status: ACTIVE" in text
+    assert "GitHub Issue: #2" in text
     assert text.count("Current task:") == 1
+
+
+def test_a002_contains_recovery_and_evidence_sections():
+    text = _read("A002-asca-architecture-contract.md")
+    assert "Status: ACTIVE" in text
+    for heading in (
+        "## Goal",
+        "## Scope",
+        "## Acceptance Criteria",
+        "## Evidence",
+        "## Current Action",
+        "## Next Action",
+    ):
+        assert heading in text
 
 
 def test_a001_contains_recovery_and_evidence_sections():
