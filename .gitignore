@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+
+# Environments
+.venv/
+venv/
+env/
+
+# Local secrets / environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local execution workspace
+.superpowers/
+
+# Large/local research artifacts
+checkpoints/
+datasets/
+data/
+*.pt
+*.pth
+*.ckpt
+*.bin
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
