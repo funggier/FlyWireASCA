@@ -1,3 +1,10 @@
+from .benchmark import (
+    BaselineMode,
+    BenchmarkDefinition,
+    EvaluationMetric,
+    REQUIRED_BASELINE_MODES,
+)
+from .codec import dumps_contract, loads_contract
 from .control import (
     ActivationBudget,
     ActivationState,
@@ -20,18 +27,24 @@ __all__ = [
     "ActivationBudget",
     "ActivationState",
     "AssociationEdge",
+    "BaselineMode",
+    "BenchmarkDefinition",
     "Cue",
     "CueKind",
     "EvidenceRef",
+    "EvaluationMetric",
     "MemoryKind",
     "MemoryRecord",
     "Observation",
     "ObservationKind",
     "ProcedureRef",
+    "REQUIRED_BASELINE_MODES",
     "RelationType",
     "RetrievalState",
     "UncertaintySignal",
     "WorkingSet",
     "WorkingSetEntry",
     "WorkingSetKind",
+    "dumps_contract",
+    "loads_contract",
 ]
