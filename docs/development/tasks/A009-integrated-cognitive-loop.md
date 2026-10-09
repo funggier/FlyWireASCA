@@ -1,7 +1,7 @@
 # A009 — Integrated Cognitive Loop
 
-Status: DONE (closure candidate; Issue #9 remains open until exact final-main evidence)
-GitHub Issue: #9
+Status: DONE
+GitHub Issue: #9 (closed as completed)
 Branch: research/a009-integrated-cognitive-loop
 
 ## Goal
@@ -189,20 +189,19 @@ Qualification report:
 
 ## Current Action
 
-A009 is DONE with exact branch qualification, physical integration,
-whole-branch author self-review, reviewed fast-forward main integration, and
-exact final-main integration CI GREEN. Issue #9 intentionally remains open
-until this final evidence commit itself passes exact main CI and final 0/0
-synchronization is reconfirmed.
+A009 is DONE. Reviewed behavior is integrated to main, deterministic and
+physical qualification are GREEN, whole-branch author self-review is GREEN,
+and final-main evidence gates are GREEN.
+
+GitHub Issue #9 closure state is recorded as completed after the exact
+closure-state main CI gate.
 
 A010 remains PLANNED and has no GitHub issue.
 
 ## Next Action
 
-Commit this final-main evidence on main, require exact CI for that evidence
-commit, reconfirm main == origin/main with 0/0 clean synchronization, then
-close Issue #9 with the final SHA/CI/test/fingerprint/outcome metrics. A010
-remains PLANNED with no issue.
+No A009 implementation action remains. A010 may be activated later under a
+separate design/plan/task gate.
 
 ## Resume Rule
 

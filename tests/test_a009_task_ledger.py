@@ -160,3 +160,15 @@ def test_a009_task_and_current_mark_final_main_gate_green_pending_issue_close():
     assert "A009 exact final-main CI: GREEN" in current
     assert "Current task: A010" in current
     assert "GitHub Issue: not created" in current
+
+def test_a009_repository_closure_state_is_final_not_pending():
+    task = read(TASKS / "A009-integrated-cognitive-loop.md")
+    current = read(TASKS / "CURRENT.md")
+    report = read(REPORT)
+    assert "Status: DONE" in task
+    assert "GitHub Issue: #9 (closed as completed)" in task
+    assert "A009 GitHub Issue #9: CLOSED (completed)" in current
+    assert "A009 repository state: DONE" in report
+    assert "GitHub Issue #9 closure: completed" in report
+    assert "remains open" not in task.lower()
+    assert "remains open" not in current.lower()

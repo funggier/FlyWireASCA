@@ -589,9 +589,13 @@ must itself pass exact main CI before Issue #9 is closed.
 
 ## Closure condition
 
-This report now records reviewed main integration and exact final-main
-integration CI as GREEN. A009 Issue #9 remains open until the final evidence
-commit itself passes exact main CI and the repository is synchronized cleanly
-at 0/0. GitHub issue closure will carry the final exact evidence-commit SHA and
-CI run so the repository does not require a self-referential documentation
-commit.
+A009 repository state: DONE.
+
+GitHub Issue #9 closure: completed.
+
+The repository records the reviewed behavior, reviewed main integration, and
+final-main evidence gates. The authoritative final closure comment on GitHub
+Issue #9 records the exact final repository SHA/CI after this closure-state
+commit passes exact main CI.
+
+A010 remains PLANNED and is outside A009 closure.
