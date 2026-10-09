@@ -41,24 +41,16 @@ Start with:
 
 ## Current stage
 
-A007 - Surprise, Uncertainty & Expansion has a qualified closure candidate;
-A008 - Procedural Memory / Skill Chunking remains planned.
+A008 - Procedural Memory / Skill Chunking is active.
 
-A007 uses `SINGLE_BEST` as the primary selector and compares
-`NO_EXPANSION`, `SIGNAL_DRIVEN`, and `ALWAYS_EXPAND` over a frozen
-three-round scope ladder. The frozen physical fixture produced outcome
-`SUPPORTED`: SIGNAL_DRIVEN recovered three declared memories missed by
-NO_EXPANSION, had zero regressions, matched ALWAYS_EXPAND required-memory
-coverage, and used 15 rounds versus 24 for ALWAYS_EXPAND.
+The primary architecture is `CHUNKED`: reusable hierarchical procedures with
+explicit step-level expected-outcome checkpoints. `FLAT` is the correctness
+baseline and `BLIND_CHUNKED` is a negative control for coarser failure
+localization.
 
-A007 does not qualify true prediction surprise or calibrated scalar
-uncertainty, does not lower the A005 threshold, does not build or traverse a
-typed graph, and does not use `qwen3.5:4b` to generate cues or decide
-expansion. A006's separate physical bounded-union convergence outcome remains
-`NOT_SUPPORTED`.
-
-Measured round/request reductions are workload-specific and do not by
-themselves imply FLOP, power, or energy savings.
+A008 uses a deterministic simulator only. It does not execute real tools/APIs,
+use Qwen3.5:4b or Ollama, traverse a semantic graph, or automatically retry
+failed actions. FlyWireLLM remains paused and independent.
 
 
 ## Claims boundary

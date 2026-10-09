@@ -14,11 +14,10 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_planned_a008_after_a007_closure():
-    text = _read(TASKS / "CURRENT.md")
-    assert "Current task: A008" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
+def test_a007_report_records_a008_was_planned_at_closure():
+    text = _read(REPORT)
+    assert "A008" in text
+    assert "PLANNED" in text
 
 
 def test_a007_task_is_done_and_preserves_scope_boundaries():
@@ -47,16 +46,16 @@ def test_a007_task_is_done_and_preserves_scope_boundaries():
         assert heading in text
 
 
-def test_roadmap_marks_a007_done_and_a008_planned():
+def test_live_roadmap_preserves_a007_done_while_a008_can_advance():
     text = _read(TASKS / "ROADMAP.md")
     assert "| A006 | Working Set / Selective Activation | DONE |" in text
     assert "| A007 | Surprise, Uncertainty & Expansion | DONE |" in text
-    assert "| A008 | Procedural Memory / Skill Chunking | PLANNED |" in text
+    assert "| A008 | Procedural Memory / Skill Chunking |" in text
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
 
 
-def test_readme_records_a007_supported_result_without_prediction_surprise_overclaim():
-    text = _read(ROOT / "README.md")
+def test_a007_report_records_supported_result_without_prediction_surprise_overclaim():
+    text = _read(REPORT)
     lower = text.lower()
     assert "a007" in lower
     assert "SUPPORTED" in text
@@ -100,13 +99,11 @@ def test_a007_report_has_exactly_one_primary_hypothesis_outcome():
     assert "Final A007 hypothesis outcome: `NOT_SUPPORTED`" not in text
 
 
-def test_a007_closure_does_not_claim_true_prediction_surprise_or_create_a008_issue():
+def test_a007_closure_does_not_claim_true_prediction_surprise():
     text = _read(REPORT)
     lower = text.lower()
     assert "prediction surprise is not qualified" in lower
     assert "scalar uncertainty" in lower
-    current = _read(TASKS / "CURRENT.md")
-    assert "GitHub Issue: not created" in current
 
 
 def test_a006_negative_physical_result_remains_historical_evidence():
@@ -144,12 +141,10 @@ def test_a007_report_records_merged_main_integration_evidence():
     assert "- [x] Final-main CI and clean/synchronized 0/0 integration gates pass." in task
 
 
-def test_current_no_longer_says_a007_integration_is_pending():
-    text = _read(TASKS / "CURRENT.md")
-    assert "Current task: A008" in text
-    assert "Status: PLANNED" in text
-    assert "A007 integration: GREEN" in text
-    assert "must complete whole-branch review" not in text
+def test_a007_task_no_longer_says_integration_is_pending():
+    text = _read(TASKS / "A007-surprise-uncertainty-expansion.md")
+    assert "Status: DONE" in text
+    assert "Whole-branch review / final integration: DONE" in text
 
 def test_a007_report_records_closure_evidence_main_ci():
     text = _read(REPORT)

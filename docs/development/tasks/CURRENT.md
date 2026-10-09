@@ -1,29 +1,24 @@
 # Current Development Task
 
 Current task: A008
-Status: PLANNED
-GitHub Issue: not created
+Status: ACTIVE
+GitHub Issue: #8
+Branch: research/a008-procedural-memory
 A007 integration: GREEN
 
 ## Current Action
 
-No implementation task is active. A007 is fast-forward integrated into main,
-its reviewed behavior tree and documentation-only closure-evidence commit both
-passed exact main CI. Only the final integration-ledger CI / Issue #7 closure
-and final synchronization gates remain.
+Implement A008 — Procedural Memory / Skill Chunking from the approved design and
+Native plan. Primary architecture is CHUNKED hierarchy with explicit
+step-level checkpoints.
 
 ## Next Action
 
-After A007 final integration-ledger CI, Issue #7 closure, and final synchronization are GREEN, design
-A008 — Procedural Memory / Skill Chunking as a separate architectural task.
-
-A008 may later provide real expected outcomes and execution failures that can
-feed richer surprise semantics. Do not treat A007 structural triggers as true
-prediction surprise.
+Finish models/library, then verifier/simulator, execution modes, deterministic
+qualification, review, and integration in plan order.
 
 ## Resume Rule
 
-Read this file, the A007 closure report, live Git/GitHub/Ollama state, and the
-paused FlyWireLLM state before action. Do not create an A008 issue
-automatically, do not create a typed graph milestone automatically, and do not
-restart FlyWireLLM training.
+Read this file, A008 task/spec/plan, live Git/GitHub state, and A007 closure
+evidence before action. Do not introduce real tool/OS/API execution, Qwen3.5:4b,
+Ollama, semantic graph traversal, automatic retry, or FlyWireLLM training.
