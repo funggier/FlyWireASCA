@@ -51,3 +51,13 @@ def test_ci_keeps_a006_selective_activation_physical_qualification_local_only():
     assert "localhost" not in text
     assert "python -m pytest -q" in text
     assert "python scripts/run_familiarity_benchmark_a003.py --qualify" in text
+
+def test_ci_keeps_a007_uncertainty_expansion_physical_qualification_local_only():
+    text = WORKFLOW.read_text(encoding="utf-8").lower()
+    assert "qualify_uncertainty_expansion_a007.py" not in text
+    assert "ollama pull" not in text
+    assert "ollama run" not in text
+    assert "127.0.0.1:11434" not in text
+    assert "localhost" not in text
+    assert "python -m pytest -q" in text
+    assert "python scripts/run_familiarity_benchmark_a003.py --qualify" in text

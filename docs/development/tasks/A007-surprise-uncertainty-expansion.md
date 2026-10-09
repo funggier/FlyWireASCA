@@ -34,8 +34,8 @@ judge expansion.
 - A007 contracts / frozen profile / task activation: DONE.
 - Structural trigger derivation / controller: DONE.
 - Bounded policy runner / controls: DONE.
-- Portable benchmark / engineering qualification: ACTIVE.
-- Physical A005+A006+A007 qualification: PLANNED.
+- Portable benchmark / engineering qualification: DONE.
+- Physical A005+A006+A007 qualification: ACTIVE.
 - Exact qualification / review / integration: PLANNED.
 
 ## Frozen Primary Profile
@@ -89,13 +89,13 @@ Activation baseline:
 
 ## Current Action
 
-Implement Task 4 portable A007 benchmark and engineering qualification gates
-under TDD using deterministic fake scope evaluators only.
+Implement Task 5 frozen physical A005+A006+A007 qualification runner under
+TDD, keeping shared index-build cost separate from per-policy query cost.
 
 ## Next Action
 
-After portable qualification is GREEN and committed, implement the frozen
-physical A005+A006+A007 qualification runner.
+After physical evidence is recorded, run exact branch qualification, write the
+A007 closure report, review the whole branch, and prepare integration.
 
 The next milestone after qualified A007 remains A008 — Procedural Memory /
 Skill Chunking.
