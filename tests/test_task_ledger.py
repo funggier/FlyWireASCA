@@ -13,12 +13,11 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_exactly_one_active_task_a006():
+def test_current_points_to_exactly_one_next_planned_task_a007():
     text = _read("CURRENT.md")
-    assert "Current task: A006" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #6" in text
-    assert "Branch: research/a006-working-set" in text
+    assert "Current task: A007" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert text.count("Current task:") == 1
 
 
@@ -136,3 +135,11 @@ def test_a005_closure_report_records_vector_retrieval_decision():
     assert "37906978728" in text
     assert "0.5037018224299838" in text
     assert "VECTOR_SUFFICIENT" in text
+
+def test_a006_closure_report_records_selective_activation_result():
+    report = ROOT / "docs" / "development" / "reports" / "ASCA-20261009-A006-working-set-selective-activation.md"
+    assert report.exists(), "A006 closure report must exist"
+    text = report.read_text(encoding="utf-8")
+    assert "94fff83a950cfc720c6afa0bc1e6b23fd904268d" in text
+    assert "37924130826" in text
+    assert "Final A006 hypothesis outcome: `NOT_SUPPORTED`" in text

@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TASKS = ROOT / "docs" / "development" / "tasks"
+REPORT = ROOT / "docs" / "development" / "reports" / "ASCA-20261009-A006-working-set-selective-activation.md"
 REPORT_A005 = ROOT / "docs" / "development" / "reports" / "ASCA-20261009-A005-vector-memory-retrieval.md"
 
 
@@ -13,27 +14,24 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_active_a006_issue_6_and_branch():
+def test_current_points_to_planned_a007_after_a006_closure():
     text = _read(TASKS / "CURRENT.md")
-    assert "Current task: A006" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #6" in text
-    assert "Branch: research/a006-working-set" in text
+    assert "Current task: A007" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
 
 
-def test_a006_task_records_required_scope_profile_and_next_milestone():
+def test_a006_task_is_done_and_preserves_scope_and_physical_outcome():
     text = _read(TASKS / "A006-working-set-selective-activation.md")
-    assert "Status: ACTIVE" in text
+    assert "Status: DONE" in text
     assert "GitHub Issue: #6" in text
-    assert "VectorMemoryResult" in text
     assert "does not build or traverse a typed graph" in text
-    assert "qwen3.5:4b" in text
     assert "does not call" in text
+    assert "NOT_SUPPORTED" in text
     assert "0.5037018224299838" in text
     assert "top_k = 12" in text
     assert "max_memory_nodes = 8" in text
     assert "max_working_set_items = 4" in text
-    assert "A007" in text
     for heading in (
         "## Goal",
         "## Scope",
@@ -46,22 +44,56 @@ def test_a006_task_records_required_scope_profile_and_next_milestone():
         assert heading in text
 
 
-def test_roadmap_activates_a006_and_keeps_a007_through_a011_planned():
+def test_roadmap_marks_a006_done_and_a007_planned():
     text = _read(TASKS / "ROADMAP.md")
     assert "| A005 | Semantic Vector Memory Retrieval | DONE |" in text
-    assert "| A006 | Working Set / Selective Activation | ACTIVE |" in text
+    assert "| A006 | Working Set / Selective Activation | DONE |" in text
     assert "| A007 | Surprise, Uncertainty & Expansion | PLANNED |" in text
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
 
 
-def test_readme_current_stage_is_a006_without_graph_or_generation_claim():
+def test_readme_records_a006_result_without_claiming_compute_or_generation_gain():
     text = _read(ROOT / "README.md")
     lower = text.lower()
     assert "a006" in lower
-    assert "working set / selective activation" in lower
-    assert "typed graph" in lower
+    assert "NOT_SUPPORTED" in text
+    assert "active-state" in lower
+    assert "compute" in lower
     assert "does not" in lower
     assert "qwen3.5:4b" in text
+
+
+def test_a006_closure_report_records_exact_branch_portable_and_physical_evidence():
+    text = _read(REPORT)
+    assert "94fff83a950cfc720c6afa0bc1e6b23fd904268d" in text
+    assert "225 passed" in text
+    assert "37924130826" in text
+    assert "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d" in text
+    assert "0.5037018224299838" in text
+    assert "e51fea2e58186e94d7affc964509e96d96fc656759677d7dcc073e5b36b91035" in text
+    assert "0.942652329749104" in text
+    assert "0.35294117647058826" in text
+    assert "Final A006 hypothesis outcome: `NOT_SUPPORTED`" in text
+    assert "convergence recovery count: 0" in text
+    assert "convergence regression count: 0" in text
+    assert "required-memory coverage: 1.0" in text
+    assert "FlyWireLLM" in text
+    assert "paused" in text.lower()
+
+
+def test_a006_report_has_exactly_one_final_hypothesis_outcome():
+    text = _read(REPORT)
+    assert text.count("Final A006 hypothesis outcome:") == 1
+    assert "Final A006 hypothesis outcome: `NOT_SUPPORTED`" in text
+    assert "Final A006 hypothesis outcome: `SUPPORTED`" not in text
+    assert "Final A006 hypothesis outcome: `MIXED`" not in text
+
+
+def test_a006_closure_does_not_create_graph_or_a007_issue():
+    task_names = {path.name.lower() for path in TASKS.glob("*.md")}
+    assert not any("graph" in name for name in task_names)
+    current = _read(TASKS / "CURRENT.md")
+    assert "GitHub Issue: not created" in current
 
 
 def test_a005_closure_report_remains_historical_evidence():

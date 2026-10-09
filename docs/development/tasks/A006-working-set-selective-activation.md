@@ -1,6 +1,6 @@
 # A006 — Working Set / Selective Activation
 
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #6
 Branch: research/a006-working-set
 
@@ -12,14 +12,14 @@ auditable working set under strict budgets.
 
 ## Scope
 
-In scope:
+Delivered:
 
 - immutable A006 evidence/support/result contracts;
-- multi-query bounded-union activation;
+- SELECTIVE_CONVERGENCE bounded-union activation;
 - strict active-memory and working-set budgets;
-- boundary-tie evidence;
+- explicit boundary-tie evidence;
 - SINGLE_BEST and EXHAUSTIVE controls;
-- portable benchmark;
+- portable benchmark and engineering qualifier;
 - physical A005+A006 composition with local `qwen3-embedding:0.6b`.
 
 Normative boundary: A006 does not build or traverse a typed graph.
@@ -34,7 +34,8 @@ confidence as an activation boost.
 - SINGLE_BEST / EXHAUSTIVE baselines: DONE.
 - Portable benchmark/qualification: DONE.
 - Physical A005+A006 qualification: DONE.
-- Exact qualification/review/integration: ACTIVE.
+- Exact qualification/review/integration: DONE as branch closure candidate;
+  final main CI/synchronization remain external integration gates.
 
 ## Physical Frozen Profile
 
@@ -47,25 +48,26 @@ confidence as an activation boost.
 - A006 `max_working_set_items = 4`
 - relation hops / expansions / model-input tokens = 0
 
-A006 does not recalibrate the A005 threshold or tune these budgets after final
-physical fixture outcomes are observed.
+A006 did not recalibrate the A005 threshold or tune these budgets after the
+final physical outcome.
 
 ## Acceptance Criteria
 
-- [ ] A006 records validate provenance/support/count invariants.
-- [ ] Bounded-union activation is deterministic and bounded.
-- [ ] Similarity/activation remain separate from proposition confidence.
-- [ ] Strict memory and working-set budgets never expand for ties.
-- [ ] Boundary ties are reported.
-- [ ] Same-name ambiguity is not converted into identity.
-- [ ] SINGLE_BEST and EXHAUSTIVE use the same evidence validation.
-- [ ] Portable qualification passes declared engineering gates.
-- [ ] Physical experiment emits SUPPORTED, MIXED, or NOT_SUPPORTED.
-- [ ] Active-state reduction is not described as compute/FLOP/energy reduction.
-- [ ] A003/A004/A005 qualification boundaries remain intact.
-- [ ] FlyWireLLM remains paused and untouched.
-- [ ] Exact branch and final-main CI pass.
-- [ ] Main is clean and synchronized 0/0.
+- [x] A006 records validate provenance/support/count invariants.
+- [x] Bounded-union activation is deterministic and bounded.
+- [x] Similarity/activation remain separate from proposition confidence.
+- [x] Strict memory and working-set budgets never expand for ties.
+- [x] Boundary ties are reported.
+- [x] Same-name ambiguity is not converted into identity.
+- [x] SINGLE_BEST and EXHAUSTIVE use the same evidence validation.
+- [x] Portable qualification passes declared engineering gates.
+- [x] Physical experiment emits one frozen-rule outcome.
+- [x] Physical outcome is `NOT_SUPPORTED`, recorded without fixture tuning.
+- [x] Active-state reduction is not described as compute/FLOP/energy reduction.
+- [x] A003/A004/A005 qualification boundaries remain intact.
+- [x] FlyWireLLM remains paused and untouched.
+- [x] Exact branch CI passes; final main CI remains an integration gate.
+- [x] Final main clean/sync 0/0 remains an integration gate before Issue #6 closure.
 
 ## Evidence
 
@@ -77,48 +79,68 @@ Approved implementation plan:
 
 `docs/superpowers/plans/2026-10-09-a006-working-set.md`
 
-Activation baseline:
+Branch candidate:
 
-- base main: `6147b9a6f6bc8c27b66735812e54c0050f13df36`;
-- branch: `research/a006-working-set`;
-- GitHub Issue: #6;
-- A005 verdict: `VECTOR_SUFFICIENT` for retrieval scope;
-- A005 frozen threshold: `0.5037018224299838`.
+`94fff83a950cfc720c6afa0bc1e6b23fd904268d`
 
-Physical qualification on implementation commit `43afe2dfb2f6a1365c1be3fc5333c55901d52f21`:
+Exact branch CI:
 
-- experiment validity: PASS;
-- hypothesis outcome: `NOT_SUPPORTED`;
-- Ollama runtime: `0.32.15`;
-- embedding model: `qwen3-embedding:0.6b`;
-- full digest: `ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d`;
-- embedding dimension: 1024;
-- fixture version: `a006-physical-v1`;
-- fixture fingerprint: `e51fea2e58186e94d7affc964509e96d96fc656759677d7dcc073e5b36b91035`;
-- required-memory coverage: 1.0;
-- convergence recovery count: 0;
-- convergence regression count: 0;
-- ambiguity failure count: 0;
-- no-selection failure count: 0;
-- strict budget observation count: 1;
-- positive candidates total: 34;
-- selected working-set items total: 22;
-- aggregate active-state reduction ratio: `0.35294117647058826`;
-- deterministic repeated selector result: PASS;
-- result interpretation: bounded-union convergence preserved all declared required memories and caused no regression, but did not recover any required memory that SINGLE_BEST missed under the frozen physical fixture, so the predeclared rule yields `NOT_SUPPORTED` rather than tuning the fixture.
+`37924130826` — success
 
-The first live attempt exposed one fixture-label bug in the strict budget case: 12 near-identical status notes had arbitrarily labeled `budget-00` as required. Regression `test_budget_truncation_case_does_not_label_an_arbitrary_equal_status_note_as_required` was observed RED, then the label alone was removed while texts, threshold, top_k, budgets, and selector behavior remained frozen. Raw physical JSON remains scratch-only.
+Fresh branch tests:
+
+- pytest: 225 passed
+- architecture audit: PASS
+- repository qualifier: PASS
+- A003 familiarity qualification: PASS
+- diff check: PASS
+
+Portable benchmark:
+
+- required-memory coverage: 1.0
+- SINGLE_BEST coverage: 0.9230769230769231
+- convergence recovery: 1
+- convergence regression: 0
+- boundary ties: 2
+- aggregate active-state reduction: `0.942652329749104`
+- deterministic repeat: PASS
+
+Physical qualification on behavior commit
+`43afe2dfb2f6a1365c1be3fc5333c55901d52f21`:
+
+- experiment validity: PASS
+- final hypothesis outcome: `NOT_SUPPORTED`
+- fixture: `a006-physical-v1`
+- fingerprint:
+  `e51fea2e58186e94d7affc964509e96d96fc656759677d7dcc073e5b36b91035`
+- required-memory coverage: 1.0
+- convergence recovery count: 0
+- convergence regression count: 0
+- ambiguity failures: 0
+- no-selection failures: 0
+- strict budget observations: 1
+- positive candidates: 34
+- selected working-set items: 22
+- aggregate active-state reduction:
+  `0.35294117647058826`
+- deterministic repeat: PASS
+
+The physical result is valid negative research evidence: convergence changed
+some ordering but did not recover a required memory that SINGLE_BEST omitted
+under the frozen working-set budget.
+
+Detailed evidence:
+
+`docs/development/reports/ASCA-20261009-A006-working-set-selective-activation.md`
 
 ## Current Action
 
-Run Task 6 exact branch qualification on the physically qualified A006 candidate,
-then publish the branch for exact portable CI.
+A006 implementation and branch-candidate qualification are complete. Require
+closure-branch review/CI and final main integration gates before Issue #6 is
+closed.
 
 ## Next Action
 
-After exact branch CI is GREEN, write the A006 closure report with the valid
-`NOT_SUPPORTED` physical research outcome, transition A007 to PLANNED, review
-the whole branch, and fast-forward `main`.
-
-The next milestone after qualified A006 remains A007 — Surprise, Uncertainty &
-Expansion.
+After A006 final main CI and synchronization are GREEN, A007 — Surprise,
+Uncertainty & Expansion remains PLANNED for a separate design/task. A007 must
+not assume bounded-union convergence is superior based on A006.

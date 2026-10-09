@@ -41,13 +41,21 @@ Start with:
 
 ## Current stage
 
-A006 — Working Set / Selective Activation is active.
+A006 - Working Set / Selective Activation has a qualified closure candidate;
+A007 - Surprise, Uncertainty & Expansion remains planned.
 
-A005 qualified a **Vector + Metadata** retrieval path with controlled-fixture
-verdict `VECTOR_SUFFICIENT`. A006 consumes those retrieval results and tests
-multi-query convergence plus strict bounded working-set selection. A006 does
-not build or traverse a typed graph and does not call `qwen3.5:4b` generation;
-those boundaries keep active-state selection measurable independently.
+A006 implements deterministic bounded working-set selection over A005
+Vector + Metadata retrieval. Portable synthetic tests demonstrate a convergence
+recovery and strong **active-state** reduction, but the frozen physical
+`qwen3-embedding:0.6b` experiment produced outcome `NOT_SUPPORTED` for the
+claim that bounded-union convergence improves required-memory selection over
+SINGLE_BEST. Required-memory coverage remained 1.0 with zero convergence
+regressions.
+
+Active-state reduction is not a compute, FLOP, power, or energy-reduction
+claim. A006 does not build or traverse a typed graph and does not call
+`qwen3.5:4b` generation.
+
 
 ## Claims boundary
 

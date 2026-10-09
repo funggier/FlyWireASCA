@@ -1,22 +1,25 @@
 # Current Development Task
 
-Current task: A006
-Status: ACTIVE
-GitHub Issue: #6
-Branch: research/a006-working-set
+Current task: A007
+Status: PLANNED
+GitHub Issue: not created
 
 ## Current Action
 
-Implement A006 — Working Set / Selective Activation from the approved spec and
-Native execution plan.
+No implementation task is active. A006 has a qualified closure candidate and
+must complete whole-branch review/final integration gates before A007 begins.
 
 ## Next Action
 
-Complete A006 contracts, selector, control baselines, portable benchmark,
-physical A005+A006 qualification, then exact closure/integration gates.
+After A006 final main CI and synchronization are GREEN, design A007 —
+Surprise, Uncertainty & Expansion as a separate architectural task.
+
+A007 should consume evidence such as insufficient evidence, partial recall, and
+budget-boundary conditions. It must not assume A006 bounded-union convergence
+is superior; the A006 frozen physical outcome was NOT_SUPPORTED.
 
 ## Resume Rule
 
-Read this file, the A006 task file, approved A006 spec/plan, live Git/GitHub
-state, and A005 physical profile before action. A006 does not build/traverse a
-typed graph and does not call Qwen3.5:4b generation. FlyWireLLM remains paused.
+Read this file, the A006 closure report, live Git/GitHub/Ollama state, and the
+paused FlyWireLLM state before action. Do not create a graph milestone
+automatically and do not restart FlyWireLLM training.
