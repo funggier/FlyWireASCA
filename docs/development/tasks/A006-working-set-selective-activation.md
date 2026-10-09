@@ -30,8 +30,8 @@ confidence as an activation boost.
 ## Phases
 
 - A006 contracts and task activation: DONE.
-- SELECTIVE_CONVERGENCE selector: ACTIVE.
-- SINGLE_BEST / EXHAUSTIVE baselines: PLANNED.
+- SELECTIVE_CONVERGENCE selector: DONE.
+- SINGLE_BEST / EXHAUSTIVE baselines: ACTIVE.
 - Portable benchmark/qualification: PLANNED.
 - Physical A005+A006 qualification: PLANNED.
 - Exact qualification/review/integration: PLANNED.
@@ -87,13 +87,13 @@ Activation baseline:
 
 ## Current Action
 
-Implement Task 2 SELECTIVE_CONVERGENCE under TDD with bounded-union activation,
-strict budgets, boundary-tie evidence, and conservative retrieval-state mapping.
+Implement Task 3 SINGLE_BEST and EXHAUSTIVE control baselines under TDD through
+the same validated evidence/canonicalization path as SELECTIVE_CONVERGENCE.
 
 ## Next Action
 
-After Task 2 is GREEN and committed, implement SINGLE_BEST and EXHAUSTIVE
-control baselines through the same validated evidence path.
+After both control baselines are GREEN and committed, implement the portable
+A006 benchmark and engineering qualification gates.
 
 The next milestone after qualified A006 remains A007 — Surprise, Uncertainty &
 Expansion.
