@@ -130,18 +130,16 @@ Exact plan-gate CI:
 - run `37989472394`;
 - conclusion: success.
 
-Task implementation evidence will be appended as Tasks 1-7 complete.
+Task 1: `394e91f` — Activate A009 integrated cognitive loop contracts. Full Task 1 gate: 401 passed; architecture/repository/A003/A008 gates PASS.
 
 ## Current Action
 
-Task 1 is ACTIVE: add the core integrated-loop contracts and task activation
-under TDD in the isolated A009 worktree.
+Task 2 is ACTIVE: compose deterministic A005 vector retrieval, A006 `SINGLE_BEST`, and A007 initial structural expansion without changing their historical semantics.
 
 ## Next Action
 
-Complete Task 1 RED -> GREEN gates and commit
-`Activate A009 integrated cognitive loop contracts`, then continue Task 2
-without pausing.
+Complete Task 2 RED -> GREEN gates and commit
+`Add A009 integrated retrieval expansion`, then continue Task 3 without pausing.
 
 ## Resume Rule
 

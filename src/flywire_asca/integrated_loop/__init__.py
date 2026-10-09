@@ -27,3 +27,18 @@ __all__ = [
     "ModelUsePolicy",
     "RecoveryCause",
 ]
+from .retrieval import (
+    IntegratedRetrievalContext,
+    IntegratedRetrievalCue,
+    IntegratedRetrievalCueTier,
+    evaluate_integrated_scope,
+    run_initial_integrated_expansion,
+)
+
+__all__ += [
+    "IntegratedRetrievalContext",
+    "IntegratedRetrievalCue",
+    "IntegratedRetrievalCueTier",
+    "evaluate_integrated_scope",
+    "run_initial_integrated_expansion",
+]
