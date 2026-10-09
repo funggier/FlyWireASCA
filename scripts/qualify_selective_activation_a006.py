@@ -39,6 +39,16 @@ A006_MAX_WORKING_SET_ITEMS = 4
 SELECTOR_PROFILE = "a006-selective-convergence-v1"
 EMBEDDING_PROFILE = "qwen3-embedding-0.6b-vector-memory-v1"
 FIXTURE_VERSION = "a006-physical-v1"
+EXPECTED_FIXTURE_FINGERPRINT = "e51fea2e58186e94d7affc964509e96d96fc656759677d7dcc073e5b36b91035"
+EXPECTED_CASE_IDS = (
+    "physical-en-convergence",
+    "physical-th-convergence",
+    "physical-cross-lingual-convergence",
+    "physical-same-name-ambiguity",
+    "physical-budget-truncation",
+    "physical-no-hit",
+    "physical-convergence-recovery-challenge",
+)
 BASE_URL = "http://127.0.0.1:11434"
 TIMEOUT_SECONDS = 120.0
 
@@ -60,6 +70,49 @@ class PhysicalSelectiveCase:
     ambiguity_expected: bool = False
     strict_budget_expected: bool = False
     convergence_recovery_challenge: bool = False
+
+
+class _RecordingEmbeddingAdapter:
+    def __init__(self, delegate) -> None:
+        self._delegate = delegate
+        self._request_count = 0
+        self._input_count = 0
+        self._prompt_tokens_total = 0
+        self._prompt_tokens_observed_response_count = 0
+        self._total_duration_ns_total = 0
+        self._total_duration_observed_response_count = 0
+        self._load_duration_ns_total = 0
+        self._load_duration_observed_response_count = 0
+
+    def inspect(self):
+        return self._delegate.inspect()
+
+    def embed(self, request):
+        response = self._delegate.embed(request)
+        self._request_count += 1
+        self._input_count += response.input_count
+        if response.prompt_tokens is not None:
+            self._prompt_tokens_total += response.prompt_tokens
+            self._prompt_tokens_observed_response_count += 1
+        if response.total_duration_ns is not None:
+            self._total_duration_ns_total += response.total_duration_ns
+            self._total_duration_observed_response_count += 1
+        if response.load_duration_ns is not None:
+            self._load_duration_ns_total += response.load_duration_ns
+            self._load_duration_observed_response_count += 1
+        return response
+
+    def metrics(self) -> dict[str, int]:
+        return {
+            "embedding_request_count": self._request_count,
+            "embedding_input_count": self._input_count,
+            "prompt_tokens_total": self._prompt_tokens_total,
+            "prompt_tokens_observed_response_count": self._prompt_tokens_observed_response_count,
+            "total_duration_ns_total": self._total_duration_ns_total,
+            "total_duration_observed_response_count": self._total_duration_observed_response_count,
+            "load_duration_ns_total": self._load_duration_ns_total,
+            "load_duration_observed_response_count": self._load_duration_observed_response_count,
+        }
 
 
 def _doc(
@@ -486,9 +539,67 @@ def run_physical_experiment(adapter) -> dict[str, object]:
             for result in results
         ),
         "cases": list(results),
+        "embedding_metrics": (
+            adapter.metrics()
+            if hasattr(adapter, "metrics")
+            else {
+                "embedding_request_count": 0,
+                "embedding_input_count": 0,
+                "prompt_tokens_total": 0,
+                "prompt_tokens_observed_response_count": 0,
+                "total_duration_ns_total": 0,
+                "total_duration_observed_response_count": 0,
+                "load_duration_ns_total": 0,
+                "load_duration_observed_response_count": 0,
+            }
+        ),
         "hypothesis_outcome": outcome,
         "experiment_valid": True,
     }
+
+
+def validate_physical_experiment(experiment: dict[str, object]) -> list[str]:
+    errors: list[str] = []
+    if experiment.get("fixture_version") != FIXTURE_VERSION:
+        errors.append("fixture_version must match the frozen A006 physical fixture")
+    if experiment.get("fixture_fingerprint") != EXPECTED_FIXTURE_FINGERPRINT:
+        errors.append("fixture_fingerprint must match the frozen A006 physical fixture")
+    if tuple(experiment.get("case_ids", ())) != EXPECTED_CASE_IDS:
+        errors.append("case_ids must match the frozen A006 physical fixture")
+    if experiment.get("ambiguity_failure_count") != 0:
+        errors.append("ambiguity failure count must be 0")
+    if experiment.get("no_selection_failure_count") != 0:
+        errors.append("no-selection failure count must be 0")
+    expected_strict_budget_count = sum(
+        int(case.strict_budget_expected)
+        for case in build_physical_fixture()
+    )
+    if experiment.get("strict_budget_observation_count") != expected_strict_budget_count:
+        errors.append(
+            "strict-budget observation count must equal the frozen fixture expectation"
+        )
+    if experiment.get("deterministic_repeat_match") is not True:
+        errors.append("deterministic repeated selector result must match")
+
+    metrics = experiment.get("embedding_metrics")
+    if not isinstance(metrics, dict):
+        errors.append("embedding_metrics must be present")
+    else:
+        request_count = metrics.get("embedding_request_count")
+        input_count = metrics.get("embedding_input_count")
+        if (
+            not isinstance(request_count, int)
+            or isinstance(request_count, bool)
+            or request_count <= 0
+        ):
+            errors.append("embedding_request_count must be positive")
+        if (
+            not isinstance(input_count, int)
+            or isinstance(input_count, bool)
+            or input_count <= 0
+        ):
+            errors.append("embedding_input_count must be positive")
+    return errors
 
 
 def validate_descriptor(descriptor: EmbeddingDescriptor) -> list[str]:
@@ -598,14 +709,14 @@ def main(argv: list[str] | None = None) -> int:
 
     descriptor: EmbeddingDescriptor | None = None
     try:
-        adapter = OllamaEmbeddingAdapter(
+        base_adapter = OllamaEmbeddingAdapter(
             args.model,
             base_url=args.base_url,
             expected_digest=args.expected_digest,
             expected_dimension=args.expected_dimension,
             timeout_seconds=args.timeout_seconds,
         )
-        descriptor = adapter.inspect()
+        descriptor = base_adapter.inspect()
         errors = validate_descriptor(descriptor)
         if errors:
             payload = _base_payload(
@@ -616,9 +727,20 @@ def main(argv: list[str] | None = None) -> int:
             _emit(payload, args.output)
             return 1
 
+        adapter = _RecordingEmbeddingAdapter(base_adapter)
         experiment = run_physical_experiment(adapter)
-        if not experiment.get("deterministic_repeat_match", True):
-            raise ValueError("physical selector repeated execution is nondeterministic")
+        experiment_errors = validate_physical_experiment(experiment)
+        if experiment_errors:
+            payload = _base_payload(
+                descriptor=descriptor,
+                experiment_valid=False,
+                errors=experiment_errors,
+            )
+            payload.update(experiment)
+            payload["experiment_valid"] = False
+            payload["errors"] = experiment_errors
+            _emit(payload, args.output)
+            return 1
         payload = _base_payload(
             descriptor=descriptor,
             experiment_valid=bool(experiment.get("experiment_valid", True)),

@@ -11,6 +11,7 @@ from flywire_asca.contracts import ActivationBudget, MemoryKind, MemoryRecord
 from flywire_asca.embedding import (
     EmbeddingDescriptor,
     EmbeddingInputKind,
+    EmbeddingRequest,
     EmbeddingResponse,
     normalize_embedding_values,
 )
@@ -195,20 +196,12 @@ def test_main_valid_negative_result_exits_zero_and_writes_byte_identical_utf8(mo
             )
 
     monkeypatch.setattr(module, "OllamaEmbeddingAdapter", FakePhysicalAdapter)
+    payload = _valid_physical_payload(module)
+    payload["cases"] = [{"case_id": "physical-th-convergence", "note": "ภาษาไทย"}]
     monkeypatch.setattr(
         module,
         "run_physical_experiment",
-        lambda adapter: {
-            "fixture_version": module.FIXTURE_VERSION,
-            "case_ids": ["physical-th-convergence"],
-            "required_memory_coverage": 1.0,
-            "convergence_recovery_count": 0,
-            "convergence_regression_count": 0,
-            "active_state_reduction_ratio": 0.5,
-            "cases": [{"case_id": "physical-th-convergence", "note": "ภาษาไทย"}],
-            "hypothesis_outcome": "NOT_SUPPORTED",
-            "experiment_valid": True,
-        },
+        lambda adapter: payload,
     )
     output = tmp_path / "evidence.json"
     rc = module.main(["--output", str(output)])
@@ -276,3 +269,153 @@ def test_budget_truncation_case_does_not_label_an_arbitrary_equal_status_note_as
     )
     assert case.strict_budget_expected is True
     assert case.required_memory_ids == ()
+
+
+def _valid_physical_payload(module):
+    cases = module.build_physical_fixture()
+    return {
+        "fixture_version": module.FIXTURE_VERSION,
+        "fixture_fingerprint": module._fixture_fingerprint(cases),
+        "case_ids": [case.case_id for case in cases],
+        "required_memory_coverage": 1.0,
+        "convergence_recovery_count": 0,
+        "convergence_regression_count": 0,
+        "ambiguity_failure_count": 0,
+        "no_selection_failure_count": 0,
+        "strict_budget_observation_count": sum(
+            int(case.strict_budget_expected) for case in cases
+        ),
+        "total_positive_candidates": 10,
+        "total_selected_items": 5,
+        "active_state_reduction_ratio": 0.5,
+        "deterministic_repeat_match": True,
+        "embedding_metrics": {
+            "embedding_request_count": 2,
+            "embedding_input_count": 3,
+            "prompt_tokens_total": 12,
+            "prompt_tokens_observed_response_count": 2,
+            "total_duration_ns_total": 100,
+            "total_duration_observed_response_count": 2,
+            "load_duration_ns_total": 20,
+            "load_duration_observed_response_count": 2,
+        },
+        "cases": [{"case_id": "physical-th-convergence", "note": "ภาษาไทย"}],
+        "hypothesis_outcome": "NOT_SUPPORTED",
+        "experiment_valid": True,
+    }
+
+
+def test_final_physical_fixture_fingerprint_is_pinned():
+    module = _load_module()
+    assert module._fixture_fingerprint(module.build_physical_fixture()) == (
+        "e51fea2e58186e94d7affc964509e96d96fc656759677d7dcc073e5b36b91035"
+    )
+
+
+@pytest.mark.parametrize(
+    "field, bad_value, error_text",
+    [
+        ("fixture_version", "drifted", "fixture_version"),
+        ("fixture_fingerprint", "wrong", "fixture_fingerprint"),
+        ("case_ids", ["wrong-case"], "case_ids"),
+        ("ambiguity_failure_count", 1, "ambiguity"),
+        ("no_selection_failure_count", 1, "no-selection"),
+        ("strict_budget_observation_count", 0, "strict-budget"),
+        ("deterministic_repeat_match", False, "deterministic"),
+    ],
+)
+def test_main_fails_closed_for_invalid_physical_engineering_evidence(
+    monkeypatch,
+    capsys,
+    field,
+    bad_value,
+    error_text,
+):
+    module = _load_module()
+
+    class FakePhysicalAdapter:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def inspect(self):
+            return EmbeddingDescriptor(
+                backend_name="ollama",
+                backend_version="0.32.15",
+                model_name=module.MODEL_NAME,
+                model_digest=module.EXPECTED_DIGEST,
+                architecture="qwen3",
+                parameter_count=595776512,
+                parameter_size="639M",
+                quantization="Q8_0",
+                context_length=32768,
+                embedding_dimension=1024,
+                capabilities=("embedding",),
+            )
+
+    payload = _valid_physical_payload(module)
+    payload[field] = bad_value
+    monkeypatch.setattr(module, "OllamaEmbeddingAdapter", FakePhysicalAdapter)
+    monkeypatch.setattr(module, "run_physical_experiment", lambda adapter: payload)
+
+    rc = module.main([])
+    emitted = json.loads(capsys.readouterr().out)
+
+    assert rc == 1
+    assert emitted["experiment_valid"] is False
+    assert any(error_text in error for error in emitted["errors"])
+
+
+def test_recording_embedding_adapter_preserves_response_and_records_available_metrics():
+    module = _load_module()
+
+    class Delegate:
+        def inspect(self):
+            return EmbeddingDescriptor(
+                backend_name="fake",
+                backend_version="1",
+                model_name="fake",
+                model_digest="digest",
+                architecture="fake",
+                parameter_count=None,
+                parameter_size=None,
+                quantization=None,
+                context_length=100,
+                embedding_dimension=2,
+                capabilities=("embedding",),
+            )
+
+        def embed(self, request):
+            vectors = tuple(
+                normalize_embedding_values((1.0, 0.0))
+                for _ in request.texts
+            )
+            return EmbeddingResponse(
+                request_id=request.request_id,
+                model_name="fake",
+                model_digest="digest",
+                vectors=vectors,
+                input_count=len(vectors),
+                prompt_tokens=7,
+                total_duration_ns=50,
+                load_duration_ns=10,
+            )
+
+    recorder = module._RecordingEmbeddingAdapter(Delegate())
+    request = EmbeddingRequest(
+        "metrics",
+        EmbeddingInputKind.DOCUMENT,
+        ("one", "two"),
+    )
+    response = recorder.embed(request)
+
+    assert response.request_id == "metrics"
+    assert recorder.metrics() == {
+        "embedding_request_count": 1,
+        "embedding_input_count": 2,
+        "prompt_tokens_total": 7,
+        "prompt_tokens_observed_response_count": 1,
+        "total_duration_ns_total": 50,
+        "total_duration_observed_response_count": 1,
+        "load_duration_ns_total": 10,
+        "load_duration_observed_response_count": 1,
+    }
