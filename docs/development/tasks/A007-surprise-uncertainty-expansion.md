@@ -35,8 +35,8 @@ judge expansion.
 - Structural trigger derivation / controller: DONE.
 - Bounded policy runner / controls: DONE.
 - Portable benchmark / engineering qualification: DONE.
-- Physical A005+A006+A007 qualification: ACTIVE.
-- Exact qualification / review / integration: PLANNED.
+- Physical A005+A006+A007 qualification: DONE.
+- Exact qualification / review / integration: ACTIVE.
 
 ## Frozen Primary Profile
 
@@ -87,15 +87,81 @@ Activation baseline:
 - A005 threshold: `0.5037018224299838`;
 - FlyWireLLM: paused/untouched.
 
+Physical qualification on behavior commit
+`c29563fc3c2cf643338fdb21021d2f9e834d1cde`:
+
+- experiment validity: PASS;
+- primary A007 hypothesis outcome: `SUPPORTED`;
+- fixture version: `a007-physical-v1`;
+- fixture fingerprint:
+  `59f95ef115534fe24e59570cb281c0564ab75aadf364f4c26feba0d4078213c9`;
+- primary selector: `SINGLE_BEST`;
+- model: `qwen3-embedding:0.6b`;
+- full digest:
+  `ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d`;
+- Ollama runtime: `0.32.15`;
+- embedding dimension: 1024;
+- threshold: `0.5037018224299838`;
+- NO_EXPANSION required-memory coverage:
+  `0.5714285714285714`;
+- SIGNAL_DRIVEN required-memory coverage: `1.0`;
+- ALWAYS_EXPAND required-memory coverage: `1.0`;
+- SIGNAL_DRIVEN recovery count: 3;
+- SIGNAL_DRIVEN regression count: 0;
+- easy unnecessary expansion count: 0;
+- persistent-insufficient expected/exhausted: 1/1;
+- ambiguity failure count: 0;
+- deterministic logical replay: PASS;
+- total rounds:
+  - NO_EXPANSION: 8;
+  - SIGNAL_DRIVEN: 15;
+  - ALWAYS_EXPAND: 24.
+
+Shared case-setup/index-build embedding evidence:
+
+- requests: 8;
+- inputs: 32;
+- prompt tokens: 499;
+- total duration: 4,385,491,900 ns;
+- load duration: 2,614,980,600 ns.
+
+Per-policy query evidence, excluding shared index build:
+
+- NO_EXPANSION:
+  - requests/inputs: 8/8;
+  - prompt tokens: 239;
+  - total duration: 984,632,200 ns;
+  - load duration: 11,766,700 ns;
+- SIGNAL_DRIVEN:
+  - requests/inputs: 24/24;
+  - prompt tokens: 727;
+  - total duration: 1,075,732,500 ns;
+  - load duration: 34,764,300 ns;
+- ALWAYS_EXPAND:
+  - requests/inputs: 48/48;
+  - prompt tokens: 1,512;
+  - total duration: 2,871,959,400 ns;
+  - load duration: 70,010,300 ns.
+
+Recovery cases were English, Thai, and cross-lingual; each failed to select
+the declared required memory under NO_EXPANSION and recovered it under
+SIGNAL_DRIVEN by round 1. The two easy cases stopped at round 0. The same-name
+case preserved both memories. The persistent-insufficient case terminated
+`CONTROLLER_EXHAUSTED` after round 2.
+
+These request/input/token/timing values are workload-specific local backend
+evidence. They are not FLOP, power, energy, or general speed claims.
+
 ## Current Action
 
-Implement Task 5 frozen physical A005+A006+A007 qualification runner under
-TDD, keeping shared index-build cost separate from per-policy query cost.
+Run Task 6 exact branch qualification on the physically qualified A007
+candidate, publish the branch for exact portable CI, then write closure
+evidence and perform whole-branch review.
 
 ## Next Action
 
-After physical evidence is recorded, run exact branch qualification, write the
-A007 closure report, review the whole branch, and prepare integration.
+After exact branch CI is GREEN, transition A007 DONE / A008 PLANNED, perform
+the required whole-branch review/fix pass, and prepare integration.
 
 The next milestone after qualified A007 remains A008 — Procedural Memory /
 Skill Chunking.
