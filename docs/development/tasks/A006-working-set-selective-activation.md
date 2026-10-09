@@ -81,15 +81,15 @@ Approved implementation plan:
 
 Branch candidate:
 
-`94fff83a950cfc720c6afa0bc1e6b23fd904268d`
+`224864cc9d70228d4feb80a9fcbc07f2776808d3`
 
 Exact branch CI:
 
-`37924130826` — success
+`37927165972` — success
 
 Fresh branch tests:
 
-- pytest: 225 passed
+- pytest: 238 passed
 - architecture audit: PASS
 - repository qualifier: PASS
 - A003 familiarity qualification: PASS
@@ -124,6 +124,11 @@ Physical qualification on behavior commit
 - aggregate active-state reduction:
   `0.35294117647058826`
 - deterministic repeat: PASS
+- embedding requests: 21
+- embedding inputs: 52
+- prompt tokens: 943
+- total duration: 4,527,985,600 ns across 21 responses
+- load duration: 1,570,494,900 ns across 13 reported responses
 
 The physical result is valid negative research evidence: convergence changed
 some ordering but did not recover a required memory that SINGLE_BEST omitted

@@ -65,14 +65,17 @@ def test_readme_records_a006_result_without_claiming_compute_or_generation_gain(
 
 def test_a006_closure_report_records_exact_branch_portable_and_physical_evidence():
     text = _read(REPORT)
-    assert "94fff83a950cfc720c6afa0bc1e6b23fd904268d" in text
-    assert "225 passed" in text
-    assert "37924130826" in text
+    assert "224864cc9d70228d4feb80a9fcbc07f2776808d3" in text
+    assert "238 passed" in text
+    assert "37927165972" in text
     assert "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d" in text
     assert "0.5037018224299838" in text
     assert "e51fea2e58186e94d7affc964509e96d96fc656759677d7dcc073e5b36b91035" in text
     assert "0.942652329749104" in text
     assert "0.35294117647058826" in text
+    assert "embedding request count: 21" in text
+    assert "embedding input count: 52" in text
+    assert "prompt tokens total: 943" in text
     assert "Final A006 hypothesis outcome: `NOT_SUPPORTED`" in text
     assert "convergence recovery count: 0" in text
     assert "convergence regression count: 0" in text

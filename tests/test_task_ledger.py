@@ -140,6 +140,6 @@ def test_a006_closure_report_records_selective_activation_result():
     report = ROOT / "docs" / "development" / "reports" / "ASCA-20261009-A006-working-set-selective-activation.md"
     assert report.exists(), "A006 closure report must exist"
     text = report.read_text(encoding="utf-8")
-    assert "94fff83a950cfc720c6afa0bc1e6b23fd904268d" in text
-    assert "37924130826" in text
+    assert "224864cc9d70228d4feb80a9fcbc07f2776808d3" in text
+    assert "37927165972" in text
     assert "Final A006 hypothesis outcome: `NOT_SUPPORTED`" in text

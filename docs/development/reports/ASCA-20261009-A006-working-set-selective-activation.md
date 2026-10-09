@@ -9,11 +9,11 @@ Branch: research/a006-working-set
 
 A006 engineering qualification is GREEN on exact branch candidate:
 
-`94fff83a950cfc720c6afa0bc1e6b23fd904268d`
+`224864cc9d70228d4feb80a9fcbc07f2776808d3`
 
 Exact branch CI run:
 
-`37924130826` — success
+`37927165972` — success
 
 The A006 mechanism is implemented and qualified as a deterministic bounded
 working-set selector. The physical research hypothesis is intentionally
@@ -206,6 +206,14 @@ Metrics:
 - total selected working-set items: 22
 - aggregate active-state reduction ratio: 0.35294117647058826
 - deterministic repeated selector output: PASS
+- embedding request count: 21
+- embedding input count: 52
+- prompt tokens total: 943 across 21 responses
+- total duration: 4,527,985,600 ns across 21 responses
+- load duration: 1,570,494,900 ns across 13 responses where the backend reported it
+
+These token/timing values are backend evidence for this local physical run only;
+they are not FLOP, power, energy, or general performance claims.
 
 The real fixture therefore showed a 35.29% reduction from positive unique
 candidates to selected working-set items while preserving all declared required
@@ -311,11 +319,11 @@ The final live run was executed on that committed behavior.
 
 Candidate SHA:
 
-`94fff83a950cfc720c6afa0bc1e6b23fd904268d`
+`224864cc9d70228d4feb80a9fcbc07f2776808d3`
 
 Fresh local gates:
 
-- `python -m pytest -q`: **225 passed**
+- `python -m pytest -q`: **238 passed**
 - `python scripts/audit_architecture_contract.py`:
   **architecture_contract_audit=PASS**
 - `python scripts/qualify_repository.py`:
@@ -327,11 +335,45 @@ Fresh local gates:
 Exact branch CI:
 
 - workflow: CI
-- run: `37924130826`
-- head SHA: `94fff83a950cfc720c6afa0bc1e6b23fd904268d`
+- run: `37927165972`
+- head SHA: `224864cc9d70228d4feb80a9fcbc07f2776808d3`
 - conclusion: **success**
 
 GitHub CI remains portable and does not run local A004/A005/A006 physical
+qualification.
+
+## Whole-branch review findings
+
+A separate reviewer/subagent facility was not available in the current harness,
+so the final review was performed as a dedicated whole-branch author review
+against the approved spec and plan rather than being conflated with
+implementation.
+
+That review found two Important issues before merge:
+
+1. the physical CLI previously rejected nondeterminism but could still emit
+   `experiment_valid=true` when frozen fixture identity, ambiguity preservation,
+   no-hit behavior, or strict-budget evidence drifted;
+2. A006 physical evidence did not retain the embedding request/input and
+   token/timing metadata exposed by A005's `EmbeddingResponse`.
+
+Both were fixed in:
+
+`224864cc9d70228d4feb80a9fcbc07f2776808d3`
+
+The fix adds fail-closed physical engineering validation while keeping
+`SUPPORTED` / `MIXED` / `NOT_SUPPORTED` as research outcomes. A structurally
+valid `NOT_SUPPORTED` experiment therefore still exits 0.
+
+It also wraps the existing A005 embedding adapter only for evidence collection;
+A005 adapter/index implementation remains unchanged.
+
+Focused review regressions passed 10/10 and the fresh full suite passed
+238/238 before the physical rerun.
+
+One Minor note remains deferred: internal `_CandidateMetadata.memory_kind` is
+annotated as `object`; runtime type safety is still enforced by
+`VectorMemoryHit` and `MemoryActivationSupport`, so this does not affect A006
 qualification.
 
 ## Isolation evidence
