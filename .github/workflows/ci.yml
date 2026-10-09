@@ -36,5 +36,8 @@ jobs:
       - name: Qualify A003 familiarity benchmark
         run: python scripts/run_familiarity_benchmark_a003.py --qualify
 
+      - name: Qualify A008 procedural memory
+        run: python scripts/qualify_procedural_memory_a008.py
+
       - name: Check whitespace
         run: git diff --check HEAD^ HEAD

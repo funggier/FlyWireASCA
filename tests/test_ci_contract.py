@@ -61,3 +61,20 @@ def test_ci_keeps_a007_uncertainty_expansion_physical_qualification_local_only()
     assert "localhost" not in text
     assert "python -m pytest -q" in text
     assert "python scripts/run_familiarity_benchmark_a003.py --qualify" in text
+
+def test_ci_runs_a008_deterministic_procedural_qualification():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    lower = text.lower()
+    assert "python scripts/qualify_procedural_memory_a008.py" in text
+    assert "python -m pytest -q" in text
+    assert "python scripts/audit_architecture_contract.py" in text
+    assert "python scripts/qualify_repository.py" in text
+    assert "python scripts/run_familiarity_benchmark_a003.py --qualify" in text
+    assert "qualify_qwen_a004.py" not in lower
+    assert "qualify_vector_memory_a005.py" not in lower
+    assert "qualify_selective_activation_a006.py" not in lower
+    assert "qualify_uncertainty_expansion_a007.py" not in lower
+    assert "ollama pull" not in lower
+    assert "ollama run" not in lower
+    assert "127.0.0.1:11434" not in lower
+    assert "localhost" not in lower

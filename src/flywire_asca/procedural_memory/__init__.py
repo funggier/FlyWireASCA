@@ -1,3 +1,14 @@
+from .benchmark import (
+    ProceduralBenchmarkCase,
+    ProceduralBenchmarkCaseResult,
+    ProceduralBenchmarkReport,
+    ProceduralModeCaseResult,
+    build_a008_fixture,
+    classify_a008_hypothesis,
+    fixture_fingerprint,
+    qualify_a008_report,
+    run_a008_benchmark,
+)
 from .runner import ProcedureExecutor, run_procedure
 from .simulator import DeterministicProcedureSimulator
 from .verifier import verify_outcome
@@ -28,6 +39,15 @@ from .models import (
 )
 
 __all__ = [
+    "ProceduralBenchmarkCase",
+    "ProceduralBenchmarkCaseResult",
+    "ProceduralBenchmarkReport",
+    "ProceduralModeCaseResult",
+    "build_a008_fixture",
+    "classify_a008_hypothesis",
+    "fixture_fingerprint",
+    "qualify_a008_report",
+    "run_a008_benchmark",
     "ProcedureExecutor",
     "run_procedure",
     "DeterministicProcedureSimulator",
