@@ -32,8 +32,8 @@ FlyWireLLM remains paused and untouched.
 
 - Models / ProcedureLibrary / flattening / activation: DONE.
 - Exact verifier / deterministic simulator: DONE.
-- FLAT / CHUNKED / BLIND_CHUNKED runner: ACTIVE.
-- Deterministic benchmark / qualification CLI / CI: PLANNED.
+- FLAT / CHUNKED / BLIND_CHUNKED runner: DONE.
+- Deterministic benchmark / qualification CLI / CI: ACTIVE.
 - Exact branch qualification / report / closure transition: PLANNED.
 - Whole-branch review / integration: PLANNED.
 
@@ -75,12 +75,12 @@ Activation base:
 
 ## Current Action
 
-Implement Task 3 FLAT / CHUNKED / BLIND_CHUNKED execution and interruption
-metrics under TDD.
+Implement Task 4 frozen deterministic benchmark, qualification CLI, and CI
+gate under TDD.
 
 ## Next Action
 
-After Task 3 is GREEN, implement the frozen deterministic benchmark and
-qualification CLI in CI.
+After deterministic qualification is GREEN, write exact branch evidence and
+A008 closure report.
 
 A009 — Integrated Cognitive Loop remains PLANNED with no issue.

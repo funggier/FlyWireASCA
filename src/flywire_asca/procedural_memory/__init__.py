@@ -1,3 +1,4 @@
+from .runner import ProcedureExecutor, run_procedure
 from .simulator import DeterministicProcedureSimulator
 from .verifier import verify_outcome
 from .library import (
@@ -12,10 +13,14 @@ from .models import (
     OutcomeMatcherKind,
     OutcomeVerification,
     ProcedureDefinition,
+    ProcedureExecutionMetrics,
     ProcedureExecutionMode,
+    ProcedureExecutionResult,
     ProcedureExecutionState,
+    ProcedureInterruption,
     ProcedureStep,
     ProcedureStepKind,
+    StepExecutionResult,
     SimulatedActionDefinition,
     SimulatedCompletionProbe,
     SimulatedFailureOverride,
@@ -23,6 +28,8 @@ from .models import (
 )
 
 __all__ = [
+    "ProcedureExecutor",
+    "run_procedure",
     "DeterministicProcedureSimulator",
     "verify_outcome",
     "ExpectedOutcome",
@@ -30,11 +37,15 @@ __all__ = [
     "OutcomeMatcherKind",
     "OutcomeVerification",
     "ProcedureDefinition",
+    "ProcedureExecutionMetrics",
     "ProcedureExecutionMode",
+    "ProcedureExecutionResult",
     "ProcedureExecutionState",
+    "ProcedureInterruption",
     "ProcedureLibrary",
     "ProcedureStep",
     "ProcedureStepKind",
+    "StepExecutionResult",
     "SimulatedActionDefinition",
     "SimulatedCompletionProbe",
     "SimulatedFailureOverride",
