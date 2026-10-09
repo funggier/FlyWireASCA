@@ -1,23 +1,21 @@
 # Current Development Task
 
-Current task: A005
-Status: ACTIVE
-GitHub Issue: #5
-Branch: research/a005-vector-memory
+Current task: A006
+Status: PLANNED
+GitHub Issue: not created
 
 ## Current Action
 
-Implement A005 — Semantic Vector Memory Retrieval using the approved Vector +
-Metadata spec and Native implementation plan.
+No implementation task is active. A005 has an exact qualified closure candidate
+and must complete whole-branch review/integration gates before A006 begins.
 
 ## Next Action
 
-Complete generic embedding contracts, then implement the Ollama embedding
-adapter, exact vector-memory index, benchmark/calibration, physical embedding
-qualification, and evidence-based graph decision.
+After A005 final main CI and synchronization are GREEN, design and activate
+A006 — Working Set / Selective Activation as a separate task/branch.
 
 ## Resume Rule
 
-Read this file, the A005 task file, approved A005 spec/plan, and live
-Git/GitHub/Ollama state before action. Do not introduce graph traversal inside
-A005. FlyWireLLM training remains paused and must not be restarted by A005.
+Read this file, the A005 closure report, live Git/GitHub/Ollama state, and the
+paused FlyWireLLM state before action. Do not auto-create a graph milestone;
+the A005 controlled-fixture verdict is evidence-scoped.

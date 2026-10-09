@@ -13,12 +13,11 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_exactly_one_active_task_a005():
+def test_current_points_to_exactly_one_next_planned_task_a006():
     text = _read("CURRENT.md")
-    assert "Current task: A005" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #5" in text
-    assert "Branch: research/a005-vector-memory" in text
+    assert "Current task: A006" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert text.count("Current task:") == 1
 
 
@@ -127,3 +126,12 @@ def test_a004_closure_report_records_qwen_physical_qualification():
     assert "37891675731" in text
     assert "pass_rate: 1.0" in text
     assert "FlyWireLLM" in text
+
+def test_a005_closure_report_records_vector_retrieval_decision():
+    report = ROOT / "docs" / "development" / "reports" / "ASCA-20261009-A005-vector-memory-retrieval.md"
+    assert report.exists(), "A005 closure report must exist"
+    text = report.read_text(encoding="utf-8")
+    assert "78099fe3e36e8e1292085425f1553a05b95a820e" in text
+    assert "37906978728" in text
+    assert "0.5037018224299838" in text
+    assert "VECTOR_SUFFICIENT" in text

@@ -41,13 +41,14 @@ Start with:
 
 ## Current stage
 
-A005 — Semantic Vector Memory Retrieval.
+A005 — Semantic Vector Memory Retrieval is in closure/integration; A006 —
+Working Set / Selective Activation remains planned.
 
-A001-A004 are complete. A005 tests a **Vector + Metadata** retrieval path with
-a backend-neutral embedding interface and deterministic exact-cosine baseline.
-A typed graph is **deferred** until A005 evidence shows whether explicit
-relation/path semantics are actually necessary. The qualified generative
-model-under-test remains local `qwen3.5:4b` from A004.
+A005 qualifies a **Vector + Metadata** retrieval path with a backend-neutral
+embedding interface and deterministic exact-cosine baseline. Its current
+controlled-fixture verdict is `VECTOR_SUFFICIENT`, so a typed graph is still
+deferred rather than auto-created. This verdict is evidence-scoped and may be
+revisited by later relational or multi-hop experiments.
 
 ## Claims boundary
 

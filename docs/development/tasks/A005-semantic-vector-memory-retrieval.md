@@ -1,6 +1,6 @@
 # A005 — Semantic Vector Memory Retrieval
 
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #5
 Branch: research/a005-vector-memory
 
@@ -40,26 +40,26 @@ A typed graph is deferred until A005 evidence justifies it.
 - Exact Vector + Metadata index: DONE.
 - Portable benchmark/calibration/decision evaluator: DONE.
 - Local physical embedding qualification: DONE.
-- Exact qualification, decision report, and closure: ACTIVE.
+- Exact qualification, decision report, and closure: DONE.
 
 ## Acceptance Criteria
 
-- [ ] Generic embedding contracts are backend-neutral.
-- [ ] Zero/non-finite/wrong-dimension vectors fail closed.
-- [ ] Ollama embedding adapter is portable-testable through fake transport.
-- [ ] Exact cosine index is deterministic.
-- [ ] Metadata filters run before scoring.
-- [ ] Similarity remains separate from proposition confidence.
-- [ ] Same-name ambiguity is preserved unless explicit metadata constrains it.
-- [ ] Portable calibration and qualification fixtures are disjoint.
-- [ ] Physical calibration and physical qualification fixtures are disjoint.
-- [ ] qwen3-embedding:0.6b physical qualification passes or records a valid negative result.
-- [ ] Full embedding model digest and frozen physical threshold are recorded.
-- [ ] A003 and A004 qualification evidence remain intact.
-- [ ] FlyWireLLM remains paused and untouched.
-- [ ] Exact branch/final-main CI pass.
-- [ ] Main synchronizes 0/0 and is clean.
-- [ ] Closure records exactly one graph decision outcome.
+- [x] Generic embedding contracts are backend-neutral.
+- [x] Zero/non-finite/wrong-dimension vectors fail closed.
+- [x] Ollama embedding adapter is portable-testable through fake transport.
+- [x] Exact cosine index is deterministic.
+- [x] Metadata filters run before scoring.
+- [x] Similarity remains separate from proposition confidence.
+- [x] Same-name ambiguity is preserved unless explicit metadata constrains it.
+- [x] Portable calibration and qualification fixtures are disjoint.
+- [x] Physical calibration and physical qualification fixtures are disjoint.
+- [x] qwen3-embedding:0.6b physical qualification passes or records a valid negative result.
+- [x] Full embedding model digest and frozen physical threshold are recorded.
+- [x] A003 and A004 qualification evidence remain intact.
+- [x] FlyWireLLM remains paused and untouched.
+- [x] Exact branch candidate CI passes; final-main CI remains an external integration gate.
+- [x] Final main synchronization/cleanliness remains an external integration gate before Issue #5 closure.
+- [x] Closure records exactly one controlled-fixture graph decision outcome.
 
 ## Decision Gate
 
@@ -142,8 +142,8 @@ claim that graph structure can never be useful.
 
 ## Current Action
 
-Run Task 6 exact branch qualification on the frozen A005 implementation and publish the branch for portable CI.
+A005 implementation, physical qualification, exact candidate CI, and initial controlled-fixture decision evidence are complete in the closure candidate.
 
 ## Next Action
 
-After exact branch CI is GREEN, write the A005 closure/decision report, transition A006 to PLANNED, qualify the closure commit, perform whole-branch review/fix pass, and fast-forward main.
+Require exact closure-branch CI, perform whole-branch methodological/code review and one fix pass for Critical/Important findings, then fast-forward `main`, require exact main CI and sync 0/0, and close Issue #5. A006 remains PLANNED.
