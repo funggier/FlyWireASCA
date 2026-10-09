@@ -4,6 +4,7 @@ Current task: A009
 Status: PLANNED
 GitHub Issue: not created
 A008 deterministic qualification: GREEN
+A008 main integration: GREEN
 
 ## Current Action
 

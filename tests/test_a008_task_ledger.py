@@ -106,3 +106,21 @@ def test_a008_task_marks_whole_branch_review_resolved():
     assert "- [x] Whole-branch review Critical/Important findings resolved." in text
     assert "b0ad2f1abed08683ea8218861c97f3c2d47384d3" in text
     assert "37959983484" in text
+
+def test_a008_report_records_main_integration_evidence():
+    text=read(REPORT_A008)
+    assert "Main integration evidence" in text
+    assert "0142973814fb67dd28a54fa454f25fa88f7dfcd9" in text
+    assert "37961029994" in text
+    assert "383 passed" in text
+    assert "SUPPORTED" in text
+    task=read(TASKS/"A008-procedural-memory-skill-chunking.md")
+    assert "First final-main CI: DONE" in task
+
+
+def test_current_records_a008_main_integration_green_without_starting_a009():
+    text=read(TASKS/"CURRENT.md")
+    assert "Current task: A009" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
+    assert "A008 main integration: GREEN" in text

@@ -82,6 +82,16 @@ Post-review exact branch CI:
 
 `37959983484` — success
 
+Merged main behavior/evidence SHA:
+
+`0142973814fb67dd28a54fa454f25fa88f7dfcd9`
+
+First final-main CI: DONE
+
+- exact CI: `37961029994` — success;
+- merged-main local suite: `383 passed`;
+- deterministic A008 outcome: `SUPPORTED`.
+
 Whole-branch review resolved three Important findings: max_call_depth cap
 enforcement, invalid-library reuse-metric contamination, and impossible
 count/reuse qualification payload relationships. The required post-review
@@ -104,13 +114,13 @@ Exact branch qualification evidence:
 
 ## Current Action
 
-A008 whole-branch review, RED->GREEN hardening, post-review deterministic
-qualification, and exact post-review branch CI are GREEN. Prepare the
-post-review evidence commit and final integration.
+A008 review, post-review qualification, fast-forward main integration,
+merged-main local gates, and first final-main CI are GREEN. Prepare the
+main integration-evidence commit and exact CI.
 
 ## Next Action
 
 A009 — Integrated Cognitive Loop remains PLANNED with no issue. Do not start it
-until A008 final-main CI, Issue #8 closure, and synchronization are GREEN.
+until A008 integration-evidence CI, final ledger CI, Issue #8 closure, and synchronization are GREEN.
 
 A009 — Integrated Cognitive Loop remains PLANNED with no issue.

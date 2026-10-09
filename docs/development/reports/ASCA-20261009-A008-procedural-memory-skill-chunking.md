@@ -321,3 +321,37 @@ Fresh post-review local gates:
 These review fixes do not change the A008 mechanism conclusion or claims
 boundary. They strengthen enforcement of the already-approved architecture and
 qualification evidence contract.
+
+## Main integration evidence
+
+A008 was fast-forward integrated into `main` from the reviewed branch.
+
+Merged main behavior/evidence SHA:
+
+`0142973814fb67dd28a54fa454f25fa88f7dfcd9`
+
+Fresh local merged-main gates:
+
+- deterministic A008 qualification: `SUPPORTED`;
+- `python -m pytest -q`: **383 passed**;
+- architecture contract audit: PASS;
+- repository qualification: PASS;
+- A003 familiarity qualification: PASS;
+- `git diff --check origin/main..HEAD`: PASS;
+- main worktree: clean before push.
+
+Exact first final-main CI:
+
+- run: `37961029994`;
+- head SHA: `0142973814fb67dd28a54fa454f25fa88f7dfcd9`;
+- conclusion: **success**.
+
+The merged-main qualification retained the frozen fixture fingerprint and the
+same mechanism result: FLAT / CHUNKED root-visible dispatches 13 / 8,
+maximum deliberative compression 2.0, exact CHUNKED failure localization 1/1,
+and primary outcome `SUPPORTED`.
+
+This proves the reviewed A008 behavior tree passed the deterministic
+qualification and portable CI gates after integration into main. A
+documentation-only integration-evidence commit follows and must receive its
+own exact-main CI before Issue #8 is closed.
