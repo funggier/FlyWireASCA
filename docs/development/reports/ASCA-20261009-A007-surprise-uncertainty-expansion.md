@@ -437,3 +437,65 @@ A008 — Procedural Memory / Skill Chunking remains **PLANNED**.
 
 A008 may later provide real expected outcomes and execution failures that can
 support richer prediction-surprise semantics.
+
+## Whole-branch review and post-review qualification
+
+The required final whole-branch review was performed as a separate author
+self-review because no fresh reviewer/subagent tool was available in this
+harness.
+
+Two findings were graded **Important**:
+
+1. the physical validator accepted any vocabulary-valid hypothesis outcome and
+   did not recompute the frozen outcome from aggregate evidence, so
+   research-outcome drift could be emitted as structurally valid;
+2. metric validation accepted nonnegative counters without rejecting impossible
+   metric-counter relationships such as observed-response counts exceeding
+   embedding requests or positive embedding inputs with zero requests.
+
+Both findings were fixed under RED -> GREEN tests. The hardened behavior
+candidate is:
+
+`5495ca909d141a8ad27dd29863d3926f24254b46`
+
+The validator now:
+
+- recomputes the expected `SUPPORTED / MIXED / NOT_SUPPORTED` result from the
+  frozen recovery/regression/coverage/easy/persistent/round aggregates and
+  rejects research-outcome drift;
+- rejects impossible embedding metric-counter relationships while preserving
+  the setup-vs-policy accounting boundary.
+
+Exact post-review branch CI:
+
+`37942219656` — success
+
+Head SHA:
+
+`5495ca909d141a8ad27dd29863d3926f24254b46`
+
+Because validation behavior changed, the frozen physical qualification was run
+again on this post-review HEAD.
+
+Post-review physical rerun:
+
+- experiment validity: PASS;
+- primary outcome: `SUPPORTED`;
+- fixture fingerprint unchanged:
+  `59f95ef115534fe24e59570cb281c0564ab75aadf364f4c26feba0d4078213c9`;
+- SIGNAL_DRIVEN recovery count: 3;
+- SIGNAL_DRIVEN regression count: 0;
+- required-memory coverage NO/SIGNAL/ALWAYS:
+  `0.5714285714285714 / 1.0 / 1.0`;
+- easy unnecessary expansion count: 0;
+- persistent-insufficient exhaustion: 1/1;
+- ambiguity failures: 0;
+- deterministic logical replay: PASS;
+- rounds: 8/15/24 for NO_EXPANSION / SIGNAL_DRIVEN / ALWAYS_EXPAND;
+- setup embedding requests/inputs: 8/32;
+- SIGNAL_DRIVEN embedding requests/inputs: 24/24;
+- ALWAYS_EXPAND embedding requests/inputs: 48/48.
+
+Backend timing values varied between physical runs and are not part of the
+logical determinism claim. The frozen fixture, threshold, selector, scope ladder,
+required-memory outcomes, and policy-round aggregates remained unchanged.

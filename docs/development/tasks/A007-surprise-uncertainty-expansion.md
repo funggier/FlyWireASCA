@@ -69,7 +69,7 @@ A007 does not qualify scalar surprise or true prediction surprise.
 - [x] No typed graph or Qwen3.5:4b cue generation is introduced.
 - [x] FlyWireLLM remains paused and untouched.
 - [x] Exact branch CI passes.
-- [ ] Whole-branch review Critical/Important findings resolved.
+- [x] Whole-branch review Critical/Important findings resolved.
 - [ ] Final-main CI and clean/synchronized 0/0 integration gates pass.
 
 ## Evidence
@@ -144,13 +144,27 @@ Detailed report:
 
 `docs/development/reports/ASCA-20261009-A007-surprise-uncertainty-expansion.md`
 
+Post-review behavior candidate:
+
+`5495ca909d141a8ad27dd29863d3926f24254b46`
+
+Post-review exact branch CI:
+
+`37942219656` — success
+
+Whole-branch review resolved two Important findings: research-outcome drift in
+physical validation and impossible metric-counter relationships. Both were
+covered by RED -> GREEN regression tests. The required post-review physical
+rerun passed with the frozen fixture fingerprint unchanged and the same
+aggregate result: `SUPPORTED`, recovery 3, regression 0, rounds 8/15/24.
+
 ## Current Action
 
-A007 branch closure candidate is qualified. Perform the required whole-branch
-review/fix pass and post-review exact CI before integration.
+A007 whole-branch review, fix pass, post-review physical rerun, and exact branch
+CI are GREEN. Prepare the evidence-only branch commit and final integration.
 
 ## Next Action
 
-After review/integration gates are complete, A008 — Procedural Memory / Skill
-Chunking remains PLANNED as a separate architectural task. Do not create its
-GitHub issue automatically.
+After the evidence-only branch commit receives exact CI, fast-forward main,
+require final-main CI, close Issue #7, and leave A008 — Procedural Memory /
+Skill Chunking PLANNED with no issue.

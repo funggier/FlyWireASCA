@@ -113,3 +113,23 @@ def test_a006_negative_physical_result_remains_historical_evidence():
     text = _read(REPORT_A006)
     assert "Final A006 hypothesis outcome: `NOT_SUPPORTED`" in text
     assert "convergence recovery count: 0" in text
+
+def test_a007_report_records_post_review_hardening_and_physical_rerun():
+    text = _read(REPORT)
+    assert "5495ca909d141a8ad27dd29863d3926f24254b46" in text
+    assert "37942219656" in text
+    assert "Important" in text
+    assert "research-outcome drift" in text
+    assert "metric-counter relationships" in text
+    assert "post-review physical rerun" in text.lower()
+    assert "recovery count: 3" in text
+    assert "regression count: 0" in text
+    assert "rounds: 8/15/24" in text
+    assert "fixture fingerprint unchanged" in text.lower()
+
+
+def test_a007_task_marks_whole_branch_review_resolved():
+    text = _read(TASKS / "A007-surprise-uncertainty-expansion.md")
+    assert "- [x] Whole-branch review Critical/Important findings resolved." in text
+    assert "5495ca909d141a8ad27dd29863d3926f24254b46" in text
+    assert "37942219656" in text
