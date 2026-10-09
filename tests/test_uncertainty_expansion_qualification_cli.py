@@ -476,3 +476,47 @@ def test_main_identity_failure_exits_nonzero(monkeypatch, capsys):
     assert rc == 1
     assert payload["experiment_valid"] is False
     assert any("digest" in error for error in payload["errors"])
+
+def test_physical_validation_rejects_research_outcome_inconsistent_with_aggregates():
+    module = _load_module()
+    payload = _valid_physical_payload(module)
+    payload["signal_driven_recovery_count"] = 0
+    payload["hypothesis_outcome"] = "SUPPORTED"
+
+    errors = module.validate_physical_experiment(payload)
+
+    assert any("hypothesis_outcome" in error for error in errors)
+
+
+@pytest.mark.parametrize(
+    "mutator, match",
+    [
+        (
+            lambda p: p["setup_embedding_metrics"].update(
+                prompt_tokens_observed_response_count=9,
+            ),
+            "observed_response_count",
+        ),
+        (
+            lambda p: p["policy_embedding_metrics"]["SIGNAL_DRIVEN"].update(
+                total_duration_observed_response_count=10,
+            ),
+            "observed_response_count",
+        ),
+        (
+            lambda p: p["policy_embedding_metrics"]["NO_EXPANSION"].update(
+                embedding_request_count=0,
+                embedding_input_count=1,
+            ),
+            "embedding_input_count",
+        ),
+    ],
+)
+def test_physical_validation_rejects_impossible_metric_relationships(mutator, match):
+    module = _load_module()
+    payload = _valid_physical_payload(module)
+    mutator(payload)
+
+    errors = module.validate_physical_experiment(payload)
+
+    assert any(match in error for error in errors)

@@ -734,6 +734,45 @@ def _validate_metrics(name, metrics):
         value = metrics.get(key)
         if not isinstance(value, int) or isinstance(value, bool) or value < 0:
             errors.append(f"{name}.{key} must be a nonnegative integer")
+    if errors:
+        return errors
+
+    requests = metrics["embedding_request_count"]
+    inputs = metrics["embedding_input_count"]
+    if requests == 0 and inputs != 0:
+        errors.append(
+            f"{name}.embedding_input_count must be 0 when "
+            "embedding_request_count is 0"
+        )
+    if requests > 0 and inputs < requests:
+        errors.append(
+            f"{name}.embedding_input_count must be >= embedding_request_count"
+        )
+
+    observed_pairs = (
+        (
+            "prompt_tokens_observed_response_count",
+            "prompt_tokens_total",
+        ),
+        (
+            "total_duration_observed_response_count",
+            "total_duration_ns_total",
+        ),
+        (
+            "load_duration_observed_response_count",
+            "load_duration_ns_total",
+        ),
+    )
+    for observed_key, total_key in observed_pairs:
+        observed = metrics[observed_key]
+        if observed > requests:
+            errors.append(
+                f"{name}.{observed_key} must be <= embedding_request_count"
+            )
+        if observed == 0 and metrics[total_key] != 0:
+            errors.append(
+                f"{name}.{total_key} must be 0 when {observed_key} is 0"
+            )
     return errors
 
 
@@ -785,12 +824,102 @@ def validate_physical_experiment(payload):
                 )
             )
 
-    if payload.get("hypothesis_outcome") not in {
+    declared_outcome = payload.get("hypothesis_outcome")
+    if declared_outcome not in {
         "SUPPORTED",
         "MIXED",
         "NOT_SUPPORTED",
     }:
         errors.append("hypothesis_outcome must be SUPPORTED, MIXED, or NOT_SUPPORTED")
+
+    coverage = payload.get("required_memory_coverage")
+    coverage_valid = isinstance(coverage, dict)
+    if not coverage_valid:
+        errors.append("required_memory_coverage must be a policy coverage object")
+    else:
+        for policy in ExpansionPolicy:
+            value = coverage.get(policy.value)
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not 0.0 <= float(value) <= 1.0
+            ):
+                coverage_valid = False
+                errors.append(
+                    f"required_memory_coverage.{policy.value} must be within [0, 1]"
+                )
+
+    count_fields = (
+        "signal_driven_recovery_count",
+        "signal_driven_regression_count",
+        "easy_unnecessary_expansion_count",
+        "persistent_insufficient_expected_count",
+        "persistent_insufficient_exhausted_count",
+    )
+    counts_valid = True
+    for field in count_fields:
+        value = payload.get(field)
+        if (
+            not isinstance(value, int)
+            or isinstance(value, bool)
+            or value < 0
+        ):
+            counts_valid = False
+            errors.append(f"{field} must be a nonnegative integer")
+
+    total_rounds = payload.get("total_rounds")
+    rounds_valid = isinstance(total_rounds, dict)
+    if not rounds_valid:
+        errors.append("total_rounds must be a policy round-count object")
+    else:
+        for policy in ExpansionPolicy:
+            value = total_rounds.get(policy.value)
+            if (
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or value < 0
+            ):
+                rounds_valid = False
+                errors.append(
+                    f"total_rounds.{policy.value} must be a nonnegative integer"
+                )
+
+    if counts_valid:
+        persistent_expected = payload["persistent_insufficient_expected_count"]
+        persistent_exhausted = payload["persistent_insufficient_exhausted_count"]
+        if persistent_exhausted > persistent_expected:
+            counts_valid = False
+            errors.append(
+                "persistent_insufficient_exhausted_count must not exceed "
+                "persistent_insufficient_expected_count"
+            )
+
+    if (
+        declared_outcome in {"SUPPORTED", "MIXED", "NOT_SUPPORTED"}
+        and coverage_valid
+        and counts_valid
+        and rounds_valid
+    ):
+        expected_outcome = classify_hypothesis_outcome(
+            recovery_count=payload["signal_driven_recovery_count"],
+            regression_count=payload["signal_driven_regression_count"],
+            signal_coverage=float(coverage["SIGNAL_DRIVEN"]),
+            always_coverage=float(coverage["ALWAYS_EXPAND"]),
+            easy_unnecessary_expansion_count=(
+                payload["easy_unnecessary_expansion_count"]
+            ),
+            persistent_exhaustion_complete=(
+                payload["persistent_insufficient_exhausted_count"]
+                == payload["persistent_insufficient_expected_count"]
+            ),
+            signal_rounds=total_rounds["SIGNAL_DRIVEN"],
+            always_rounds=total_rounds["ALWAYS_EXPAND"],
+        )
+        if declared_outcome != expected_outcome:
+            errors.append(
+                "hypothesis_outcome is inconsistent with frozen aggregate "
+                f"evidence; expected {expected_outcome}"
+            )
     return errors
 
 
