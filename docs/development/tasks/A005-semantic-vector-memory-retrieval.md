@@ -119,26 +119,31 @@ Physical final-qualification evidence:
 - implementation/pin commit: `7dfd4b0f477128007eae4c14c7e8948d610c18f3`;
 - experiment validity: PASS;
 - retrieval qualification: PASS;
-- physical qualification cases: 6/6 passed;
+- initial physical qualification: 6/6 passed on pin commit `7dfd4b0f477128007eae4c14c7e8948d610c18f3`;
+- final review identified missing physical no-hit and relation/multi-memory challenge coverage;
+- reviewed implementation: `e5536d983b45e241dda2e9d740cdc792adbd9ae7`;
+- post-review physical qualification: **8/8 passed** with the same frozen threshold;
 - Recall@1: `1.0` on cases where Recall@1 is declared;
 - Recall@K: `1.0`;
 - mean reciprocal rank: `1.0`;
+- measured physical no-hit correctness: `1.0`;
 - metadata-filter correctness: `1.0`;
 - false retrieval count: `0`;
 - ambiguity failure count: `0`;
-- relation-semantic failure count: `0` on the declared physical fixture;
-- scalability warning count: `0` on the declared six-document fixture;
-- embedding request count: `7`;
-- embedding input count: `12`;
-- stored memory count: `6`;
-- vector-scored total: `31`;
+- relation-semantic failure count: `0`;
+- scalability warning count: `0` on the declared eight-document fixture;
+- embedding request count: `9`;
+- embedding input count: `16`;
+- stored memory count: `8`;
+- vector-scored total: `57`;
 - vector health: 16/16 finite, nonzero, dimension 1024, unit-normalized;
-- graph decision: `VECTOR_SUFFICIENT` for the controlled A005 physical fixture.
+- post-review branch CI run `37907918470`: success;
+- graph decision: `VECTOR_SUFFICIENT` for A005 **retrieval scope**.
 
-The physical fixture did not exercise every possible relational or multi-hop
-failure mode. `VECTOR_SUFFICIENT` therefore means that a typed graph is not
-justified by the **current declared A005 evidence**; it is not a universal
-claim that graph structure can never be useful.
+The reviewed physical fixture now exercises both no-hit behavior and a
+multi-memory relation-evidence challenge. The relation challenge proves that
+both required memories can be retrieved; it does not claim that vector
+similarity performs downstream relational inference.
 
 ## Current Action
 

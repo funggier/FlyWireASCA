@@ -15,15 +15,22 @@ The candidate passed portable repository qualification, local physical
 embedding calibration, and the declared six-case physical vector-memory
 qualification using a threshold frozen before the final physical fixture ran.
 
-This report records the initial controlled-fixture decision. The whole-branch
-review is still required before final integration and may invalidate or narrow
-this decision if it finds a methodological or implementation gap.
+The initial closure candidate was later subjected to a separate whole-branch
+methodological/code review. That review found two Important evidence gaps and
+fixed both in one RED→GREEN pass. The reviewed implementation is:
+
+`e5536d983b45e241dda2e9d740cdc792adbd9ae7`
+
+It passed full local qualification, a fresh physical embedding/retrieval run,
+and exact branch CI run `37907918470`.
 
 Final graph decision: `VECTOR_SUFFICIENT`
 
-This decision is scoped to the declared A005 controlled evidence. It means the
-current experiments do not justify adding a typed graph yet. It does **not**
-claim that explicit relation/path semantics are universally unnecessary.
+This decision is scoped to **A005 retrieval** and the declared controlled
+evidence. It means the current experiments do not justify adding a typed graph
+for retrieval yet. It does **not** claim that explicit relation/path semantics
+are universally unnecessary, nor that vector retrieval alone performs
+relational reasoning.
 
 ## Delivered subsystem
 
@@ -172,32 +179,43 @@ cases. The threshold was not tuned after the qualification fixture was scored.
 
 ## Physical final qualification
 
-Implementation/pin commit used for physical qualification:
+The initial physical run used implementation/pin commit:
 
 `7dfd4b0f477128007eae4c14c7e8948d610c18f3`
 
-Only documentation changed between that implementation commit and the exact
-branch candidate.
+It passed the original six cases, but the final review correctly identified
+that those cases did not physically exercise no-hit behavior or give the graph
+decision a real relation/multi-memory challenge.
 
-Physical final result:
+The single review fix pass added those two challenge classes without changing
+the embedding model, digest, physical development fixture, or frozen threshold.
+
+Reviewed implementation:
+
+`e5536d983b45e241dda2e9d740cdc792adbd9ae7`
+
+Reviewed physical result:
 
 - experiment validity: PASS
 - retrieval qualification: PASS
-- cases: **6/6**
+- cases: **8/8**
+- frozen threshold: `0.5037018224299838` (unchanged)
 - Recall@1: 1.0 on cases declaring one best result
 - Recall@K: 1.0
 - mean reciprocal rank: 1.0
+- measured physical no-hit correctness: 1.0
 - metadata-filter correctness: 1.0
 - false retrieval count: 0
 - ambiguity failure count: 0
-- relation-semantic failure count: 0 on this declared fixture
-- scalability warning count: 0 on this six-document fixture
-- embedding requests: 7
-- embedding inputs: 12
-- stored documents: 6
-- vectors scored across queries: 31
+- relation-semantic failure count: 0
+- scalability warning count: 0 on the declared eight-document fixture
+- embedding requests: 9
+- embedding inputs: 16
+- stored documents: 8
+- vectors scored across queries: 57
+- vector health: 16/16 finite, nonzero, dimension 1024, unit-normalized
 
-Physical qualification cases:
+Reviewed physical qualification cases:
 
 1. English paraphrase -> red-scooter memory — PASS
 2. Thai paraphrase -> green-parrot memory — PASS
@@ -205,11 +223,14 @@ Physical qualification cases:
 4. English query -> Thai meeting-room memory — PASS
 5. same-name Somchai ambiguity -> both candidate memories preserved — PASS
 6. explicit entity filter -> only `person-b` memory eligible/scored — PASS
+7. relation/multi-memory challenge -> both bicycle-owner and Ayutthaya-trip
+   memories retrieved under fixed Top-K/threshold — PASS
+8. no-hit challenge -> zero memories returned above the frozen threshold — PASS
 
-The physical fixture does not contain a no-hit case. The benchmark report
-currently emits its neutral aggregate default for unexercised no-hit metrics;
-this report therefore does **not** present physical no-hit correctness as
-measured evidence. Portable qualification does exercise no-hit behavior.
+The relation challenge is intentionally interpreted as **retrieval evidence**:
+A005 proved that the two memories needed by a later reasoning stage were both
+retrievable. A005 does not claim that vector similarity itself performed the
+ownership/path inference.
 
 ## Similarity and confidence boundary
 
@@ -243,22 +264,50 @@ FlyWireLLM was inspected read-only before A005 branch publication:
 
 FlyWireLLM remains paused and was not started, stopped, or mutated by A005.
 
-## Initial graph decision rationale
+## Whole-branch review and final graph-decision rationale
 
-The declared A005 controlled evidence shows:
+A fresh reviewer/subagent dispatcher was not available in this harness, so the
+mandatory final review was performed as a separate author self-review over the
+whole A005 branch. This limitation is recorded explicitly.
 
-- strong same-language semantic retrieval;
+Two Important findings were reproduced and fixed in one pass:
+
+1. **Physical no-hit evidence gap.** The original physical fixture had no
+   no-hit case, so a neutral aggregate value could be mistaken for measured
+   evidence. A physical no-hit case was added; it returned zero memories above
+   the already-frozen threshold.
+2. **Graph-decision reachability gap.** The original physical fixture had no
+   relation/multi-memory case marked as requiring relational evidence, making
+   `GRAPH_JUSTIFIED` unreachable from real physical evidence. A fixed
+   relation challenge was added. The query required both an ownership memory
+   and a trip memory; both were retrieved under the unchanged threshold, so the
+   relation-semantic failure count remained zero.
+
+The review fix was observed RED before implementation, GREEN afterward, then
+validated by the full suite, a new physical run, and exact CI.
+
+Post-review branch CI:
+
+- run id: `37907918470`
+- exact SHA: `e5536d983b45e241dda2e9d740cdc792adbd9ae7`
+- conclusion: success
+
+The reviewed controlled evidence now shows:
+
+- same-language semantic retrieval;
 - Thai/English cross-lingual retrieval;
 - same-name ambiguity preservation;
 - explicit metadata disambiguation;
-- no false retrievals in the declared portable/physical positive fixtures;
-- no current controlled case proving a need for typed relation traversal.
+- measured no-hit behavior;
+- multi-memory relation-evidence retrieval;
+- no false retrievals in the declared physical fixture;
+- no current retrieval case demonstrating that typed graph traversal is
+  required.
 
-Therefore the initial controlled-fixture result remains `VECTOR_SUFFICIENT`.
-
-This means continue without automatically creating a graph milestone. A later
-experiment may still justify a graph if reproducible multi-memory,
-causal/temporal/ownership/path failures appear.
+Therefore A005 retains `VECTOR_SUFFICIENT` for **retrieval scope** and does
+not auto-create a graph milestone. A later reasoning/integration experiment
+may still justify graph structure if it shows reproducible causal, temporal,
+ownership, or path failures beyond what evidence retrieval alone can solve.
 
 ## Deferred scope
 

@@ -53,7 +53,7 @@ def test_a005_closure_report_records_exact_candidate_physical_and_ci_evidence():
     assert "37906978728" in text
     assert "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d" in text
     assert "0.5037018224299838" in text
-    assert "6/6" in text
+    assert "8/8" in text
     assert "VECTOR_SUFFICIENT" in text
     assert "controlled" in text.lower()
     assert "FlyWireLLM" in text
