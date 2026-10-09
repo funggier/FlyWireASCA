@@ -39,8 +39,8 @@ A typed graph is deferred until A005 evidence justifies it.
 - Ollama embedding adapter: DONE.
 - Exact Vector + Metadata index: DONE.
 - Portable benchmark/calibration/decision evaluator: DONE.
-- Local physical embedding qualification: ACTIVE.
-- Exact qualification, decision report, and closure: PLANNED.
+- Local physical embedding qualification: DONE.
+- Exact qualification, decision report, and closure: ACTIVE.
 
 ## Acceptance Criteria
 
@@ -112,12 +112,38 @@ Physical development-calibration evidence:
 - physical development threshold: `0.5037018224299838`;
 - threshold origin: `physical_development_fixture_v1`;
 - calibration case IDs: `physical-cal-bike`, `physical-cal-cat`;
-- final physical qualification fixture is separate and has not been run yet.
+- final physical qualification fixture is separate and has now been run with the frozen threshold.
+
+Physical final-qualification evidence:
+
+- implementation/pin commit: `7dfd4b0f477128007eae4c14c7e8948d610c18f3`;
+- experiment validity: PASS;
+- retrieval qualification: PASS;
+- physical qualification cases: 6/6 passed;
+- Recall@1: `1.0` on cases where Recall@1 is declared;
+- Recall@K: `1.0`;
+- mean reciprocal rank: `1.0`;
+- metadata-filter correctness: `1.0`;
+- false retrieval count: `0`;
+- ambiguity failure count: `0`;
+- relation-semantic failure count: `0` on the declared physical fixture;
+- scalability warning count: `0` on the declared six-document fixture;
+- embedding request count: `7`;
+- embedding input count: `12`;
+- stored memory count: `6`;
+- vector-scored total: `31`;
+- vector health: 16/16 finite, nonzero, dimension 1024, unit-normalized;
+- graph decision: `VECTOR_SUFFICIENT` for the controlled A005 physical fixture.
+
+The physical fixture did not exercise every possible relational or multi-hop
+failure mode. `VECTOR_SUFFICIENT` therefore means that a typed graph is not
+justified by the **current declared A005 evidence**; it is not a universal
+claim that graph structure can never be useful.
 
 ## Current Action
 
-Implement Task 5 local physical embedding/vector-memory qualification CLI under TDD, then inspect/pull and qualify `qwen3-embedding:0.6b`.
+Run Task 6 exact branch qualification on the frozen A005 implementation and publish the branch for portable CI.
 
 ## Next Action
 
-After physical development calibration freezes the real threshold and the disjoint physical qualification fixture runs, begin exact branch qualification and closure.
+After exact branch CI is GREEN, write the A005 closure/decision report, transition A006 to PLANNED, qualify the closure commit, perform whole-branch review/fix pass, and fast-forward main.
