@@ -133,3 +133,20 @@ def test_a007_task_marks_whole_branch_review_resolved():
     assert "- [x] Whole-branch review Critical/Important findings resolved." in text
     assert "5495ca909d141a8ad27dd29863d3926f24254b46" in text
     assert "37942219656" in text
+
+def test_a007_report_records_merged_main_integration_evidence():
+    text = _read(REPORT)
+    assert "Main integration evidence" in text
+    assert "61cf9053b39f8d4aed413058cd99e4ec664c8a42" in text
+    assert "37945417867" in text
+    assert "318 passed" in text
+    task = _read(TASKS / "A007-surprise-uncertainty-expansion.md")
+    assert "- [x] Final-main CI and clean/synchronized 0/0 integration gates pass." in task
+
+
+def test_current_no_longer_says_a007_integration_is_pending():
+    text = _read(TASKS / "CURRENT.md")
+    assert "Current task: A008" in text
+    assert "Status: PLANNED" in text
+    assert "A007 integration: GREEN" in text
+    assert "must complete whole-branch review" not in text

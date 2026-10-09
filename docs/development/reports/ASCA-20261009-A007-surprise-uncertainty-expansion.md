@@ -499,3 +499,32 @@ Post-review physical rerun:
 Backend timing values varied between physical runs and are not part of the
 logical determinism claim. The frozen fixture, threshold, selector, scope ladder,
 required-memory outcomes, and policy-round aggregates remained unchanged.
+
+## Main integration evidence
+
+A007 was fast-forward integrated into `main` from the reviewed branch.
+
+Merged main behavior/evidence SHA:
+
+`61cf9053b39f8d4aed413058cd99e4ec664c8a42`
+
+Fresh local merged-main gates:
+
+- `python -m pytest -q`: **318 passed**;
+- architecture contract audit: PASS;
+- repository qualification: PASS;
+- A003 familiarity qualification: PASS;
+- `git diff --check origin/main..HEAD`: PASS;
+- main worktree: clean before push;
+- main was synchronized 0/0 before integration.
+
+Exact first final-main CI:
+
+- run: `37945417867`;
+- head SHA: `61cf9053b39f8d4aed413058cd99e4ec664c8a42`;
+- conclusion: **success**.
+
+This proves the reviewed A007 tree passed the portable CI gates after
+fast-forward integration into main. A documentation-only closure-evidence
+commit may follow and is required to receive its own exact-main CI before
+Issue #7 is closed.

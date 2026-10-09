@@ -70,7 +70,7 @@ A007 does not qualify scalar surprise or true prediction surprise.
 - [x] FlyWireLLM remains paused and untouched.
 - [x] Exact branch CI passes.
 - [x] Whole-branch review Critical/Important findings resolved.
-- [ ] Final-main CI and clean/synchronized 0/0 integration gates pass.
+- [x] Final-main CI and clean/synchronized 0/0 integration gates pass.
 
 ## Evidence
 
