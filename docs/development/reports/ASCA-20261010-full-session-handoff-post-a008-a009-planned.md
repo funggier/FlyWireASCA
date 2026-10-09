@@ -1,7 +1,7 @@
 # FlyWireASCA Full Session Handoff — Post-A008 / A009 Planned
 
-Date: 2026-10-10  
-Repository: `funggier/FlyWireASCA`  
+Date: 2026-10-10
+Repository: `funggier/FlyWireASCA`
 Local repository: `T:\Space\Projects\ProjectsAI\FlyWireASCA`
 
 ## 1. Read this first
