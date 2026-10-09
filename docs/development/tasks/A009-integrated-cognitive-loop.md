@@ -134,14 +134,16 @@ Task 1: `394e91f` — Activate A009 integrated cognitive loop contracts. Full Ta
 
 Task 2: `80b4ac1` — Add A009 integrated retrieval expansion. Full Task 2 gate: 410 passed; architecture/repository/A003/A008 gates PASS.
 
+Task 3: `931211e` — Add A009 context-bound procedure replay. Full Task 3 gate: 417 passed; architecture/repository/A008 gates PASS.
+
 ## Current Action
 
-Task 3 is ACTIVE: add context-bound deterministic procedure execution and prove every higher-level replay starts from the same immutable pre-execution snapshot.
+Task 4 is ACTIVE: implement the bounded integrated cognitive controller, mismatch-driven recovery policies, deterministic trace, and terminal-only model gate.
 
 ## Next Action
 
-Complete Task 3 RED -> GREEN gates and commit
-`Add A009 context-bound procedure replay`, then continue Task 4 without pausing.
+Complete Task 4 RED -> GREEN gates and commit
+`Add A009 bounded cognitive controller`, then continue Task 5 without pausing.
 
 ## Resume Rule
 

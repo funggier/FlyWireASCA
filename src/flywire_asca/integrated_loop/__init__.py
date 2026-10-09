@@ -53,3 +53,9 @@ __all__ += [
     "ContextBoundProcedureExecutor",
     "ContextBoundProcedureExecutorFactory",
 ]
+from .controller import MemoryContextProvider, run_cognitive_loop
+
+__all__ += [
+    "MemoryContextProvider",
+    "run_cognitive_loop",
+]
