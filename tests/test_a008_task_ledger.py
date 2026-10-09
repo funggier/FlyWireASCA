@@ -124,3 +124,17 @@ def test_current_records_a008_main_integration_green_without_starting_a009():
     assert "Status: PLANNED" in text
     assert "GitHub Issue: not created" in text
     assert "A008 main integration: GREEN" in text
+
+def test_a008_report_records_closure_evidence_main_ci():
+    text=read(REPORT_A008)
+    assert "Closure-evidence main CI" in text
+    assert "1972c98b1b7d1346bd4b66458ac92b4ef00e11cd" in text
+    assert "37961779986" in text
+    task=read(TASKS/"A008-procedural-memory-skill-chunking.md")
+    assert "Final closure-evidence main CI: DONE" in task
+
+
+def test_a008_all_acceptance_criteria_closed_before_issue_closure():
+    text=read(TASKS/"A008-procedural-memory-skill-chunking.md")
+    acceptance=text.split("## Acceptance Criteria",1)[1].split("## Evidence",1)[0]
+    assert "- [ ]" not in acceptance

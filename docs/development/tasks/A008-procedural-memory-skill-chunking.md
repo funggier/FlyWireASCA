@@ -55,7 +55,7 @@ FlyWireLLM remains paused and untouched.
 - [x] No real tool/model/Ollama/graph dependency is introduced.
 - [x] FlyWireLLM remains paused/untouched.
 - [x] Whole-branch review Critical/Important findings resolved.
-- [ ] Exact branch/review/final-main CI and synchronization gates pass.
+- [x] Exact branch/review/final-main CI and synchronization gates pass.
 
 ## Evidence
 
@@ -92,6 +92,15 @@ First final-main CI: DONE
 - merged-main local suite: `383 passed`;
 - deterministic A008 outcome: `SUPPORTED`.
 
+Main integration evidence commit:
+
+`1972c98b1b7d1346bd4b66458ac92b4ef00e11cd`
+
+Final closure-evidence main CI: DONE
+
+- exact CI: `37961779986` — success;
+- main was clean/synchronized 0/0 before the final ledger transition.
+
 Whole-branch review resolved three Important findings: max_call_depth cap
 enforcement, invalid-library reuse-metric contamination, and impossible
 count/reuse qualification payload relationships. The required post-review
@@ -114,13 +123,13 @@ Exact branch qualification evidence:
 
 ## Current Action
 
-A008 review, post-review qualification, fast-forward main integration,
-merged-main local gates, and first final-main CI are GREEN. Prepare the
-main integration-evidence commit and exact CI.
+A008 implementation, review/fix pass, deterministic rerun, branch CI, main
+integration, first final-main CI, and closure-evidence main CI are GREEN.
+Prepare the final integration-ledger commit and its exact CI.
 
 ## Next Action
 
 A009 — Integrated Cognitive Loop remains PLANNED with no issue. Do not start it
-until A008 integration-evidence CI, final ledger CI, Issue #8 closure, and synchronization are GREEN.
+until A008 final integration-ledger CI, Issue #8 closure, and synchronization are GREEN.
 
 A009 — Integrated Cognitive Loop remains PLANNED with no issue.

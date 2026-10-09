@@ -355,3 +355,23 @@ This proves the reviewed A008 behavior tree passed the deterministic
 qualification and portable CI gates after integration into main. A
 documentation-only integration-evidence commit follows and must receive its
 own exact-main CI before Issue #8 is closed.
+
+## Closure-evidence main CI
+
+The documentation-only main integration evidence commit is:
+
+`1972c98b1b7d1346bd4b66458ac92b4ef00e11cd`
+
+Exact CI for that evidence commit:
+
+- run: `37961779986`;
+- head SHA: `1972c98b1b7d1346bd4b66458ac92b4ef00e11cd`;
+- conclusion: **success**.
+
+Before this final ledger transition, main was clean and synchronized 0/0 with
+origin/main at the evidence commit. The deterministic A008 qualification
+remained `SUPPORTED` with the frozen fingerprint unchanged.
+
+One final integration-ledger commit records this CI. Issue #8 remains open until
+that final ledger commit also receives exact-main CI and main is again verified
+clean/synchronized 0/0.
