@@ -1,31 +1,37 @@
 # Current Development Task
 
-Current task: A009
-Status: ACTIVE
-GitHub Issue: #9
-Branch: research/a009-integrated-cognitive-loop
+Current task: A010
+Status: PLANNED
+GitHub Issue: not created
+
 A008 deterministic qualification: GREEN
 A008 main integration: GREEN
+A009 deterministic qualification: GREEN
+A009 physical qualification: GREEN
+A009 exact branch CI: GREEN
 
 ## Current Action
 
-A009 — Integrated Cognitive Loop is active from exact activation base
-`8d0721a77abaae5d0cc6d6c7c81d4795c5d355fa`. The approved design and
-implementation plan are committed, exact activation-base CI `37989472394`
-succeeded, Issue #9 is open, and implementation is isolated on
-`research/a009-integrated-cognitive-loop`.
+A009 — Integrated Cognitive Loop has a qualified closure candidate with primary
+outcome `SUPPORTED`. The exact qualified branch candidate is
+`eecca7d842753fd2b39e8c565c704fb2e6303896`, exact branch CI
+`37992245085` succeeded, and local physical A005/A004 integration is GREEN.
 
-Task 1 is implementing immutable A009 request/evidence/trace/result contracts
-and activating the task ledger under TDD.
+A010 — Dense/Non-selective Baseline Comparison remains PLANNED. No A010 GitHub
+issue has been created.
+
+A009 GitHub Issue #9 remains open until whole-branch review, reviewed fast-forward
+integration to main, exact final-main CI, and final synchronization are GREEN.
 
 ## Next Action
 
-Complete A009 Task 1 gates, commit the activation/contracts checkpoint, then
-continue Task 2 retrieval/expansion integration.
+Finish A009 Task 7 whole-branch review and final-main integration evidence.
+After A009 Issue #9 is closed on exact final-main evidence, A010 may be
+activated under a separate design/plan/task gate.
 
 ## Resume Rule
 
-Read the latest full-session handoff, the approved A009 design/plan, the A009
-task ledger, and live Git/GitHub state before action. Treat Git/GitHub/runtime
-as authoritative over stale documentation. Do not reset/clean/rebase/force
-push, do not resume A008 Task 4, and keep FlyWireLLM untouched.
+Treat live Git/GitHub/runtime as authoritative over stale prose. Do not
+reset/clean/rebase/force-push. Preserve A006 `NOT_SUPPORTED`, A007
+`SUPPORTED`, A008 `SUPPORTED`, and A009 portable `SUPPORTED`. Keep
+FlyWireLLM untouched.

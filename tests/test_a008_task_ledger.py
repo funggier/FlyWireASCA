@@ -6,17 +6,18 @@ A007=ROOT/"docs"/"development"/"reports"/"ASCA-20261009-A007-surprise-uncertaint
 
 def read(p): return p.read_text(encoding="utf-8")
 
-def test_current_preserves_a008_green_while_a009_is_active():
+def test_current_preserves_a008_green_after_a009_closure():
     text=read(TASKS/"CURRENT.md")
-    assert "Current task: A009" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #9" in text
+    assert "Current task: A010" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert "A008 deterministic qualification: GREEN" in text
 
-def test_roadmap_a008_done_a009_active_a011_planned():
+def test_roadmap_a008_a009_done_a010_a011_planned():
     text=read(TASKS/"ROADMAP.md")
     assert "| A008 | Procedural Memory / Skill Chunking | DONE |" in text
-    assert "| A009 | Integrated Cognitive Loop | ACTIVE |" in text
+    assert "| A009 | Integrated Cognitive Loop | DONE |" in text
+    assert "| A010 | Dense/Non-selective Baseline Comparison | PLANNED |" in text
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
 
 def test_a008_task_records_approved_boundaries():
@@ -33,10 +34,11 @@ def test_a008_task_records_approved_boundaries():
     assert "retry" in text.lower()
     assert "FlyWireLLM" in text and "paused" in text.lower()
 
-def test_readme_current_stage_a009_preserves_a008_result():
+def test_readme_current_stage_preserves_a008_result_after_a009_closure():
     text=read(ROOT/"README.md")
     assert "A009" in text
     assert "Integrated Cognitive Loop" in text
+    assert "SUPPORTED" in text
     assert "A008" in text
     assert "CHUNKED" in text
 
@@ -67,16 +69,16 @@ def test_a008_report_has_exactly_one_primary_outcome():
     assert "Final A008 hypothesis outcome: `MIXED`" not in text
     assert "Final A008 hypothesis outcome: `NOT_SUPPORTED`" not in text
 
-def test_a008_closure_remains_historical_after_a009_activation():
+def test_a008_closure_remains_historical_after_a009_closure():
     task=read(TASKS/"A008-procedural-memory-skill-chunking.md")
     assert "Status: DONE" in task
     roadmap=read(TASKS/"ROADMAP.md")
     assert "| A008 | Procedural Memory / Skill Chunking | DONE |" in roadmap
-    assert "| A009 | Integrated Cognitive Loop | ACTIVE |" in roadmap
+    assert "| A009 | Integrated Cognitive Loop | DONE |" in roadmap
     current=read(TASKS/"CURRENT.md")
-    assert "Current task: A009" in current
-    assert "Status: ACTIVE" in current
-    assert "GitHub Issue: #9" in current
+    assert "Current task: A010" in current
+    assert "Status: PLANNED" in current
+    assert "GitHub Issue: not created" in current
 
 def test_a008_report_keeps_claims_and_integration_boundaries():
     text=read(REPORT_A008).lower()
@@ -119,11 +121,11 @@ def test_a008_report_records_main_integration_evidence():
     assert "First final-main CI: DONE" in task
 
 
-def test_current_records_a008_main_integration_green_during_a009():
+def test_current_records_a008_main_integration_green_after_a009_closure():
     text=read(TASKS/"CURRENT.md")
-    assert "Current task: A009" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #9" in text
+    assert "Current task: A010" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert "A008 main integration: GREEN" in text
 
 def test_a008_report_records_closure_evidence_main_ci():

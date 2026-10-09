@@ -1,6 +1,6 @@
 # A009 — Integrated Cognitive Loop
 
-Status: ACTIVE
+Status: DONE (closure candidate; Issue #9 remains open until exact final-main evidence)
 GitHub Issue: #9
 Branch: research/a009-integrated-cognitive-loop
 
@@ -92,26 +92,26 @@ Baseline before Task 1 implementation:
 
 ## Acceptance Criteria
 
-- [ ] Immutable A009 request/evidence/trace/result contracts validated.
-- [ ] A003 familiarity is integrated without acting as a semantic-retrieval veto.
-- [ ] A005 real vector-index path is exercised in portable integration.
-- [ ] A006 `SINGLE_BEST` is the primary selector.
-- [ ] A007 `SIGNAL_DRIVEN` remains the initial structural-expansion policy.
-- [ ] A007 trigger vocabulary remains unchanged.
-- [ ] A008 `CHUNKED` remains the primary procedure mode.
-- [ ] A008 performs zero hidden automatic retry.
-- [ ] Procedure mismatch becomes typed A009 recovery evidence.
-- [ ] Recovery advances exactly one frozen scope at a time.
-- [ ] Every replay has a unique execution ID and fresh snapshot-based executor.
-- [ ] Maximum procedure attempts is 3.
-- [ ] Deterministic portable A009 fixture is frozen and fingerprinted.
-- [ ] Primary outcome is exactly SUPPORTED/MIXED/NOT_SUPPORTED.
-- [ ] Valid MIXED/NOT_SUPPORTED is accepted as research evidence.
-- [ ] Physical A005/A004 integration is qualified locally when prerequisites match.
-- [ ] Model output is proven non-controlling.
-- [ ] No real OS/API/LConnect/BConnect procedure action is introduced.
-- [ ] A006/A007/A008 historical outcomes remain unchanged.
-- [ ] FlyWireLLM remains untouched.
+- [x] Immutable A009 request/evidence/trace/result contracts validated.
+- [x] A003 familiarity is integrated without acting as a semantic-retrieval veto.
+- [x] A005 real vector-index path is exercised in portable integration.
+- [x] A006 `SINGLE_BEST` is the primary selector.
+- [x] A007 `SIGNAL_DRIVEN` remains the initial structural-expansion policy.
+- [x] A007 trigger vocabulary remains unchanged.
+- [x] A008 `CHUNKED` remains the primary procedure mode.
+- [x] A008 performs zero hidden automatic retry.
+- [x] Procedure mismatch becomes typed A009 recovery evidence.
+- [x] Recovery advances exactly one frozen scope at a time.
+- [x] Every replay has a unique execution ID and fresh snapshot-based executor.
+- [x] Maximum procedure attempts is 3.
+- [x] Deterministic portable A009 fixture is frozen and fingerprinted.
+- [x] Primary outcome is exactly SUPPORTED/MIXED/NOT_SUPPORTED.
+- [x] Valid MIXED/NOT_SUPPORTED is accepted as research evidence.
+- [x] Physical A005/A004 integration is qualified locally when prerequisites match.
+- [x] Model output is proven non-controlling.
+- [x] No real OS/API/LConnect/BConnect procedure action is introduced.
+- [x] A006/A007/A008 historical outcomes remain unchanged.
+- [x] FlyWireLLM remains untouched.
 - [ ] Exact branch CI, whole-branch review, final-main CI and synchronization pass.
 
 ## Evidence
@@ -138,14 +138,47 @@ Task 3: `931211e` — Add A009 context-bound procedure replay. Full Task 3 gate:
 
 Task 4: `7b3b35a` — Add A009 bounded cognitive controller. Full Task 4 gate: 428 passed; architecture/repository/A003/A008 gates PASS.
 
+Task 5: `eecca7d842753fd2b39e8c565c704fb2e6303896` — Add A009 integrated loop qualification. Frozen fixture fingerprint: `2f92b5092de346f62879ac2cbb9f96d6de5d6f919e12d0693345c8228b01ab2a`. Portable primary outcome: `SUPPORTED`. Task 5 full gate: 455 passed; architecture/repository/A003/A008 gates PASS.
+
+Exact branch qualification: GREEN.
+- SHA: `eecca7d842753fd2b39e8c565c704fb2e6303896`;
+- exact branch CI: `37992245085` — success;
+- genuine recoveries: 2;
+- regressions: 0;
+- primary / always-max total scope evaluations: 19 / 27;
+- primary / always-max successful cases: 6 / 6;
+- maximum procedure attempts: 3;
+- maximum scope index: 2;
+- model-control leakage failures: 0.
+
+Physical qualification: GREEN.
+- embedding: `qwen3-embedding:0.6b`;
+- embedding digest: `ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d`;
+- embedding dimension: 1024;
+- frozen threshold: `0.5037018224299838`;
+- terminal model: `qwen3.5:4b`;
+- terminal model digest: `2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd`;
+- physical integrated success case: GREEN;
+- physical terminal-fallback case: GREEN;
+- terminal model request count: 1.
+
+Qualification report:
+`docs/development/reports/ASCA-20261010-A009-integrated-cognitive-loop.md`.
+
 ## Current Action
 
-Task 5 is ACTIVE: freeze the deterministic integrated-loop benchmark, add portable and local-physical qualification CLIs, and add the deterministic A009 qualifier to GitHub CI.
+A009 is a DONE closure candidate with exact branch qualification and physical
+integration GREEN. Issue #9 intentionally remains open while Task 7 performs
+whole-branch review and reviewed final-main integration.
+
+A010 remains PLANNED and has no GitHub issue.
 
 ## Next Action
 
-Complete Task 5 RED -> GREEN gates and commit
-`Add A009 integrated loop qualification`, then continue exact branch qualification and physical evidence in Task 6.
+Execute A009 Task 7: whole-branch review, resolve any Critical/Important
+findings with RED -> GREEN evidence, rerun full qualification, fast-forward
+main only, require exact final-main CI, record final-main evidence, synchronize
+0/0, and only then close Issue #9.
 
 ## Resume Rule
 

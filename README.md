@@ -41,28 +41,43 @@ Start with:
 
 ## Current stage
 
-A009 - Integrated Cognitive Loop is **ACTIVE** on
-`research/a009-integrated-cognitive-loop` (GitHub Issue #9).
+A009 - Integrated Cognitive Loop has a **qualified closure candidate** with
+primary deterministic outcome `SUPPORTED`.
 
-A009 integrates A003 familiarity, A005 retrieval, A006 working-set selection,
-A007 bounded expansion, and A008 procedural execution while preserving each
-milestone's evidence boundary. The primary A009 path uses `SINGLE_BEST`,
-A007 `SIGNAL_DRIVEN`, and A008 `CHUNKED`, with
-`MISMATCH_DRIVEN_RECOVERY` as the primary integrated-loop policy.
+The frozen A009 fixture demonstrates:
+
+- 2 genuine procedure-mismatch recoveries over `NO_PROCEDURE_RECOVERY`;
+- 0 regressions;
+- primary success coverage equal to `ALWAYS_MAX_SCOPE` (6 / 6 successful cases);
+- 19 primary scope evaluations versus 27 for `ALWAYS_MAX_SCOPE`;
+- maximum 3 procedure attempts and maximum scope index 2;
+- 0 duplicate-execution-ID failures;
+- 0 same-name ambiguity failures;
+- CHUNKED/FLAT diagnostic equivalence 6 / 6;
+- 0 model-control leakage failures;
+- deterministic replay.
+
+The primary path remains `SINGLE_BEST` + A007 `SIGNAL_DRIVEN` + A008
+`CHUNKED`, with `MISMATCH_DRIVEN_RECOVERY` as the A009 recovery policy.
 
 Historical outcomes remain unchanged:
 
 - A006 selective-convergence hypothesis: `NOT_SUPPORTED`;
 - A007 structural-expansion hypothesis: `SUPPORTED`;
-- A008 procedural-memory hypothesis: `SUPPORTED`.
+- A008 procedural-memory hypothesis: `SUPPORTED`;
+- A009 integrated-loop hypothesis: `SUPPORTED`.
 
-A008's recommended representation remains `CHUNKED`: reusable hierarchical
-procedures with explicit step-level checkpoints. A009 keeps A008 zero-auto-retry
-and models every higher-level replay as a fresh bounded attempt from an
-immutable pre-execution snapshot.
+Local physical integration is also GREEN with pinned
+`qwen3-embedding:0.6b` retrieval and terminal-only `qwen3.5:4b` fallback.
 
-These are control/evidence boundaries; they are not claims of lower hardware
-cost, energy use, token use, or faster real-world tool execution.
+A010 - Dense/Non-selective Baseline Comparison remains **PLANNED**. No A010
+GitHub issue has been created. A009 Issue #9 remains open until whole-branch
+review, reviewed main integration, exact final-main CI, and final
+synchronization are GREEN.
+
+These results are control/retrieval/procedure evidence. They are not claims of
+lower FLOPs, lower energy, lower token use, general speed superiority, or safe
+real-world side-effect replay.
 
 
 ## Claims boundary

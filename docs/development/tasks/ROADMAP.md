@@ -10,6 +10,6 @@
 | A006 | Working Set / Selective Activation | DONE |
 | A007 | Surprise, Uncertainty & Expansion | DONE |
 | A008 | Procedural Memory / Skill Chunking | DONE |
-| A009 | Integrated Cognitive Loop | ACTIVE |
+| A009 | Integrated Cognitive Loop | DONE |
 | A010 | Dense/Non-selective Baseline Comparison | PLANNED |
 | A011 | ASCA v0.x Qualification | PLANNED |
