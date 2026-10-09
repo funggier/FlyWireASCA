@@ -54,6 +54,7 @@ FlyWireLLM remains paused and untouched.
 - [x] Valid primary outcome is exactly SUPPORTED/MIXED/NOT_SUPPORTED.
 - [x] No real tool/model/Ollama/graph dependency is introduced.
 - [x] FlyWireLLM remains paused/untouched.
+- [x] Whole-branch review Critical/Important findings resolved.
 - [ ] Exact branch/review/final-main CI and synchronization gates pass.
 
 ## Evidence
@@ -73,7 +74,22 @@ Activation base:
 - branch: `research/a008-procedural-memory`;
 - A007 historical outcome: `SUPPORTED`.
 
+Post-review behavior candidate:
+
+`b0ad2f1abed08683ea8218861c97f3c2d47384d3`
+
+Post-review exact branch CI:
+
+`37959983484` — success
+
+Whole-branch review resolved three Important findings: max_call_depth cap
+enforcement, invalid-library reuse-metric contamination, and impossible
+count/reuse qualification payload relationships. The required post-review
+deterministic qualification remained `SUPPORTED` with fixture fingerprint
+unchanged and FLAT / CHUNKED root-visible dispatches 13 / 8.
+
 Exact branch qualification evidence:
+
 
 - candidate SHA: `0bfee1dfc424934ed783150f6c4d86140c6502d2`;
 - branch CI: `37956221852` — success;
@@ -88,13 +104,13 @@ Exact branch qualification evidence:
 
 ## Current Action
 
-A008 deterministic mechanism qualification is DONE on the branch candidate.
-Commit the closure transition, require exact closure-branch CI, then perform
-the required whole-branch review and integration gates.
+A008 whole-branch review, RED->GREEN hardening, post-review deterministic
+qualification, and exact post-review branch CI are GREEN. Prepare the
+post-review evidence commit and final integration.
 
 ## Next Action
 
 A009 — Integrated Cognitive Loop remains PLANNED with no issue. Do not start it
-until A008 review, final-main CI, Issue #8 closure, and synchronization are GREEN.
+until A008 final-main CI, Issue #8 closure, and synchronization are GREEN.
 
 A009 — Integrated Cognitive Loop remains PLANNED with no issue.

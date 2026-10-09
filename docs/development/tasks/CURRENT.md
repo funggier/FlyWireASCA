@@ -7,15 +7,15 @@ A008 deterministic qualification: GREEN
 
 ## Current Action
 
-No A009 implementation is active. A008 has a qualified closure candidate with
-primary deterministic outcome `SUPPORTED`; whole-branch review and final main
-integration remain A008 finishing gates.
+No A009 implementation is active. A008 has primary deterministic outcome
+`SUPPORTED`; whole-branch review, post-review qualification, and exact
+post-review branch CI are GREEN. Final main integration remains the finishing gate.
 
 ## Next Action
 
-After A008 review, exact final-main CI, Issue #8 closure, and clean/synchronized
-main are GREEN, design A009 — Integrated Cognitive Loop as a separate
-architectural task.
+After A008 fast-forward integration, exact final-main CI, Issue #8 closure,
+and clean/synchronized main are GREEN, design A009 — Integrated Cognitive Loop
+as a separate architectural task.
 
 ## Resume Rule
 

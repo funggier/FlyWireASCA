@@ -86,3 +86,23 @@ def test_a008_report_keeps_claims_and_integration_boundaries():
     assert "control-state" in text
     assert "do not establish" in text
     assert "a007" in text and "supported" in text
+
+def test_a008_report_records_post_review_hardening():
+    text=read(REPORT_A008)
+    assert "b0ad2f1abed08683ea8218861c97f3c2d47384d3" in text
+    assert "37959983484" in text
+    assert "Important" in text
+    assert "max_call_depth" in text
+    assert "invalid-library" in text
+    assert "count/reuse" in text
+    assert "post-review deterministic qualification" in text.lower()
+    assert "Final A008 hypothesis outcome: `SUPPORTED`" in text
+    assert "FLAT / CHUNKED root-visible dispatches: 13 / 8" in text
+    assert "fixture fingerprint unchanged" in text.lower()
+
+
+def test_a008_task_marks_whole_branch_review_resolved():
+    text=read(TASKS/"A008-procedural-memory-skill-chunking.md")
+    assert "- [x] Whole-branch review Critical/Important findings resolved." in text
+    assert "b0ad2f1abed08683ea8218861c97f3c2d47384d3" in text
+    assert "37959983484" in text

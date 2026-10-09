@@ -262,3 +262,62 @@ A009 — Integrated Cognitive Loop remains PLANNED with no GitHub issue.
 A009 is the appropriate milestone to combine qualified A003/A005/A006/A007/A008
 mechanisms and the A004 model adapter, including use of real procedural
 mismatch evidence as an input to higher-level control decisions.
+
+## Whole-branch review and post-review qualification
+
+The required final whole-branch review was performed as a separate author
+self-review because no fresh reviewer/subagent tool was available in this
+harness.
+
+Three findings were graded **Important**:
+
+1. `ProcedureLibrary.max_call_depth` accepted values above the A008 architectural
+   cap even though the approved spec fixes the maximum at 8;
+2. invalid-library fixture definitions could contaminate chunk-reuse accounting,
+   even though those cases are explicitly excluded from success/final-state/
+   root-visible-dispatch denominators;
+3. the qualification payload validator enforced nonnegative counters but did
+   not reject impossible count/reuse relationships, allowing structurally
+   inconsistent evidence to survive validation.
+
+All three findings were fixed under RED -> GREEN tests.
+
+Post-review behavior candidate:
+
+`b0ad2f1abed08683ea8218861c97f3c2d47384d3`
+
+Exact post-review branch CI:
+
+`37959983484` — success
+
+Post-review deterministic qualification was rerun because benchmark/validation
+semantics changed.
+
+Post-review deterministic qualification:
+
+- experiment validity: PASS;
+- Post-review A008 hypothesis outcome: `SUPPORTED`;
+- fixture fingerprint unchanged:
+  `f52fbd4ab018386ff3cbfb62a68cc44a4b40e54ec4fd9a3b2e885dd2c5663fc6`;
+- FLAT / CHUNKED root-visible dispatches: 13 / 8;
+- maximum deliberative compression ratio: 2.0;
+- shared `heat-water` reuse count: 2;
+- FLAT exact failure localization: 1/1;
+- CHUNKED exact failure localization: 1/1;
+- BLIND_CHUNKED boundary localization: 1/1;
+- invalid-library validation failures: 0;
+- post-interruption execution failures: 0;
+- deterministic logical replay: PASS.
+
+Fresh post-review local gates:
+
+- targeted library/benchmark/qualification tests: 28 passed;
+- full suite: 381 passed;
+- architecture contract audit: PASS;
+- repository qualification: PASS;
+- A003 familiarity qualification: PASS;
+- `git diff --check`: PASS.
+
+These review fixes do not change the A008 mechanism conclusion or claims
+boundary. They strengthen enforcement of the already-approved architecture and
+qualification evidence contract.
