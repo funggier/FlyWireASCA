@@ -33,8 +33,8 @@ confidence as an activation boost.
 - SELECTIVE_CONVERGENCE selector: DONE.
 - SINGLE_BEST / EXHAUSTIVE baselines: DONE.
 - Portable benchmark/qualification: DONE.
-- Physical A005+A006 qualification: ACTIVE.
-- Exact qualification/review/integration: PLANNED.
+- Physical A005+A006 qualification: DONE.
+- Exact qualification/review/integration: ACTIVE.
 
 ## Physical Frozen Profile
 
@@ -85,15 +85,40 @@ Activation baseline:
 - A005 verdict: `VECTOR_SUFFICIENT` for retrieval scope;
 - A005 frozen threshold: `0.5037018224299838`.
 
+Physical qualification on implementation commit `43afe2dfb2f6a1365c1be3fc5333c55901d52f21`:
+
+- experiment validity: PASS;
+- hypothesis outcome: `NOT_SUPPORTED`;
+- Ollama runtime: `0.32.15`;
+- embedding model: `qwen3-embedding:0.6b`;
+- full digest: `ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d`;
+- embedding dimension: 1024;
+- fixture version: `a006-physical-v1`;
+- fixture fingerprint: `e51fea2e58186e94d7affc964509e96d96fc656759677d7dcc073e5b36b91035`;
+- required-memory coverage: 1.0;
+- convergence recovery count: 0;
+- convergence regression count: 0;
+- ambiguity failure count: 0;
+- no-selection failure count: 0;
+- strict budget observation count: 1;
+- positive candidates total: 34;
+- selected working-set items total: 22;
+- aggregate active-state reduction ratio: `0.35294117647058826`;
+- deterministic repeated selector result: PASS;
+- result interpretation: bounded-union convergence preserved all declared required memories and caused no regression, but did not recover any required memory that SINGLE_BEST missed under the frozen physical fixture, so the predeclared rule yields `NOT_SUPPORTED` rather than tuning the fixture.
+
+The first live attempt exposed one fixture-label bug in the strict budget case: 12 near-identical status notes had arbitrarily labeled `budget-00` as required. Regression `test_budget_truncation_case_does_not_label_an_arbitrary_equal_status_note_as_required` was observed RED, then the label alone was removed while texts, threshold, top_k, budgets, and selector behavior remained frozen. Raw physical JSON remains scratch-only.
+
 ## Current Action
 
-Implement Task 5 physical A005+A006 qualification runner under TDD using the
-frozen embedding model, threshold, top_k, and A006 budgets.
+Run Task 6 exact branch qualification on the physically qualified A006 candidate,
+then publish the branch for exact portable CI.
 
 ## Next Action
 
-After physical experiment evidence is recorded, run exact branch qualification,
-write the A006 closure report, perform whole-branch review, and integrate.
+After exact branch CI is GREEN, write the A006 closure report with the valid
+`NOT_SUPPORTED` physical research outcome, transition A007 to PLANNED, review
+the whole branch, and fast-forward `main`.
 
 The next milestone after qualified A006 remains A007 — Surprise, Uncertainty &
 Expansion.
