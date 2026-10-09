@@ -163,10 +163,8 @@ def test_missing_memory_returns_deterministic_mismatch_without_state_write():
     assert result.interruption.observed.payload_ref == "missing-memory"
     assert executor.world_state().get("phase") == "prepared"
     assert executor.world_state().get("done") is None
-    assert executor.executed_primitive_step_paths() == (
-        "root::prepare",
-        "root::finish",
-    )
+    assert executor.executed_primitive_step_paths() == ("root::prepare",)
+    assert result.interruption.completed_primitive_step_paths == ("root::prepare",)
 
 
 def test_missing_memory_observation_id_is_stable_for_same_execution_and_path():

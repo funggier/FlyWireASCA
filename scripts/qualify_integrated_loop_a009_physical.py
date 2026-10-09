@@ -45,6 +45,7 @@ EMBEDDING_DIGEST="ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a1562
 EMBEDDING_DIMENSION=1024
 MINIMUM_SIMILARITY=0.5037018224299838
 TERMINAL_MODEL="qwen3.5:4b"
+TERMINAL_MODEL_DIGEST="2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd"
 PRIMARY_SELECTOR="SINGLE_BEST"
 PRIMARY_PROCEDURE_MODE="CHUNKED"
 PHYSICAL_FIXTURE_VERSION="a009-physical-v1"
@@ -70,6 +71,8 @@ def validate_terminal_model_descriptor(descriptor):
         return ["terminal model descriptor must be a ModelDescriptor"]
     if descriptor.model_name!=TERMINAL_MODEL:
         errors.append("terminal model_name mismatch")
+    if descriptor.model_digest!=TERMINAL_MODEL_DIGEST:
+        errors.append("terminal model_digest mismatch")
     return errors
 
 
@@ -293,6 +296,7 @@ def inspect_live_prerequisites(*,portable_primary_outcome):
     )
     model=OllamaModelAdapter(
         TERMINAL_MODEL,
+        expected_digest=TERMINAL_MODEL_DIGEST,
         keep_alive="6h",
     )
     return run_physical_qualification(

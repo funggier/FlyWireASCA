@@ -243,6 +243,13 @@ class CognitiveLoopResult:
             raise ValueError(
                 "procedure_attempts must contain CognitiveProcedureAttempt values"
             )
+        if len(self.procedure_attempts) > 3:
+            raise ValueError("procedure_attempts must contain at most three attempts")
+        if any(
+            evaluation.scope.round_index > 2
+            for evaluation in self.scope_evaluations
+        ):
+            raise ValueError("scope_evaluations must not exceed scope index 2")
 
         indices = tuple(item.attempt_index for item in self.procedure_attempts)
         if indices != tuple(range(len(self.procedure_attempts))):
@@ -251,15 +258,41 @@ class CognitiveLoopResult:
         if len(execution_ids) != len(set(execution_ids)):
             raise ValueError("procedure attempt execution_id values must be unique")
         scope_indices = tuple(item.scope.round_index for item in self.procedure_attempts)
-        if any(
-            current < previous
-            for previous, current in zip(scope_indices, scope_indices[1:])
-        ):
-            raise ValueError("procedure attempt scope indices must not regress")
+        initial_final_scope = self.initial_expansion.evaluations[-1].scope.round_index
+        if scope_indices[0] != initial_final_scope:
+            raise ValueError(
+                "first procedure attempt scope must equal initial expansion final scope"
+            )
+        for previous, current in zip(scope_indices, scope_indices[1:]):
+            if current != previous + 1:
+                raise ValueError(
+                    "recovery procedure attempt scope must advance exactly one scope"
+                )
+        snapshot_refs = tuple(
+            item.initial_world_state_ref for item in self.procedure_attempts
+        )
+        if len(set(snapshot_refs)) != 1:
+            raise ValueError(
+                "procedure attempt initial_world_state_ref values must be identical"
+            )
         for item in self.procedure_attempts[:-1]:
             if item.execution.state is ProcedureExecutionState.COMPLETED:
                 raise ValueError("procedure attempt cannot occur after COMPLETED")
-
+        expected_scope_evaluation_count = (
+            len(self.initial_expansion.evaluations)
+            + len(self.procedure_attempts)
+            - 1
+        )
+        if len(self.scope_evaluations) != expected_scope_evaluation_count:
+            raise ValueError(
+                "scope_evaluations must contain exactly one evaluation per recovery attempt"
+            )
+        for attempt_index, attempt in enumerate(self.procedure_attempts[1:], 1):
+            evaluation_index = len(self.initial_expansion.evaluations) + attempt_index - 1
+            if self.scope_evaluations[evaluation_index].scope != attempt.scope:
+                raise ValueError(
+                    "recovery scope evaluation must match the corresponding procedure attempt"
+                )
         if not isinstance(self.termination_reason, CognitiveTerminationReason):
             raise ValueError(
                 "termination_reason must be a CognitiveTerminationReason"
@@ -291,10 +324,24 @@ class CognitiveLoopResult:
 
         if not isinstance(self.final_working_set, WorkingSet):
             raise ValueError("final_working_set must be a WorkingSet")
+        expected_final_working_set = self.scope_evaluations[-1].working_set_result.working_set
+        if self.final_working_set != expected_final_working_set:
+            raise ValueError(
+                "final_working_set must equal the final scope evaluation working set"
+            )
+        final_memory_ids = tuple(entry.ref_id for entry in self.final_working_set.entries)
+        if final_attempt.working_set_memory_ids != final_memory_ids:
+            raise ValueError(
+                "final attempt working_set_memory_ids must match final_working_set entries"
+            )
         _require_optional_nonempty(
             "final_world_state_ref",
             self.final_world_state_ref,
         )
+        if self.final_world_state_ref != final_attempt.execution.final_world_state_ref:
+            raise ValueError(
+                "final_world_state_ref must equal final attempt execution final_world_state_ref"
+            )
         if self.model_response is not None and not isinstance(
             self.model_response,
             ModelResponse,

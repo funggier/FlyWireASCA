@@ -98,6 +98,7 @@ class IntegratedLoopBenchmarkCaseResult:
     validation_error: str | None
     policy_results: tuple[IntegratedLoopPolicyCaseResult, ...]
     chunked_flat_equivalent: bool | None
+    model_control_isolated: bool | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -616,6 +617,7 @@ def _run_case(case: IntegratedLoopBenchmarkCase) -> IntegratedLoopBenchmarkCaseR
                 validation_error=str(exc),
                 policy_results=(),
                 chunked_flat_equivalent=None,
+                model_control_isolated=None,
             )
         return IntegratedLoopBenchmarkCaseResult(
             case_id=case.case_id,
@@ -624,6 +626,7 @@ def _run_case(case: IntegratedLoopBenchmarkCase) -> IntegratedLoopBenchmarkCaseR
             validation_error=None,
             policy_results=(),
             chunked_flat_equivalent=None,
+            model_control_isolated=None,
         )
 
     policy_results = tuple(
@@ -635,6 +638,14 @@ def _run_case(case: IntegratedLoopBenchmarkCase) -> IntegratedLoopBenchmarkCaseR
         )
     )
     primary = policy_results[1]
+    model_control_isolated: bool | None = None
+    if case.terminal_model:
+        alternate = _result_for_policy(
+            case,
+            LoopPolicy.MISMATCH_DRIVEN_RECOVERY,
+            model_content="different deterministic terminal diagnostic",
+        )
+        model_control_isolated = alternate == primary
     return IntegratedLoopBenchmarkCaseResult(
         case_id=case.case_id,
         recoverable=case.expected_recoverable,
@@ -642,6 +653,7 @@ def _run_case(case: IntegratedLoopBenchmarkCase) -> IntegratedLoopBenchmarkCaseR
         validation_error=None,
         policy_results=policy_results,
         chunked_flat_equivalent=_chunked_flat_equivalent(case, primary),
+        model_control_isolated=model_control_isolated,
     )
 
 
@@ -685,10 +697,7 @@ def run_a009_benchmark(
     model_calls = 0
     model_control_leakage_failures = 0
 
-    for source_case, case in zip(
-        (item for item in materialized if not item.invalid_root),
-        valid,
-    ):
+    for case in valid:
         no = _policy_result(case, LoopPolicy.NO_PROCEDURE_RECOVERY)
         primary = _policy_result(case, LoopPolicy.MISMATCH_DRIVEN_RECOVERY)
         always = _policy_result(case, LoopPolicy.ALWAYS_MAX_SCOPE)
@@ -706,13 +715,9 @@ def run_a009_benchmark(
             len(primary.execution_ids) != len(set(primary.execution_ids))
         )
         model_calls += int(primary.model_fallback_called)
-        if source_case.terminal_model:
-            alternate = _result_for_policy(
-                source_case,
-                LoopPolicy.MISMATCH_DRIVEN_RECOVERY,
-                model_content="different deterministic terminal diagnostic",
-            )
-            model_control_leakage_failures += int(alternate != primary)
+        model_control_leakage_failures += int(
+            case.model_control_isolated is False
+        )
         if no.procedure_success and not primary.procedure_success:
             regression += 1
         if (

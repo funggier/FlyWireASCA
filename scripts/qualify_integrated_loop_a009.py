@@ -70,6 +70,7 @@ def _case_payload(item):
         "validation_error":item.validation_error,
         "policy_results":[_policy_payload(value) for value in item.policy_results],
         "chunked_flat_equivalent":item.chunked_flat_equivalent,
+        "model_control_isolated":item.model_control_isolated,
     }
 
 def _aggregate_payload(report):
@@ -122,6 +123,131 @@ def _nonnegative_int(errors,name,value):
     if not isinstance(value,int) or isinstance(value,bool) or value<0:
         errors.append(f"{name} must be a nonnegative integer")
 
+
+def _derive_metrics_from_case_evidence(case_payloads):
+    errors=[]
+    derived={
+        "case_count":len(case_payloads),
+        "valid_case_count":0,
+        "invalid_case_count":0,
+        "recoverable_case_count":0,
+        "genuine_recovery_count":0,
+        "regression_count":0,
+        "primary_recoverable_success_count":0,
+        "always_recoverable_success_count":0,
+        "primary_total_scope_evaluations":0,
+        "always_total_scope_evaluations":0,
+        "primary_success_count":0,
+        "always_success_count":0,
+        "primary_final_state_correct_count":0,
+        "primary_same_name_ambiguity_failure_count":0,
+        "chunked_flat_diagnostic_case_count":0,
+        "chunked_flat_equivalence_count":0,
+        "max_procedure_attempt_count":0,
+        "max_scope_index":0,
+        "duplicate_execution_id_failure_count":0,
+        "model_fallback_call_count":0,
+        "model_control_leakage_failure_count":0,
+    }
+    for case in case_payloads:
+        if not isinstance(case,dict):
+            errors.append("cases entries must be objects")
+            continue
+        invalid=case.get("validation_error_observed") is True
+        if invalid:
+            derived["invalid_case_count"]+=1
+            if case.get("policy_results") not in ([],()):
+                errors.append("invalid cases must not contain policy_results")
+            continue
+        derived["valid_case_count"]+=1
+        recoverable=case.get("recoverable") is True
+        if recoverable:
+            derived["recoverable_case_count"]+=1
+        results=case.get("policy_results")
+        if not isinstance(results,list):
+            errors.append("policy_results must be a list")
+            continue
+        names=[item.get("policy") for item in results if isinstance(item,dict)]
+        if names!=POLICIES:
+            errors.append("valid case policy_results must match frozen policies")
+            continue
+        by_policy={item["policy"]:item for item in results}
+        no=by_policy[LoopPolicy.NO_PROCEDURE_RECOVERY.value]
+        primary=by_policy[LoopPolicy.MISMATCH_DRIVEN_RECOVERY.value]
+        always=by_policy[LoopPolicy.ALWAYS_MAX_SCOPE.value]
+
+        no_success=no.get("procedure_success") is True
+        primary_success=primary.get("procedure_success") is True
+        always_success=always.get("procedure_success") is True
+        primary_scopes=primary.get("evaluated_scope_indices")
+        always_scopes=always.get("evaluated_scope_indices")
+        primary_ids=primary.get("execution_ids")
+        if not isinstance(primary_scopes,list) or not isinstance(always_scopes,list):
+            errors.append("policy scope evidence must be lists")
+            continue
+        if not isinstance(primary_ids,list):
+            errors.append("primary execution_ids must be a list")
+            continue
+
+        derived["primary_total_scope_evaluations"]+=len(primary_scopes)
+        derived["always_total_scope_evaluations"]+=len(always_scopes)
+        derived["primary_success_count"]+=int(primary_success)
+        derived["always_success_count"]+=int(always_success)
+        derived["primary_final_state_correct_count"]+=int(
+            primary_success and primary.get("final_state_correct") is True
+        )
+        derived["primary_same_name_ambiguity_failure_count"]+=int(
+            primary.get("same_name_ambiguity_preserved") is not True
+        )
+        derived["max_procedure_attempt_count"]=max(
+            derived["max_procedure_attempt_count"],
+            primary.get("procedure_attempt_count",0)
+            if isinstance(primary.get("procedure_attempt_count"),int)
+            and not isinstance(primary.get("procedure_attempt_count"),bool)
+            else 0,
+        )
+        if primary_scopes:
+            numeric_scopes=[
+                item for item in primary_scopes
+                if isinstance(item,int) and not isinstance(item,bool)
+            ]
+            if len(numeric_scopes)==len(primary_scopes):
+                derived["max_scope_index"]=max(
+                    derived["max_scope_index"],
+                    max(numeric_scopes),
+                )
+        derived["duplicate_execution_id_failure_count"]+=int(
+            len(primary_ids)!=len(set(primary_ids))
+        )
+        derived["model_fallback_call_count"]+=int(
+            primary.get("model_fallback_called") is True
+        )
+        if recoverable:
+            derived["primary_recoverable_success_count"]+=int(primary_success)
+            derived["always_recoverable_success_count"]+=int(always_success)
+        if no_success and not primary_success:
+            derived["regression_count"]+=1
+        if (
+            not no_success
+            and primary_success
+            and isinstance(primary.get("forced_recovery_scope_count"),int)
+            and not isinstance(primary.get("forced_recovery_scope_count"),bool)
+            and primary.get("forced_recovery_scope_count")>0
+            and len(primary_ids)==len(set(primary_ids))
+        ):
+            derived["genuine_recovery_count"]+=1
+        diagnostic=case.get("chunked_flat_equivalent")
+        if diagnostic is not None:
+            derived["chunked_flat_diagnostic_case_count"]+=1
+            derived["chunked_flat_equivalence_count"]+=int(diagnostic is True)
+        model_control_isolated=case.get("model_control_isolated")
+        if model_control_isolated not in (None,True,False):
+            errors.append("model_control_isolated must be bool or null")
+        derived["model_control_leakage_failure_count"]+=int(
+            model_control_isolated is False
+        )
+    return derived,errors
+
 def validate_qualification_payload(payload):
     errors=[]
     cases=build_a009_deterministic_fixture()
@@ -173,6 +299,9 @@ def validate_qualification_payload(payload):
     if not isinstance(case_payloads,list):
         errors.append("cases must be a list")
     else:
+        observed_case_ids=[case.get("case_id") for case in case_payloads if isinstance(case,dict)]
+        if observed_case_ids!=payload.get("case_ids"):
+            errors.append("cases order/identity must match case_ids")
         for case in case_payloads:
             if not isinstance(case,dict):
                 errors.append("cases entries must be objects")
@@ -201,6 +330,11 @@ def validate_qualification_payload(payload):
                 attempt_count=policy_result.get("procedure_attempt_count")
                 if isinstance(execution_ids,list) and attempt_count!=len(execution_ids):
                     errors.append("procedure_attempt_count must equal len(execution_ids)")
+        derived,derive_errors=_derive_metrics_from_case_evidence(case_payloads)
+        errors.extend(derive_errors)
+        for name,value in derived.items():
+            if aggregate.get(name)!=value:
+                errors.append(f"{name} does not match case evidence")
     outcome=payload.get("primary_hypothesis_outcome")
     if outcome not in {"SUPPORTED","MIXED","NOT_SUPPORTED"}:
         errors.append("primary_hypothesis_outcome has invalid vocabulary")

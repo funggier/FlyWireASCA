@@ -123,6 +123,7 @@ def test_model_fallback_is_recorded_but_does_not_convert_failure_to_success():
     assert primary.model_fallback_called is True
     assert primary.procedure_success is False
     assert report.model_fallback_call_count >= 1
+    assert case.model_control_isolated is True
     assert report.model_control_leakage_failure_count == 0
 
 

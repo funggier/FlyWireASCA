@@ -26,9 +26,9 @@ def embedding_descriptor(*,digest=None,dimension=1024,model="qwen3-embedding:0.6
     )
 
 
-def model_descriptor(*,model="qwen3.5:4b"):
+def model_descriptor(*,model="qwen3.5:4b",digest="2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd"):
     return ModelDescriptor(
-        "ollama","test",model,"model-digest","qwen3",4_000_000_000,
+        "ollama","test",model,digest,"qwen3",4_000_000_000,
         None,None,8192,None,("completion",),
     )
 
@@ -40,6 +40,7 @@ def test_physical_constants_pin_a005_and_a004_boundaries():
     assert m.EMBEDDING_DIMENSION==1024
     assert m.MINIMUM_SIMILARITY==0.5037018224299838
     assert m.TERMINAL_MODEL=="qwen3.5:4b"
+    assert m.TERMINAL_MODEL_DIGEST=="2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd"
     assert m.PRIMARY_SELECTOR=="SINGLE_BEST"
     assert m.PRIMARY_PROCEDURE_MODE=="CHUNKED"
 
@@ -59,11 +60,14 @@ def test_embedding_identity_validation_requires_exact_model_digest_dimension():
     )
 
 
-def test_terminal_model_validation_requires_qwen35_4b_only():
+def test_terminal_model_validation_requires_exact_qwen35_4b_identity():
     m=load()
     assert m.validate_terminal_model_descriptor(model_descriptor())==[]
     assert m.validate_terminal_model_descriptor(
         model_descriptor(model="other")
+    )
+    assert m.validate_terminal_model_descriptor(
+        model_descriptor(digest="wrong-digest")
     )
 
 

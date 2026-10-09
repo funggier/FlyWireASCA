@@ -92,7 +92,6 @@ class ContextBoundProcedureExecutor:
                 "execution_id must match executor creation execution_id"
             )
         path = canonical_primitive_step_path(call_path, step_id)
-        self._executed_paths.append(path)
 
         requirement = self._requirements.get(action_ref)
         if requirement is not None:
@@ -113,6 +112,7 @@ class ContextBoundProcedureExecutor:
                     evidence_ids=(),
                 )
 
+        self._executed_paths.append(path)
         return self._simulator.execute_action(
             action_ref=action_ref,
             execution_id=execution_id,

@@ -110,8 +110,27 @@ def test_stdout_and_output_bytes_match_and_support_utf8(monkeypatch,tmp_path):
 def test_valid_negative_outcome_exits_zero(monkeypatch,capsys):
     m=load()
     payload=m.run_qualification()
-    payload["aggregate_metrics"]["genuine_recovery_count"]=0
+    for case_id in (
+        "procedure-recovery-round-one",
+        "procedure-recovery-round-two",
+    ):
+        case=next(item for item in payload["cases"] if item["case_id"]==case_id)
+        primary=next(
+            item for item in case["policy_results"]
+            if item["policy"]=="MISMATCH_DRIVEN_RECOVERY"
+        )
+        primary["procedure_success"]=False
+        primary["final_state_correct"]=False
+        primary["termination_reason"]="PROCEDURE_MISMATCH_EXHAUSTED"
+        primary["procedure_states"]=[
+            "INTERRUPTED"
+            for _ in primary["procedure_states"]
+        ]
+    derived,errors=m._derive_metrics_from_case_evidence(payload["cases"])
+    assert errors==[]
+    payload["aggregate_metrics"].update(derived)
     payload["primary_hypothesis_outcome"]="NOT_SUPPORTED"
+    assert m.validate_qualification_payload(payload)==[]
     monkeypatch.setattr(m,"run_qualification",lambda:payload)
     rc=m.main([])
     assert rc==0
@@ -154,3 +173,29 @@ def test_cli_validator_rejects_model_control_leakage_evidence():
     payload["primary_hypothesis_outcome"]="MIXED"
     errors=m.validate_qualification_payload(payload)
     assert any("model_control_leakage_failure_count" in item for item in errors)
+
+def test_cli_validator_recomputes_aggregate_metrics_from_case_evidence():
+    m=load()
+    payload=m.run_qualification()
+    payload["aggregate_metrics"]["primary_total_scope_evaluations"] -= 1
+    errors=m.validate_qualification_payload(payload)
+    assert any("primary_total_scope_evaluations" in item and "case evidence" in item for item in errors)
+
+    payload=m.run_qualification()
+    case=next(item for item in payload["cases"] if item["case_id"]=="procedure-recovery-round-one")
+    primary=next(item for item in case["policy_results"] if item["policy"]=="MISMATCH_DRIVEN_RECOVERY")
+    primary["procedure_success"]=False
+    errors=m.validate_qualification_payload(payload)
+    assert any("primary_success_count" in item and "case evidence" in item for item in errors)
+
+def test_cli_exposes_and_recomputes_model_control_isolation_from_case_evidence():
+    m=load()
+    payload=m.run_qualification()
+    case=next(item for item in payload["cases"] if item["case_id"]=="model-terminal-fallback")
+    assert case["model_control_isolated"] is True
+    case["model_control_isolated"]=False
+    errors=m.validate_qualification_payload(payload)
+    assert any(
+        "model_control_leakage_failure_count" in item and "case evidence" in item
+        for item in errors
+    )

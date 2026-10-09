@@ -498,3 +498,99 @@ def test_loop_result_model_response_must_be_real_contract():
         _trace(),
     )
     assert result.model_response is response
+
+def test_loop_result_rejects_scope_skip_between_recovery_attempts():
+    initial = _initial_expansion()
+    first = _attempt(0, scope_index=0, state=ProcedureExecutionState.INTERRUPTED)
+    second = _attempt(1, scope_index=2, state=ProcedureExecutionState.COMPLETED)
+    with pytest.raises(ValueError, match="scope.*exactly"):
+        CognitiveLoopResult(
+            "loop",
+            LoopPolicy.MISMATCH_DRIVEN_RECOVERY,
+            _familiarity(),
+            initial,
+            initial.evaluations,
+            (first, second),
+            CognitiveTerminationReason.RECOVERED_AFTER_MISMATCH,
+            initial.evaluations[-1].working_set_result.working_set,
+            second.execution.final_world_state_ref,
+            None,
+            _trace(),
+        )
+
+
+def test_loop_result_rejects_snapshot_drift_and_more_than_three_attempts():
+    initial = _initial_expansion()
+    first = _attempt(0, state=ProcedureExecutionState.INTERRUPTED)
+    second = _attempt(1, scope_index=1, state=ProcedureExecutionState.COMPLETED)
+    drifted = CognitiveProcedureAttempt(
+        second.attempt_index,
+        second.execution_id,
+        second.scope,
+        second.working_set_memory_ids,
+        second.execution,
+        second.recovery_cause,
+        "world:different",
+    )
+    with pytest.raises(ValueError, match="initial_world_state_ref"):
+        CognitiveLoopResult(
+            "loop",
+            LoopPolicy.MISMATCH_DRIVEN_RECOVERY,
+            _familiarity(),
+            initial,
+            initial.evaluations,
+            (first, drifted),
+            CognitiveTerminationReason.RECOVERED_AFTER_MISMATCH,
+            initial.evaluations[-1].working_set_result.working_set,
+            drifted.execution.final_world_state_ref,
+            None,
+            _trace(),
+        )
+
+    attempts = (
+        _attempt(0, scope_index=0, state=ProcedureExecutionState.INTERRUPTED),
+        _attempt(1, scope_index=1, state=ProcedureExecutionState.INTERRUPTED),
+        _attempt(2, scope_index=2, state=ProcedureExecutionState.INTERRUPTED),
+        CognitiveProcedureAttempt(
+            3,
+            "loop:procedure-attempt:3",
+            _scope(2),
+            (),
+            _execution("loop:procedure-attempt:3"),
+            RecoveryCause.PROCEDURE_OUTCOME_MISMATCH,
+            "world:initial",
+        ),
+    )
+    with pytest.raises(ValueError, match="at most three"):
+        CognitiveLoopResult(
+            "loop",
+            LoopPolicy.MISMATCH_DRIVEN_RECOVERY,
+            _familiarity(),
+            initial,
+            initial.evaluations,
+            attempts,
+            CognitiveTerminationReason.RECOVERED_AFTER_MISMATCH,
+            initial.evaluations[-1].working_set_result.working_set,
+            attempts[-1].execution.final_world_state_ref,
+            None,
+            _trace(),
+        )
+
+
+def test_loop_result_rejects_final_world_state_ref_drift():
+    initial = _initial_expansion()
+    attempt = _attempt(0)
+    with pytest.raises(ValueError, match="final_world_state_ref"):
+        CognitiveLoopResult(
+            "loop",
+            LoopPolicy.MISMATCH_DRIVEN_RECOVERY,
+            _familiarity(),
+            initial,
+            initial.evaluations,
+            (attempt,),
+            CognitiveTerminationReason.PROCEDURE_COMPLETED,
+            initial.evaluations[-1].working_set_result.working_set,
+            "world:wrong",
+            None,
+            _trace(),
+        )
