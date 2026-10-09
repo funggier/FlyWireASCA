@@ -7,6 +7,7 @@ from .contracts import (
     EmbeddingVector,
     normalize_embedding_values,
 )
+from .ollama import OllamaEmbeddingAdapter, UrllibEmbeddingJsonTransport
 from .errors import (
     EmbeddingAdapterError,
     EmbeddingIdentityMismatchError,
@@ -17,6 +18,8 @@ from .errors import (
 )
 
 __all__ = [
+    "OllamaEmbeddingAdapter",
+    "UrllibEmbeddingJsonTransport",
     "EmbeddingAdapter",
     "EmbeddingAdapterError",
     "EmbeddingDescriptor",
