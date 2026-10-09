@@ -4,8 +4,10 @@ Date: 2026-10-10
 Milestone: A009 — Integrated Cognitive Loop
 GitHub Issue: #9
 Branch: `research/a009-integrated-cognitive-loop`
-Exact qualified branch SHA: `eecca7d842753fd2b39e8c565c704fb2e6303896`
-Exact branch CI run: `37992245085` — success
+Initial qualified branch SHA: `eecca7d842753fd2b39e8c565c704fb2e6303896`
+Initial exact branch CI run: `37992245085` - success
+Reviewed behavior SHA: `4796d28e9285dc395240010987126a45c4e5ed5d`
+Exact post-review branch CI run: `37999918527` - success
 Primary A009 hypothesis outcome: `SUPPORTED`
 
 ## Executive result
@@ -401,9 +403,156 @@ Unsupported claims:
 
 The last system-level comparison remains A010.
 
+## Whole-branch review
+
+Review range:
+
+`8d0721a77abaae5d0cc6d6c7c81d4795c5d355fa..4796d28e9285dc395240010987126a45c4e5ed5d`
+
+Reviewed behavior SHA:
+
+`4796d28e9285dc395240010987126a45c4e5ed5d`
+
+Exact post-review branch CI:
+
+`37999918527` - success
+
+Post-review local gate:
+
+- full pytest suite: 463 passed;
+- A009 portable qualification: PASS;
+- primary outcome: `SUPPORTED`;
+- frozen fixture fingerprint unchanged:
+  `2f92b5092de346f62879ac2cbb9f96d6de5d6f919e12d0693345c8228b01ab2a`;
+- genuine recoveries: 2;
+- regressions: 0;
+- primary / always-max scope evaluations: 19 / 27;
+- maximum procedure attempts: 3;
+- maximum scope index: 2;
+- model-control leakage failures: 0;
+- architecture contract audit: PASS;
+- repository qualification: PASS;
+- A003 qualification: PASS;
+- A008 qualification: PASS;
+- `git diff --check`: PASS.
+
+Post-review physical qualification was rerun with exact identity validation and
+remained GREEN:
+
+- embedding tag/digest/dimension unchanged;
+- terminal `qwen3.5:4b` tag and digest unchanged;
+- success case: 1 attempt;
+- fallback case: 3 attempts;
+- terminal model requests: 1;
+- physical integration valid: true;
+- prompt/generated token metadata: 151 / 256;
+- observed terminal model duration: 15,185,478,500 ns.
+
+### Review method and limitation
+
+The available environment did not provide an independent code-review subagent
+or separate reviewer identity. The review was therefore an author self-review
+of the entire A009 branch diff, with targeted static searches, subsystem-diff
+checks, RED -> GREEN regression tests, full local qualification, exact branch
+CI, and a repeated local physical qualification.
+
+This limitation is recorded explicitly: there was no independent reviewer.
+The evidence below should be interpreted as rigorous author self-review rather
+than independent peer review.
+
+Critical findings: 0
+
+Important findings: 5
+
+### Important finding 1 - completed primitive evidence
+
+A context-bound action blocked by a missing memory requirement was being
+included in `completed_primitive_step_paths` even though the delegate action
+did not execute and no state write occurred.
+
+Fix:
+
+- move primitive-path recording until after the memory precondition passes;
+- regression-test that the blocked failing step is absent from completed
+  primitive evidence.
+
+### Important finding 2 - fail-closed integrated result invariants
+
+A manually constructed `CognitiveLoopResult` could previously represent
+evidence the controller itself would never emit, including scope skipping,
+snapshot drift, more than three attempts, and final-state reference drift.
+
+Fix:
+
+- require at most three attempts;
+- require first attempt scope to equal the initial A007 final scope;
+- require each replay scope to advance exactly one level;
+- require all attempt `initial_world_state_ref` values to match;
+- require one recovery scope evaluation per recovery attempt;
+- require final working-set/evidence/world-state references to be internally
+  consistent;
+- reject attempts after a completed attempt.
+
+### Important finding 3 - exact physical terminal-model identity
+
+The physical A009 script pinned the A005 embedding identity exactly but
+initially validated only the terminal model tag.
+
+Fix:
+
+- add `TERMINAL_MODEL_DIGEST`;
+- require exact
+  `qwen3.5:4b` digest
+  `2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd`;
+- pass the digest as `expected_digest` to the live A004 adapter;
+- rerun physical qualification successfully.
+
+### Important finding 4 - aggregate/result evidence drift
+
+The portable payload validator originally recomputed the hypothesis outcome
+from aggregate counters, but it did not independently derive those aggregate
+counters from raw case records.
+
+Fix:
+
+- recompute aggregate recovery, regression, success, scope, boundedness,
+  identity, final-state, diagnostic, and model-call metrics from case evidence;
+- reject any aggregate value that does not match case evidence;
+- retain valid `SUPPORTED`, `MIXED`, and `NOT_SUPPORTED` as research
+  outcomes when the underlying case evidence is internally consistent.
+
+### Important finding 5 - raw model-control isolation evidence
+
+`model_control_leakage_failure_count` was computed by the benchmark but was
+only visible as an aggregate counter.
+
+Fix:
+
+- expose `model_control_isolated` on the terminal-fallback case result;
+- include it in the portable case payload;
+- recompute `model_control_leakage_failure_count` from raw case evidence;
+- reject payloads whose aggregate leakage metric disagrees with that evidence.
+
+### Additional review checks
+
+- A007 source under `src/flywire_asca/uncertainty_expansion` is unchanged from
+  the activation base;
+- A008 source under `src/flywire_asca/procedural_memory` is unchanged from the
+  activation base;
+- A009 core imports no LConnect/BConnect, subprocess, PowerShell, or direct
+  network transport;
+- A009 core contains no `SELECTIVE_CONVERGENCE` primary path;
+- A009 core contains no `BLIND_CHUNKED` primary path;
+- A009 does not import or mutate A007 `ExpansionTrigger`;
+- claims remain explicitly bounded away from hardware/energy/token/general
+  latency and real-world side-effect safety claims.
+
+Whole-branch review: GREEN.
+
 ## Closure condition
 
-This report qualifies the exact branch candidate. A009 may be marked DONE only
-after closure-transition tests/gates, whole-branch review, reviewed behavior
-integration to main, exact final-main CI, final synchronization, and Issue #9
-closure evidence are all GREEN.
+This report qualifies the reviewed branch behavior. Whole-branch author
+self-review and exact post-review branch CI are GREEN. A009 Issue #9 remains
+open until reviewed behavior is integrated to main, exact final-main CI is
+GREEN, final synchronization is 0/0 and clean, and final-main evidence is
+recorded.

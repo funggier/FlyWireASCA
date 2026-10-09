@@ -114,3 +114,27 @@ def test_historical_a006_a007_a008_outcomes_remain_unchanged():
     assert "Final A006 hypothesis outcome: `NOT_SUPPORTED`" in read(A006)
     assert "Final A007 hypothesis outcome: `SUPPORTED`" in read(A007)
     assert "Final A008 hypothesis outcome: `SUPPORTED`" in read(A008)
+
+def test_a009_report_records_whole_branch_review_and_exact_post_review_ci():
+    text = read(REPORT)
+    assert "4796d28e9285dc395240010987126a45c4e5ed5d" in text
+    assert "37999918527" in text
+    assert "463 passed" in text
+    assert "Critical findings: 0" in text
+    assert "Important findings: 5" in text
+    assert "author self-review" in text.lower()
+    assert "independent reviewer" in text.lower()
+    assert "completed primitive" in text.lower()
+    assert "initial_world_state_ref" in text
+    assert "TERMINAL_MODEL_DIGEST" in text
+    assert "aggregate" in text.lower() and "case evidence" in text.lower()
+    assert "model_control_isolated" in text
+
+
+def test_a009_task_ledger_records_post_review_green_pending_final_main():
+    text = read(TASKS / "A009-integrated-cognitive-loop.md")
+    assert "Whole-branch review: GREEN" in text
+    assert "4796d28e9285dc395240010987126a45c4e5ed5d" in text
+    assert "37999918527" in text
+    assert "Important findings: 5" in text
+    assert "final-main" in text.lower()

@@ -162,23 +162,41 @@ Physical qualification: GREEN.
 - physical terminal-fallback case: GREEN;
 - terminal model request count: 1.
 
+Whole-branch review: GREEN.
+- method: author self-review; no independent reviewer/subagent was available;
+- Critical findings: 0;
+- Important findings: 5;
+- reviewed behavior SHA: `4796d28e9285dc395240010987126a45c4e5ed5d`;
+- exact post-review CI: `37999918527` - success;
+- post-review full suite: 463 passed;
+- post-review portable fingerprint unchanged:
+  `2f92b5092de346f62879ac2cbb9f96d6de5d6f919e12d0693345c8228b01ab2a`;
+- post-review primary outcome: `SUPPORTED`;
+- post-review physical qualification: GREEN;
+- A007/A008 source unchanged from activation base;
+- review fixes cover completed-primitive evidence, fail-closed replay/snapshot
+  result invariants, exact terminal-model digest pin, aggregate-vs-case
+  evidence recomputation, and raw `model_control_isolated` evidence;
+- final-main integration/CI/synchronization remain pending.
+
 Qualification report:
 `docs/development/reports/ASCA-20261010-A009-integrated-cognitive-loop.md`.
 
 ## Current Action
 
-A009 is a DONE closure candidate with exact branch qualification and physical
-integration GREEN. Issue #9 intentionally remains open while Task 7 performs
-whole-branch review and reviewed final-main integration.
+A009 is a DONE closure candidate with exact branch qualification, physical
+integration, whole-branch author self-review, and exact post-review branch CI
+GREEN. Issue #9 intentionally remains open while Task 7 performs reviewed
+final-main integration and synchronization.
 
 A010 remains PLANNED and has no GitHub issue.
 
 ## Next Action
 
-Execute A009 Task 7: whole-branch review, resolve any Critical/Important
-findings with RED -> GREEN evidence, rerun full qualification, fast-forward
-main only, require exact final-main CI, record final-main evidence, synchronize
-0/0, and only then close Issue #9.
+Execute the remaining A009 Task 7 integration steps: verify clean/synchronized
+main preconditions, fast-forward main only, rerun merged-main gates, push main,
+require exact final-main CI, record final-main evidence, synchronize 0/0, and
+only then close Issue #9.
 
 ## Resume Rule
 

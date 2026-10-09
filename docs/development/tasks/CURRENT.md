@@ -9,6 +9,8 @@ A008 main integration: GREEN
 A009 deterministic qualification: GREEN
 A009 physical qualification: GREEN
 A009 exact branch CI: GREEN
+A009 whole-branch review: GREEN
+A009 exact post-review branch CI: GREEN
 
 ## Current Action
 
@@ -20,14 +22,15 @@ outcome `SUPPORTED`. The exact qualified branch candidate is
 A010 — Dense/Non-selective Baseline Comparison remains PLANNED. No A010 GitHub
 issue has been created.
 
-A009 GitHub Issue #9 remains open until whole-branch review, reviewed fast-forward
-integration to main, exact final-main CI, and final synchronization are GREEN.
+A009 GitHub Issue #9 remains open until reviewed fast-forward integration to
+main, exact final-main CI, final-main evidence, and final synchronization are
+GREEN.
 
 ## Next Action
 
-Finish A009 Task 7 whole-branch review and final-main integration evidence.
-After A009 Issue #9 is closed on exact final-main evidence, A010 may be
-activated under a separate design/plan/task gate.
+Finish A009 Task 7 reviewed final-main integration and exact final-main
+evidence. After A009 Issue #9 is closed on exact final-main evidence, A010 may
+be activated under a separate design/plan/task gate.
 
 ## Resume Rule
 
