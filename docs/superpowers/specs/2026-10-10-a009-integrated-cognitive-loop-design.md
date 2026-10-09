@@ -266,8 +266,15 @@ Conceptually:
 ActionMemoryRequirement(
     action_ref: str,
     required_memory_ids: tuple[str, ...],
+    failure_observation_kind: ObservationKind,
+    failure_payload_ref: str,
 )
 ```
+
+The record requires a nonblank action ref, at least one unique nonblank required
+memory ID, a real `ObservationKind`, and a nonblank failure payload ref. One
+context-bound executor may contain at most one memory-requirement record per
+action ref.
 
 A deterministic context-bound simulator checks these requirements before an
 A008 primitive action is executed.
@@ -278,9 +285,14 @@ delegates to the normal deterministic action behavior.
 If one or more required memory IDs are absent:
 
 - no action state write occurs;
-- the executor returns an observation that does not match the A008
+- the executor returns a deterministic `Observation` with the requirement's
+  `failure_observation_kind` and `failure_payload_ref`;
+- the observation ID is derived from execution ID + canonical primitive path +
+  a stable missing-memory event suffix, with no random UUID or timestamp;
+- A008 verifies that observation against the existing step
   `ExpectedOutcome`;
-- A008 CHUNKED detects the mismatch normally;
+- A008 CHUNKED detects the mismatch normally when the declared failure
+  observation does not match;
 - A008 interrupts immediately;
 - A009 receives the resulting `ProcedureInterruption`.
 
