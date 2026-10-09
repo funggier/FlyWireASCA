@@ -38,8 +38,8 @@ Out of scope:
 
 - Generic model contracts and roadmap migration: DONE.
 - Ollama transport and adapter: DONE.
-- Qwen-only baseline and portable CI: ACTIVE.
-- Local physical Qwen qualification: PLANNED.
+- Qwen-only baseline and portable CI: DONE.
+- Local physical Qwen qualification: ACTIVE.
 - Exact qualification and closure: PLANNED.
 
 ## Acceptance Criteria
@@ -83,8 +83,8 @@ Further evidence is appended only after fresh verification.
 
 ## Current Action
 
-Implement Task 3 Qwen-only controlled baseline scoring and portable CI coverage under TDD.
+Implement Task 4 local physical Qwen qualification CLI under TDD, then run it against the installed local Ollama/Qwen runtime.
 
 ## Next Action
 
-After portable baseline software is GREEN and committed, implement the local physical Qwen qualification runner.
+After physical qualification passes and evidence is captured, run exact branch qualification and closure.

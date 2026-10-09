@@ -1,3 +1,13 @@
+from .baseline import (
+    BaselineScoring,
+    ModelBaselineCase,
+    ModelBaselineCaseResult,
+    ModelBaselineReport,
+    build_qwen_a004_baseline_cases,
+    normalize_baseline_answer,
+    qualify_qwen_a004_report,
+    run_model_baseline,
+)
 from .adapter import ModelAdapter
 from .contracts import (
     ModelDescriptor,
@@ -17,6 +27,14 @@ from .errors import (
 from .ollama import OllamaModelAdapter, UrllibJsonTransport
 
 __all__ = [
+    "BaselineScoring",
+    "ModelBaselineCase",
+    "ModelBaselineCaseResult",
+    "ModelBaselineReport",
+    "build_qwen_a004_baseline_cases",
+    "normalize_baseline_answer",
+    "qualify_qwen_a004_report",
+    "run_model_baseline",
     "ModelAdapter",
     "ModelAdapterError",
     "ModelDescriptor",
