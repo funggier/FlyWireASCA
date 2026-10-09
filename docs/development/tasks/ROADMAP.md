@@ -8,7 +8,7 @@
 | A004 | Local Model Adapter & Qwen3.5:4B Baseline | DONE |
 | A005 | Semantic Vector Memory Retrieval | DONE |
 | A006 | Working Set / Selective Activation | DONE |
-| A007 | Surprise, Uncertainty & Expansion | PLANNED |
+| A007 | Surprise, Uncertainty & Expansion | ACTIVE |
 | A008 | Procedural Memory / Skill Chunking | PLANNED |
 | A009 | Integrated Cognitive Loop | PLANNED |
 | A010 | Dense/Non-selective Baseline Comparison | PLANNED |

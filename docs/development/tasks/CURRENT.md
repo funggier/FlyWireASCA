@@ -1,25 +1,23 @@
 # Current Development Task
 
 Current task: A007
-Status: PLANNED
-GitHub Issue: not created
+Status: ACTIVE
+GitHub Issue: #7
+Branch: research/a007-uncertainty-expansion
 
 ## Current Action
 
-No implementation task is active. A006 has a qualified closure candidate and
-must complete whole-branch review/final integration gates before A007 begins.
+Implement A007 — Surprise, Uncertainty & Expansion from the approved design and
+Native implementation plan. Task 1 is contracts/profile/task activation.
 
 ## Next Action
 
-After A006 final main CI and synchronization are GREEN, design A007 —
-Surprise, Uncertainty & Expansion as a separate architectural task.
-
-A007 should consume evidence such as insufficient evidence, partial recall, and
-budget-boundary conditions. It must not assume A006 bounded-union convergence
-is superior; the A006 frozen physical outcome was NOT_SUPPORTED.
+Implement structural trigger derivation, bounded policy runner, portable
+qualification, and frozen physical A005+A006+A007 qualification in plan order.
 
 ## Resume Rule
 
-Read this file, the A006 closure report, live Git/GitHub/Ollama state, and the
-paused FlyWireLLM state before action. Do not create a graph milestone
-automatically and do not restart FlyWireLLM training.
+Read this file, the A007 task/spec/plan, live Git/GitHub/Ollama state, and A006
+closure evidence before action. Preserve A006 `NOT_SUPPORTED`; do not lower
+the A005 threshold, create a typed graph, generate cues with Qwen3.5:4b, or
+restart FlyWireLLM training.

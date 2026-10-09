@@ -14,11 +14,10 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_planned_a007_after_a006_closure():
-    text = _read(TASKS / "CURRENT.md")
-    assert "Current task: A007" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
+def test_a006_report_records_a007_was_planned_at_closure():
+    text = _read(REPORT)
+    assert "A007" in text
+    assert "PLANNED" in text
 
 
 def test_a006_task_is_done_and_preserves_scope_and_physical_outcome():
@@ -44,16 +43,16 @@ def test_a006_task_is_done_and_preserves_scope_and_physical_outcome():
         assert heading in text
 
 
-def test_roadmap_marks_a006_done_and_a007_planned():
+def test_live_roadmap_preserves_a006_done_while_a007_can_advance():
     text = _read(TASKS / "ROADMAP.md")
     assert "| A005 | Semantic Vector Memory Retrieval | DONE |" in text
     assert "| A006 | Working Set / Selective Activation | DONE |" in text
-    assert "| A007 | Surprise, Uncertainty & Expansion | PLANNED |" in text
+    assert "| A007 | Surprise, Uncertainty & Expansion |" in text
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
 
 
-def test_readme_records_a006_result_without_claiming_compute_or_generation_gain():
-    text = _read(ROOT / "README.md")
+def test_a006_report_records_non_compute_active_state_claim_boundary():
+    text = _read(REPORT)
     lower = text.lower()
     assert "a006" in lower
     assert "NOT_SUPPORTED" in text
@@ -92,11 +91,12 @@ def test_a006_report_has_exactly_one_final_hypothesis_outcome():
     assert "Final A006 hypothesis outcome: `MIXED`" not in text
 
 
-def test_a006_closure_does_not_create_graph_or_a007_issue():
+def test_a006_closure_did_not_create_graph_and_report_remains_historical():
     task_names = {path.name.lower() for path in TASKS.glob("*.md")}
     assert not any("graph" in name for name in task_names)
-    current = _read(TASKS / "CURRENT.md")
-    assert "GitHub Issue: not created" in current
+    text = _read(REPORT)
+    assert "A007" in text
+    assert "PLANNED" in text
 
 
 def test_a005_closure_report_remains_historical_evidence():

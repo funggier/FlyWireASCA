@@ -41,20 +41,17 @@ Start with:
 
 ## Current stage
 
-A006 - Working Set / Selective Activation has a qualified closure candidate;
-A007 - Surprise, Uncertainty & Expansion remains planned.
+A007 - Surprise, Uncertainty & Expansion is active.
 
-A006 implements deterministic bounded working-set selection over A005
-Vector + Metadata retrieval. Portable synthetic tests demonstrate a convergence
-recovery and strong **active-state** reduction, but the frozen physical
-`qwen3-embedding:0.6b` experiment produced outcome `NOT_SUPPORTED` for the
-claim that bounded-union convergence improves required-memory selection over
-SINGLE_BEST. Required-memory coverage remained 1.0 with zero convergence
-regressions.
+A006 qualified deterministic bounded working-set selection, while its frozen
+physical convergence-benefit outcome remained `NOT_SUPPORTED`. A007 therefore
+uses `SINGLE_BEST` as the primary selector and tests whether typed structural
+signals can drive bounded retrieval/working-set expansion selectively.
 
-Active-state reduction is not a compute, FLOP, power, or energy-reduction
-claim. A006 does not build or traverse a typed graph and does not call
-`qwen3.5:4b` generation.
+A007 v0.1 does not qualify scalar prediction surprise, does not lower the A005
+threshold, does not build or traverse a typed graph, and does not use
+`qwen3.5:4b` to generate cues or decide expansion. FlyWireLLM remains paused
+and independent.
 
 
 ## Claims boundary

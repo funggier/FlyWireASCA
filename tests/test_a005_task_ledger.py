@@ -41,7 +41,7 @@ def test_live_roadmap_preserves_a005_done_while_a006_can_advance():
     text = _read(TASKS / "ROADMAP.md")
     assert "| A005 | Semantic Vector Memory Retrieval | DONE |" in text
     assert "| A006 | Working Set / Selective Activation |" in text
-    assert "| A007 | Surprise, Uncertainty & Expansion | PLANNED |" in text
+    assert "| A007 | Surprise, Uncertainty & Expansion |" in text
     assert "Graph" not in text
 
 
