@@ -435,6 +435,30 @@ A006 intentionally does not answer:
 
 Those require future experiments and must not be inferred from A006.
 
+## Main integration evidence
+
+A006 was fast-forward merged locally into `main` from
+`6147b9a6f6bc8c27b66735812e54c0050f13df36` to the qualified branch head:
+
+`90ee1709bfd6a827246f5c6292e73f264bf07c2c`
+
+Fresh merged-main verification before push:
+
+- `python -m pytest -q`: **238 passed**
+- architecture contract audit: PASS
+- repository qualification: PASS
+- A003 familiarity qualification: PASS
+- `git diff --check origin/main..HEAD`: PASS
+
+The merged implementation was pushed to `main` and exact GitHub CI passed:
+
+- run: `37932246076`
+- head SHA: `90ee1709bfd6a827246f5c6292e73f264bf07c2c`
+- conclusion: **success**
+
+A final documentation-only closure commit follows this evidence and must itself
+pass exact-main CI before Issue #6 is closed.
+
 ## Next milestone
 
 A007 — Surprise, Uncertainty & Expansion remains **PLANNED**.

@@ -140,12 +140,13 @@ Detailed evidence:
 
 ## Current Action
 
-A006 implementation and branch-candidate qualification are complete. Require
-closure-branch review/CI and final main integration gates before Issue #6 is
-closed.
+The qualified implementation has been fast-forward merged into `main`; merged
+implementation CI run `37932246076` passed at
+`90ee1709bfd6a827246f5c6292e73f264bf07c2c`. Verify the final
+documentation-only closure commit on exact `main`, then close Issue #6.
 
 ## Next Action
 
-After A006 final main CI and synchronization are GREEN, A007 — Surprise,
-Uncertainty & Expansion remains PLANNED for a separate design/task. A007 must
-not assume bounded-union convergence is superior based on A006.
+After final closure-evidence `main` CI and synchronization are GREEN, remove
+the clean A006 worktree/local branch. A007 — Surprise, Uncertainty & Expansion
+remains PLANNED for a separate design/task.

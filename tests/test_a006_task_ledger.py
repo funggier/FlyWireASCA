@@ -104,3 +104,9 @@ def test_a005_closure_report_remains_historical_evidence():
     assert "Final graph decision: `VECTOR_SUFFICIENT`" in text
     assert "0.5037018224299838" in text
     assert "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d" in text
+
+def test_a006_report_records_merged_main_ci_evidence():
+    text = _read(REPORT)
+    assert "90ee1709bfd6a827246f5c6292e73f264bf07c2c" in text
+    assert "37932246076" in text
+    assert "Main integration evidence" in text
