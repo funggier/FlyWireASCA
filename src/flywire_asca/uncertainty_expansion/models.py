@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from flywire_asca.contracts import ActivationBudget
+from flywire_asca.selective_activation import SelectiveWorkingSetResult
 from flywire_asca.contracts.validation import require_nonempty
 
 
@@ -204,3 +205,97 @@ def build_a007_primary_profile() -> ExpansionProfile:
             ),
         ),
     )
+
+@dataclass(frozen=True, slots=True)
+class ExpansionRoundResult:
+    scope: ExpansionScope
+    working_set_result: SelectiveWorkingSetResult
+    assessment: ExpansionDecision
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.scope, ExpansionScope):
+            raise ValueError("scope must be an ExpansionScope")
+        if not isinstance(self.working_set_result, SelectiveWorkingSetResult):
+            raise ValueError(
+                "working_set_result must be a SelectiveWorkingSetResult"
+            )
+        if not isinstance(self.assessment, ExpansionDecision):
+            raise ValueError("assessment must be an ExpansionDecision")
+        if self.assessment.current_scope != self.scope:
+            raise ValueError("assessment current_scope must equal scope")
+        if self.assessment.round_index != self.scope.round_index:
+            raise ValueError("assessment round_index must equal scope round_index")
+
+
+@dataclass(frozen=True, slots=True)
+class ExpansionRunResult:
+    policy: ExpansionPolicy
+    rounds: tuple[ExpansionRoundResult, ...]
+    final_result: SelectiveWorkingSetResult
+    final_assessment: ExpansionDecision
+    termination_reason: ExpansionTerminationReason
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.policy, ExpansionPolicy):
+            raise ValueError("policy must be an ExpansionPolicy")
+        if not self.rounds:
+            raise ValueError("rounds must not be empty")
+        if any(not isinstance(item, ExpansionRoundResult) for item in self.rounds):
+            raise ValueError("rounds must contain only ExpansionRoundResult values")
+        for index, item in enumerate(self.rounds):
+            if item.scope.round_index != index:
+                raise ValueError("round scopes must be contiguous from round 0")
+        if not isinstance(self.final_result, SelectiveWorkingSetResult):
+            raise ValueError("final_result must be a SelectiveWorkingSetResult")
+        if self.final_result != self.rounds[-1].working_set_result:
+            raise ValueError("final_result must equal last round working_set_result")
+        if not isinstance(self.final_assessment, ExpansionDecision):
+            raise ValueError("final_assessment must be an ExpansionDecision")
+        if self.final_assessment != self.rounds[-1].assessment:
+            raise ValueError("final_assessment must equal last round assessment")
+        if not isinstance(self.termination_reason, ExpansionTerminationReason):
+            raise ValueError(
+                "termination_reason must be an ExpansionTerminationReason"
+            )
+
+        if self.policy is ExpansionPolicy.NO_EXPANSION:
+            if len(self.rounds) != 1:
+                raise ValueError("NO_EXPANSION must contain exactly one round")
+            if (
+                self.termination_reason
+                is not ExpansionTerminationReason.POLICY_NO_EXPANSION
+            ):
+                raise ValueError(
+                    "termination_reason for NO_EXPANSION must be "
+                    "POLICY_NO_EXPANSION"
+                )
+            return
+
+        if self.policy is ExpansionPolicy.ALWAYS_EXPAND:
+            if (
+                self.termination_reason
+                is not ExpansionTerminationReason.POLICY_MAX_SCOPE
+            ):
+                raise ValueError(
+                    "termination_reason for ALWAYS_EXPAND must be "
+                    "POLICY_MAX_SCOPE"
+                )
+            return
+
+        if self.policy is ExpansionPolicy.SIGNAL_DRIVEN:
+            if self.final_assessment.kind is ExpansionDecisionKind.STOP:
+                expected = ExpansionTerminationReason.CONTROLLER_STOP
+            elif self.final_assessment.kind is ExpansionDecisionKind.EXHAUSTED:
+                expected = ExpansionTerminationReason.CONTROLLER_EXHAUSTED
+            else:
+                raise ValueError(
+                    "SIGNAL_DRIVEN final assessment must be STOP or EXHAUSTED"
+                )
+            if self.termination_reason is not expected:
+                raise ValueError(
+                    "termination_reason does not match SIGNAL_DRIVEN "
+                    "final assessment"
+                )
+            return
+
+        raise ValueError("unsupported ExpansionPolicy")
