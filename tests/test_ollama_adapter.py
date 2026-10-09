@@ -295,3 +295,29 @@ def test_urllib_transport_maps_timeout_unavailable_http_and_invalid_json(monkeyp
     )
     with pytest.raises(ModelProtocolError, match="object"):
         transport.request_json("GET", "/api/version", None, 1.0)
+
+def test_generate_rejects_incomplete_or_wrong_role_nonstream_response():
+    not_done = _responses()
+    not_done[("POST", "/api/chat")]["done"] = False
+    with pytest.raises(ModelProtocolError, match="done"):
+        OllamaModelAdapter(
+            "qwen3.5:4b",
+            transport=FakeTransport(not_done),
+        ).generate(_request())
+
+    wrong_role = _responses()
+    wrong_role[("POST", "/api/chat")]["message"]["role"] = "user"
+    with pytest.raises(ModelProtocolError, match="role"):
+        OllamaModelAdapter(
+            "qwen3.5:4b",
+            transport=FakeTransport(wrong_role),
+        ).generate(_request())
+
+
+def test_generate_accepts_explicit_false_as_no_hidden_thinking_content():
+    responses = _responses(thinking=False)
+    result = OllamaModelAdapter(
+        "qwen3.5:4b",
+        transport=FakeTransport(responses),
+    ).generate(_request())
+    assert result.content == "OK"

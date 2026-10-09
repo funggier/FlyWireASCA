@@ -298,19 +298,40 @@ class OllamaModelAdapter:
             raise ModelProtocolError(
                 f"response model mismatch: {response_model}"
             )
+        if response.get("done") is not True:
+            raise ModelProtocolError(
+                "backend response done must be true for non-streaming generation"
+            )
         message = _require_mapping(
             "message",
             response.get("message"),
         )
+        message_role = _require_string(
+            "message.role",
+            message.get("role"),
+        )
+        if message_role != "assistant":
+            raise ModelProtocolError(
+                f"message.role must be assistant, observed {message_role}"
+            )
         content = _require_string(
             "message.content",
             message.get("content"),
         )
         returned_thinking = message.get("thinking")
-        if not request.thinking and returned_thinking not in (None, ""):
-            raise ModelProtocolError(
-                "backend returned nonempty thinking while thinking is disabled"
+        if not request.thinking:
+            thinking_is_empty = (
+                returned_thinking is None
+                or returned_thinking is False
+                or (
+                    isinstance(returned_thinking, str)
+                    and not returned_thinking.strip()
+                )
             )
+            if not thinking_is_empty:
+                raise ModelProtocolError(
+                    "backend returned nonempty thinking while thinking is disabled"
+                )
 
         return ModelResponse(
             request_id=request.request_id,

@@ -235,3 +235,45 @@ def test_report_validates_count_and_rate_consistency():
             prompt_eval_duration_ns=None,
             eval_duration_ns=None,
         )
+
+def test_baseline_contract_rejects_malformed_scoring_messages_and_case_results():
+    with pytest.raises(ValueError, match="scoring"):
+        ModelBaselineCase(
+            "bad-scoring",
+            (ModelMessage(ModelRole.USER, "x"),),
+            "exact_normalized",  # type: ignore[arg-type]
+            ("x",),
+        )
+
+    with pytest.raises(ValueError, match="messages"):
+        ModelBaselineCase(
+            "bad-message",
+            ("x",),  # type: ignore[arg-type]
+            BaselineScoring.EXACT_NORMALIZED,
+            ("x",),
+        )
+
+    with pytest.raises(ValueError, match="expected_answers"):
+        ModelBaselineCase(
+            "bad-answer",
+            (ModelMessage(ModelRole.USER, "x"),),
+            BaselineScoring.EXACT_NORMALIZED,
+            (1,),  # type: ignore[arg-type]
+        )
+
+    with pytest.raises(ValueError, match="case_results"):
+        ModelBaselineReport(
+            profile_name="p",
+            model_name="m",
+            model_digest="d",
+            case_results=("not-a-result",),  # type: ignore[arg-type]
+            case_count=1,
+            passed_case_count=0,
+            pass_rate=0.0,
+            prompt_tokens_total=None,
+            generated_tokens_total=None,
+            total_duration_ns=None,
+            load_duration_ns=None,
+            prompt_eval_duration_ns=None,
+            eval_duration_ns=None,
+        )

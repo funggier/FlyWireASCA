@@ -149,3 +149,35 @@ def test_generic_contracts_and_protocol_do_not_name_ollama_or_qwen():
     hints = get_type_hints(ModelAdapter.generate)
     assert hints["request"] is ModelRequest
     assert hints["return"] is ModelResponse
+
+def test_public_contracts_reject_malformed_runtime_types_at_boundary():
+    with pytest.raises(ValueError, match="role"):
+        ModelMessage("user", "hello")  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError, match="messages"):
+        ModelRequest(
+            "req",
+            ("not-a-message",),  # type: ignore[arg-type]
+        )
+
+    with pytest.raises(ValueError, match="temperature"):
+        ModelRequest(
+            "req",
+            (ModelMessage(ModelRole.USER, "x"),),
+            temperature=True,  # type: ignore[arg-type]
+        )
+
+    with pytest.raises(ValueError, match="content"):
+        ModelResponse(
+            request_id="req",
+            model_name="m",
+            model_digest=None,
+            content=None,  # type: ignore[arg-type]
+            finish_reason=None,
+            prompt_tokens=None,
+            generated_tokens=None,
+            total_duration_ns=None,
+            load_duration_ns=None,
+            prompt_eval_duration_ns=None,
+            eval_duration_ns=None,
+        )

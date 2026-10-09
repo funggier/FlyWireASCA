@@ -36,6 +36,8 @@ class ModelMessage:
     content: str
 
     def __post_init__(self) -> None:
+        if not isinstance(self.role, ModelRole):
+            raise ValueError("role must be a ModelRole")
         require_nonempty("content", self.content)
 
 
@@ -53,8 +55,15 @@ class ModelRequest:
         require_nonempty("request_id", self.request_id)
         if not self.messages:
             raise ValueError("messages must not be empty")
+        if any(not isinstance(message, ModelMessage) for message in self.messages):
+            raise ValueError("messages must contain only ModelMessage values")
         _require_positive_int("max_output_tokens", self.max_output_tokens)
         _require_positive_int("context_limit", self.context_limit)
+        if (
+            not isinstance(self.temperature, (int, float))
+            or isinstance(self.temperature, bool)
+        ):
+            raise ValueError("temperature must be a finite nonnegative number")
         temperature = float(self.temperature)
         if not math.isfinite(temperature) or temperature < 0.0:
             raise ValueError("temperature must be finite and nonnegative")
@@ -113,6 +122,8 @@ class ModelResponse:
     def __post_init__(self) -> None:
         require_nonempty("request_id", self.request_id)
         require_nonempty("model_name", self.model_name)
+        if not isinstance(self.content, str):
+            raise ValueError("content must be a string")
         _require_optional_text("model_digest", self.model_digest)
         _require_optional_text("finish_reason", self.finish_reason)
         for name in (

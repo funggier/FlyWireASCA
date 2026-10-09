@@ -45,10 +45,16 @@ class ModelBaselineCase:
 
     def __post_init__(self) -> None:
         require_nonempty("case_id", self.case_id)
+        if not isinstance(self.scoring, BaselineScoring):
+            raise ValueError("scoring must be a BaselineScoring value")
         if not self.messages:
             raise ValueError("messages must not be empty")
+        if any(not isinstance(message, ModelMessage) for message in self.messages):
+            raise ValueError("messages must contain only ModelMessage values")
         if not self.expected_answers:
             raise ValueError("expected_answers must not be empty")
+        if any(not isinstance(value, str) for value in self.expected_answers):
+            raise ValueError("expected_answers must contain only strings")
         canonical = tuple(
             sorted({normalize_baseline_answer(value) for value in self.expected_answers})
         )
@@ -121,6 +127,13 @@ class ModelBaselineReport:
             raise ValueError("case_count must be a nonnegative integer")
         if self.case_count != len(self.case_results):
             raise ValueError("case_count must equal len(case_results)")
+        if any(
+            not isinstance(result, ModelBaselineCaseResult)
+            for result in self.case_results
+        ):
+            raise ValueError(
+                "case_results must contain only ModelBaselineCaseResult values"
+            )
         actual_passed = sum(1 for result in self.case_results if result.passed)
         if self.passed_case_count != actual_passed:
             raise ValueError(
