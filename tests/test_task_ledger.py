@@ -13,11 +13,12 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_exactly_one_next_planned_task_a004():
+def test_current_points_to_exactly_one_active_task_a004():
     text = _read("CURRENT.md")
     assert "Current task: A004" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
+    assert "Status: ACTIVE" in text
+    assert "GitHub Issue: #4" in text
+    assert "Branch: research/a004-qwen-adapter" in text
     assert text.count("Current task:") == 1
 
 
@@ -63,9 +64,9 @@ def test_a001_contains_recovery_and_evidence_sections():
         assert heading in text
 
 
-def test_roadmap_lists_a001_through_a010_exactly_once():
+def test_roadmap_lists_a001_through_a011_exactly_once():
     text = _read("ROADMAP.md")
-    for number in range(1, 11):
+    for number in range(1, 12):
         task_id = f"A{number:03d}"
         assert text.count(task_id) == 1, task_id
 

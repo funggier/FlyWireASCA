@@ -1,21 +1,23 @@
 # Current Development Task
 
 Current task: A004
-Status: PLANNED
-GitHub Issue: not created
+Status: ACTIVE
+GitHub Issue: #4
+Branch: research/a004-qwen-adapter
 
 ## Current Action
 
-No implementation task is active. A003 has a qualified closure candidate and
-must complete its external integration gates before any A004 implementation.
+Implement A004 — Local Model Adapter & Qwen3.5:4B Baseline using the approved
+design/plan in the isolated A004 worktree.
 
 ## Next Action
 
-After A003 final main CI and synchronization are GREEN, design and activate
-A004 — Associative Memory & Recall as a separate task/branch.
+Complete generic model contracts and roadmap migration, then implement the
+Ollama HTTP adapter, Qwen-only baseline, local physical qualification, and
+exact closure gates.
 
 ## Resume Rule
 
-Read this file, the A003 closure report, live Git/GitHub state, and the active
-FlyWireLLM runtime state before taking action. Do not start or restart
-FlyWireLLM training from FlyWireASCA.
+Read this file, the A004 task file, approved A004 spec/plan, and live
+Git/GitHub/Ollama state before taking action. ASCA remains model-agnostic.
+FlyWireLLM training is paused and must not be restarted or modified by A004.

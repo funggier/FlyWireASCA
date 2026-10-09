@@ -17,9 +17,13 @@ FlyWireASCA is independent from `funggier/FlyWireLLM`.
 - **FlyWireLLM** remains a separate language-model architecture and training
   project.
 
-FlyWireASCA may later use FlyWireLLM or another model through an adapter, but
-no specific LLM, Transformer, provider, or cloud service is a mandatory core
-dependency.
+FlyWireASCA is model-agnostic. It may use local or remote models through a
+model-adapter boundary, but no specific LLM, Transformer, provider, or cloud
+service is a mandatory core dependency.
+
+The current model-under-test is local `qwen3.5:4b` through Ollama. FlyWireLLM
+remains an independent project and a future adapter candidate rather than an
+A004 dependency.
 
 ## Development method
 
@@ -37,11 +41,11 @@ Start with:
 
 ## Current stage
 
-A001 — Repository & Research Foundation.
+A004 — Local Model Adapter & Qwen3.5:4B Baseline.
 
-A001 establishes the repository, MIT licensing, Python package foundation,
-tests, CI, task tracking, and qualification workflow. Cognitive algorithms are
-deliberately deferred to later tasks.
+A001-A003 are complete. A004 adds a backend-neutral model interface, a local
+Ollama adapter, and a reproducible Qwen-only control baseline so later ASCA
+cognitive components can be compared against the same model backend.
 
 ## Claims boundary
 
