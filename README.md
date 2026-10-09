@@ -41,17 +41,24 @@ Start with:
 
 ## Current stage
 
-A007 - Surprise, Uncertainty & Expansion is active.
+A007 - Surprise, Uncertainty & Expansion has a qualified closure candidate;
+A008 - Procedural Memory / Skill Chunking remains planned.
 
-A006 qualified deterministic bounded working-set selection, while its frozen
-physical convergence-benefit outcome remained `NOT_SUPPORTED`. A007 therefore
-uses `SINGLE_BEST` as the primary selector and tests whether typed structural
-signals can drive bounded retrieval/working-set expansion selectively.
+A007 uses `SINGLE_BEST` as the primary selector and compares
+`NO_EXPANSION`, `SIGNAL_DRIVEN`, and `ALWAYS_EXPAND` over a frozen
+three-round scope ladder. The frozen physical fixture produced outcome
+`SUPPORTED`: SIGNAL_DRIVEN recovered three declared memories missed by
+NO_EXPANSION, had zero regressions, matched ALWAYS_EXPAND required-memory
+coverage, and used 15 rounds versus 24 for ALWAYS_EXPAND.
 
-A007 v0.1 does not qualify scalar prediction surprise, does not lower the A005
-threshold, does not build or traverse a typed graph, and does not use
-`qwen3.5:4b` to generate cues or decide expansion. FlyWireLLM remains paused
-and independent.
+A007 does not qualify true prediction surprise or calibrated scalar
+uncertainty, does not lower the A005 threshold, does not build or traverse a
+typed graph, and does not use `qwen3.5:4b` to generate cues or decide
+expansion. A006's separate physical bounded-union convergence outcome remains
+`NOT_SUPPORTED`.
+
+Measured round/request reductions are workload-specific and do not by
+themselves imply FLOP, power, or energy savings.
 
 
 ## Claims boundary

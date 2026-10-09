@@ -13,12 +13,11 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_exactly_one_active_task_a007():
+def test_current_points_to_exactly_one_next_planned_task_a008():
     text = _read("CURRENT.md")
-    assert "Current task: A007" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #7" in text
-    assert "Branch: research/a007-uncertainty-expansion" in text
+    assert "Current task: A008" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert text.count("Current task:") == 1
 
 
@@ -144,3 +143,11 @@ def test_a006_closure_report_records_selective_activation_result():
     assert "224864cc9d70228d4feb80a9fcbc07f2776808d3" in text
     assert "37927165972" in text
     assert "Final A006 hypothesis outcome: `NOT_SUPPORTED`" in text
+
+def test_a007_closure_report_records_structural_expansion_result():
+    report = ROOT / "docs" / "development" / "reports" / "ASCA-20261009-A007-surprise-uncertainty-expansion.md"
+    assert report.exists(), "A007 closure report must exist"
+    text = report.read_text(encoding="utf-8")
+    assert "d76084178a3fca84208794efca7a46330785eb6e" in text
+    assert "37940884611" in text
+    assert "Final A007 hypothesis outcome: `SUPPORTED`" in text
