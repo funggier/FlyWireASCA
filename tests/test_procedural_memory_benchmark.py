@@ -90,3 +90,10 @@ def test_report_is_deterministic_and_engineering_qualifier_passes():
 def test_primary_hypothesis_is_supported_by_frozen_fixture():
     report=run_a008_benchmark(build_a008_fixture())
     assert classify_a008_hypothesis(report)=="SUPPORTED"
+
+def test_invalid_library_cases_do_not_contaminate_chunk_reuse_metrics():
+    report=run_a008_benchmark(build_a008_fixture())
+    reuse=dict(report.chunk_reuse_counts)
+    assert reuse["heat-water"] == 2
+    for invalid_only_id in ("direct","a","b","missing-child","depth-2","depth-9"):
+        assert invalid_only_id not in reuse

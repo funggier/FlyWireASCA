@@ -42,8 +42,13 @@ class ProcedureLibrary:
     def __post_init__(self) -> None:
         if not self.procedures:
             raise ValueError("procedures must not be empty")
-        if not isinstance(self.max_call_depth, int) or isinstance(self.max_call_depth, bool) or self.max_call_depth <= 0:
-            raise ValueError("max_call_depth must be a positive integer")
+        if (
+            not isinstance(self.max_call_depth, int)
+            or isinstance(self.max_call_depth, bool)
+            or self.max_call_depth <= 0
+            or self.max_call_depth > 8
+        ):
+            raise ValueError("max_call_depth must be an integer from 1 through 8")
         if any(not isinstance(item, ProcedureDefinition) for item in self.procedures):
             raise ValueError("procedures must contain ProcedureDefinition values")
         by_id = {item.procedure.procedure_id: item for item in self.procedures}

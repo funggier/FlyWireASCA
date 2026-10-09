@@ -250,12 +250,103 @@ def validate_qualification_payload(payload):
     if aggregate.get("no_post_interruption_failure_count") != 0:
         errors.append("no_post_interruption_failure_count must be 0")
 
+    if (
+        isinstance(aggregate.get("case_count"), int)
+        and isinstance(aggregate.get("valid_case_count"), int)
+        and isinstance(aggregate.get("invalid_case_count"), int)
+        and aggregate["case_count"]
+        != aggregate["valid_case_count"] + aggregate["invalid_case_count"]
+    ):
+        errors.append("case_count must equal valid_case_count + invalid_case_count")
+
+    if (
+        isinstance(aggregate.get("success_case_count"), int)
+        and isinstance(aggregate.get("valid_case_count"), int)
+        and aggregate["success_case_count"] > aggregate["valid_case_count"]
+    ):
+        errors.append("success_case_count cannot exceed valid_case_count")
+
+    success_bound_metrics = (
+        "flat_success_count",
+        "chunked_success_count",
+        "blind_success_count",
+        "primitive_sequence_equivalence_count",
+        "flat_final_state_correct_count",
+        "chunked_final_state_correct_count",
+        "blind_final_state_correct_count",
+    )
+    success_cases = aggregate.get("success_case_count")
+    if isinstance(success_cases, int):
+        for name in success_bound_metrics:
+            value = aggregate.get(name)
+            if isinstance(value, int) and value > success_cases:
+                errors.append(f"{name} cannot exceed success_case_count")
+
+    failure_cases = aggregate.get("checked_failure_case_count")
+    if isinstance(failure_cases, int):
+        for name in (
+            "flat_exact_failure_localization_count",
+            "chunked_exact_failure_localization_count",
+            "blind_boundary_localization_count",
+        ):
+            value = aggregate.get(name)
+            if isinstance(value, int) and value > failure_cases:
+                errors.append(f"{name} cannot exceed checked_failure_case_count")
+        provenance = aggregate.get("explanation_provenance_correct_count")
+        if isinstance(provenance, int) and provenance > failure_cases * 3:
+            errors.append(
+                "explanation_provenance_correct_count cannot exceed "
+                "checked_failure_case_count * 3"
+            )
+
     reused = payload.get("reused_procedure_ids")
     if not isinstance(reused, list) or any(
         not isinstance(item, str) or not item for item in reused
     ):
         errors.append("reused_procedure_ids must be a list of nonblank strings")
         reused = []
+
+    reuse_counts_raw = payload.get("chunk_reuse_counts")
+    parsed_reuse_counts = {}
+    if not isinstance(reuse_counts_raw, list):
+        errors.append("chunk_reuse_counts must be a list")
+    else:
+        for item in reuse_counts_raw:
+            if (
+                not isinstance(item, list)
+                or len(item) != 2
+                or not isinstance(item[0], str)
+                or not item[0]
+                or not isinstance(item[1], int)
+                or isinstance(item[1], bool)
+                or item[1] < 0
+            ):
+                errors.append("chunk_reuse_counts entries must be [nonblank id, nonnegative int]")
+                parsed_reuse_counts = {}
+                break
+            if item[0] in parsed_reuse_counts:
+                errors.append("chunk_reuse_counts procedure IDs must be unique")
+                parsed_reuse_counts = {}
+                break
+            parsed_reuse_counts[item[0]] = item[1]
+
+    if parsed_reuse_counts:
+        expected_reused = sorted(
+            procedure_id
+            for procedure_id, count in parsed_reuse_counts.items()
+            if count >= 2
+        )
+        if sorted(reused) != expected_reused:
+            errors.append("reused_procedure_ids reuse metadata drift")
+        expected_reuse_count = sum(
+            count
+            for procedure_id, count in parsed_reuse_counts.items()
+            if procedure_id in expected_reused
+        )
+        if aggregate.get("chunk_reuse_count") != expected_reuse_count:
+            errors.append("chunk_reuse_count reuse metadata drift")
+    elif reused or aggregate.get("chunk_reuse_count") not in (0, None):
+        errors.append("reuse metadata is inconsistent with chunk_reuse_counts")
 
     outcome = payload.get("primary_hypothesis_outcome")
     if outcome not in {"SUPPORTED", "MIXED", "NOT_SUPPORTED"}:

@@ -79,6 +79,7 @@ def test_valid_negative_outcome_exits_zero(monkeypatch,capsys):
     # and recomputing the outcome through the production classifier helper.
     payload["aggregate_metrics"]["chunk_reuse_count"]=0
     payload["reused_procedure_ids"]=[]
+    payload["chunk_reuse_counts"]=[]
     payload["primary_hypothesis_outcome"]="NOT_SUPPORTED"
     monkeypatch.setattr(m,"run_qualification",lambda:payload)
     rc=m.main([])
@@ -94,3 +95,41 @@ def test_invalid_payload_exits_nonzero(monkeypatch,capsys):
     rc=m.main([])
     assert rc==1
     assert json.loads(capsys.readouterr().out)["experiment_valid"] is False
+
+@pytest.mark.parametrize(
+    "metric,value_from,expected_substring",
+    [
+        ("chunked_success_count", "success_plus_one", "chunked_success_count"),
+        ("primitive_sequence_equivalence_count", "success_plus_one", "primitive_sequence_equivalence_count"),
+        ("chunked_exact_failure_localization_count", "failure_plus_one", "chunked_exact_failure_localization_count"),
+        ("explanation_provenance_correct_count", "provenance_plus_one", "explanation_provenance_correct_count"),
+    ],
+)
+def test_cli_validator_rejects_impossible_count_relationships(metric,value_from,expected_substring):
+    m=load()
+    payload=m.run_qualification()
+    aggregate=payload["aggregate_metrics"]
+    if value_from=="success_plus_one":
+        aggregate[metric]=aggregate["success_case_count"]+1
+    elif value_from=="failure_plus_one":
+        aggregate[metric]=aggregate["checked_failure_case_count"]+1
+    else:
+        aggregate[metric]=aggregate["checked_failure_case_count"]*3+1
+    payload["primary_hypothesis_outcome"]="MIXED"
+    errors=m.validate_qualification_payload(payload)
+    assert any(expected_substring in error for error in errors)
+
+
+def test_cli_validator_rejects_case_partition_and_reuse_metadata_drift():
+    m=load()
+    payload=m.run_qualification()
+    payload["aggregate_metrics"]["valid_case_count"] += 1
+    payload["primary_hypothesis_outcome"]="MIXED"
+    errors=m.validate_qualification_payload(payload)
+    assert any("case_count" in error for error in errors)
+
+    payload=m.run_qualification()
+    payload["reused_procedure_ids"]=["fabricated"]
+    payload["primary_hypothesis_outcome"]="SUPPORTED"
+    errors=m.validate_qualification_payload(payload)
+    assert any("reuse" in error.lower() for error in errors)

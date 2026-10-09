@@ -120,3 +120,8 @@ def test_provenance_rejects_invalid_call_path():
     lib = ProcedureLibrary((root, child))
     with pytest.raises(ValueError, match="call_path"):
         canonical_explanation_memory_ids(lib, ("root", "child"), child.steps[0])
+
+def test_library_rejects_configured_max_depth_above_a008_cap():
+    leaf = proc("leaf-cap", [action("a", "act")], exp("d", "done"))
+    with pytest.raises(ValueError, match="max_call_depth"):
+        ProcedureLibrary((leaf,), max_call_depth=9)

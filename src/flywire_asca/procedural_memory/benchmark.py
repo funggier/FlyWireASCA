@@ -318,7 +318,7 @@ def run_a008_benchmark(cases: Iterable[ProceduralBenchmarkCase]) -> ProceduralBe
             if any(forbidden in mode_result.executed_primitive_step_paths for forbidden in case.forbidden_post_failure_paths):
                 no_post_failures += 1
 
-    reuse_counts = _reuse_counts(case_tuple)
+    reuse_counts = _reuse_counts(tuple(case for case, _result in valid_pairs))
     reused = tuple(pid for pid, count in reuse_counts if count >= 2)
     reuse_count = sum(count for _pid, count in reuse_counts if count >= 2)
     invalid_results = tuple(result for result in results if result.expected_validation_error is not None)
