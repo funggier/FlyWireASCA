@@ -132,14 +132,16 @@ Exact plan-gate CI:
 
 Task 1: `394e91f` — Activate A009 integrated cognitive loop contracts. Full Task 1 gate: 401 passed; architecture/repository/A003/A008 gates PASS.
 
+Task 2: `80b4ac1` — Add A009 integrated retrieval expansion. Full Task 2 gate: 410 passed; architecture/repository/A003/A008 gates PASS.
+
 ## Current Action
 
-Task 2 is ACTIVE: compose deterministic A005 vector retrieval, A006 `SINGLE_BEST`, and A007 initial structural expansion without changing their historical semantics.
+Task 3 is ACTIVE: add context-bound deterministic procedure execution and prove every higher-level replay starts from the same immutable pre-execution snapshot.
 
 ## Next Action
 
-Complete Task 2 RED -> GREEN gates and commit
-`Add A009 integrated retrieval expansion`, then continue Task 3 without pausing.
+Complete Task 3 RED -> GREEN gates and commit
+`Add A009 context-bound procedure replay`, then continue Task 4 without pausing.
 
 ## Resume Rule
 

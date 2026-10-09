@@ -42,3 +42,14 @@ __all__ += [
     "evaluate_integrated_scope",
     "run_initial_integrated_expansion",
 ]
+from .procedure import (
+    ActionMemoryRequirement,
+    ContextBoundProcedureExecutor,
+    ContextBoundProcedureExecutorFactory,
+)
+
+__all__ += [
+    "ActionMemoryRequirement",
+    "ContextBoundProcedureExecutor",
+    "ContextBoundProcedureExecutorFactory",
+]
