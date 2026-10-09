@@ -267,3 +267,12 @@ def test_main_identity_failure_exits_nonzero(monkeypatch, capsys):
     assert rc == 1
     assert payload["experiment_valid"] is False
     assert any("digest" in error for error in payload["errors"])
+
+def test_budget_truncation_case_does_not_label_an_arbitrary_equal_status_note_as_required():
+    module = _load_module()
+    case = next(
+        case for case in module.build_physical_fixture()
+        if case.case_id == "physical-budget-truncation"
+    )
+    assert case.strict_budget_expected is True
+    assert case.required_memory_ids == ()

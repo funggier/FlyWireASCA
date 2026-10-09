@@ -180,7 +180,7 @@ def build_physical_fixture() -> tuple[PhysicalSelectiveCase, ...]:
             (
                 PhysicalCue("budget-cue", "budget-q", "project launch readiness security backup deployment status"),
             ),
-            ("budget-00",),
+            (),
             strict_budget_expected=True,
         ),
         PhysicalSelectiveCase(
