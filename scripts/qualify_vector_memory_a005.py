@@ -132,6 +132,14 @@ def build_physical_qualification_fixture(
             "Somchai works at company B.",
             entity_ids=("person-b",),
         ),
+        _doc(
+            "physical-relation-owner",
+            "Mali owns the silver bicycle.",
+        ),
+        _doc(
+            "physical-relation-trip",
+            "The silver bicycle was used for the trip to Ayutthaya.",
+        ),
     )
     cases = (
         VectorMemoryBenchmarkCase(
@@ -193,6 +201,29 @@ def build_physical_qualification_fixture(
             ),
             ("physical-somchai-b",),
             metadata_filter_expected=True,
+        ),
+        VectorMemoryBenchmarkCase(
+            "physical-relation-challenge",
+            VectorMemoryQuery(
+                "physical-relation-challenge",
+                "Who owns the bicycle used for the Ayutthaya trip?",
+                top_k=2,
+                minimum_similarity=frozen_threshold,
+            ),
+            ("physical-relation-owner", "physical-relation-trip"),
+            require_recall_at_1=False,
+            relation_semantic_required=True,
+        ),
+        VectorMemoryBenchmarkCase(
+            "physical-no-hit",
+            VectorMemoryQuery(
+                "physical-no-hit",
+                "What is the password for the lunar research server?",
+                top_k=3,
+                minimum_similarity=frozen_threshold,
+            ),
+            (),
+            require_recall_at_1=False,
         ),
     )
     return documents, cases

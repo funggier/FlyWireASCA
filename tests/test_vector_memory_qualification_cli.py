@@ -79,6 +79,12 @@ def _vector_map(module):
         "Which Somchai works at company B?": _basis(8),
         "health probe english": _basis(9),
         "ทดสอบเวกเตอร์สุขภาพ": _basis(10),
+        "Mali owns the silver bicycle.": _basis(11),
+        "The silver bicycle was used for the trip to Ayutthaya.": _basis(11),
+        "Who owns the bicycle used for the Ayutthaya trip?": _basis(11),
+        "What is the password for the lunar research server?": tuple(
+            1.0 / math.sqrt(DIMENSION) for _ in range(DIMENSION)
+        ),
     }
     return mapping
 
@@ -127,7 +133,17 @@ def test_physical_calibration_and_qualification_fixtures_are_disjoint():
         {case.case_id for case in qual[1]}
     )
     assert len(cal[0]) == 4
-    assert len(qual[0]) == 6
+    assert len(qual[0]) == 8
+    assert {case.case_id for case in qual[1]} == {
+        "physical-en-paraphrase",
+        "physical-th-paraphrase",
+        "physical-th-to-en",
+        "physical-en-to-th",
+        "physical-same-name",
+        "physical-entity-filter",
+        "physical-relation-challenge",
+        "physical-no-hit",
+    }
 
 
 def test_descriptor_and_health_validation_pin_embedding_identity_and_vectors():
@@ -197,7 +213,11 @@ def test_qualification_mode_uses_pinned_digest_and_threshold_defaults(monkeypatc
         "physical-en-to-th",
         "physical-same-name",
         "physical-entity-filter",
+        "physical-relation-challenge",
+        "physical-no-hit",
     ]
+    assert payload["benchmark"]["no_hit_correctness"] == 1.0
+    assert payload["benchmark"]["relation_semantic_failure_count"] == 0
     assert payload["calibration_case_ids"] == [
         "physical-cal-bike",
         "physical-cal-cat",
