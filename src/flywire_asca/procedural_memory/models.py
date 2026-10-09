@@ -101,3 +101,93 @@ class FlattenedPrimitiveStep:
     action_ref: str
     expected_outcome: ExpectedOutcome
     explanation_memory_ids: tuple[str, ...]
+
+@dataclass(frozen=True, slots=True)
+class OutcomeVerification:
+    expectation_id: str
+    observation_id: str
+    matched: bool
+
+    def __post_init__(self) -> None:
+        require_nonempty("expectation_id", self.expectation_id)
+        require_nonempty("observation_id", self.observation_id)
+        if not isinstance(self.matched, bool):
+            raise ValueError("matched must be bool")
+
+
+@dataclass(frozen=True, slots=True)
+class SimulatedWorldState:
+    values: tuple[tuple[str, str], ...]
+
+    def __post_init__(self) -> None:
+        normalized = tuple(self.values)
+        keys: list[str] = []
+        for item in normalized:
+            if not isinstance(item, tuple) or len(item) != 2:
+                raise ValueError("values must contain (key, value) pairs")
+            key, value = item
+            require_nonempty("key", key)
+            if not isinstance(value, str):
+                raise ValueError("world-state value must be a string")
+            keys.append(key)
+        if len(keys) != len(set(keys)):
+            raise ValueError("world-state keys must be unique")
+        object.__setattr__(self, "values", tuple(sorted(normalized)))
+
+    def get(self, key: str) -> str | None:
+        require_nonempty("key", key)
+        return dict(self.values).get(key)
+
+
+@dataclass(frozen=True, slots=True)
+class SimulatedActionDefinition:
+    action_ref: str
+    writes: tuple[tuple[str, str], ...]
+    observation_kind: ObservationKind
+    success_payload_ref: str
+
+    def __post_init__(self) -> None:
+        require_nonempty("action_ref", self.action_ref)
+        if not isinstance(self.observation_kind, ObservationKind):
+            raise ValueError("observation_kind must be an ObservationKind")
+        require_nonempty("success_payload_ref", self.success_payload_ref)
+        keys: list[str] = []
+        for item in self.writes:
+            if not isinstance(item, tuple) or len(item) != 2:
+                raise ValueError("writes must contain (key, value) pairs")
+            key, value = item
+            require_nonempty("write key", key)
+            if not isinstance(value, str):
+                raise ValueError("write value must be a string")
+            keys.append(key)
+        if len(keys) != len(set(keys)):
+            raise ValueError("write keys must be unique within an action definition")
+
+
+@dataclass(frozen=True, slots=True)
+class SimulatedCompletionProbe:
+    procedure_id: str
+    state_key: str
+    observation_kind: ObservationKind
+
+    def __post_init__(self) -> None:
+        require_nonempty("procedure_id", self.procedure_id)
+        require_nonempty("state_key", self.state_key)
+        if not isinstance(self.observation_kind, ObservationKind):
+            raise ValueError("observation_kind must be an ObservationKind")
+
+
+@dataclass(frozen=True, slots=True)
+class SimulatedFailureOverride:
+    primitive_step_path: str
+    observation_kind: ObservationKind
+    payload_ref: str
+    suppress_writes: bool = True
+
+    def __post_init__(self) -> None:
+        require_nonempty("primitive_step_path", self.primitive_step_path)
+        if not isinstance(self.observation_kind, ObservationKind):
+            raise ValueError("observation_kind must be an ObservationKind")
+        require_nonempty("payload_ref", self.payload_ref)
+        if not isinstance(self.suppress_writes, bool):
+            raise ValueError("suppress_writes must be bool")
