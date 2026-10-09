@@ -120,16 +120,14 @@ def _rank_key(support: MemoryActivationSupport) -> tuple[float, float, int, str]
 def _boundary_tie(
     ranked: tuple[MemoryActivationSupport, ...],
     keep_count: int,
+    *,
+    tie_key,
 ) -> bool:
     if keep_count <= 0 or keep_count >= len(ranked):
         return False
     left = ranked[keep_count - 1]
     right = ranked[keep_count]
-    return (
-        left.activation == right.activation
-        and left.max_similarity == right.max_similarity
-        and left.support_count == right.support_count
-    )
+    return tie_key(left) == tie_key(right)
 
 
 def _prepare_evidence(
@@ -229,6 +227,7 @@ def _build_result(
     *,
     budget: ActivationBudget,
     ranked_supports: tuple[MemoryActivationSupport, ...],
+    tie_key=None,
 ) -> SelectiveWorkingSetResult:
     positive_count = len(ranked_supports)
     memory_keep = min(positive_count, budget.max_memory_nodes)
@@ -239,13 +238,21 @@ def _build_result(
     )
     selected_supports = activated_supports[:working_keep]
 
+    if tie_key is None:
+        tie_key = lambda support: (
+            support.activation,
+            support.max_similarity,
+            support.support_count,
+        )
     memory_tie = _boundary_tie(
         ranked_supports,
         budget.max_memory_nodes,
+        tie_key=tie_key,
     )
     working_tie = _boundary_tie(
         activated_supports,
         budget.max_working_set_items,
+        tie_key=tie_key,
     )
 
     activation_states = tuple(

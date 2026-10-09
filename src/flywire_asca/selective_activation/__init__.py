@@ -1,3 +1,4 @@
+from .baselines import select_exhaustive, select_single_best
 from .selector import (
     bounded_union_activation,
     select_working_set,
@@ -11,6 +12,8 @@ from .models import (
 )
 
 __all__ = [
+    "select_exhaustive",
+    "select_single_best",
     "bounded_union_activation",
     "select_working_set",
     "validate_a006_budget",
