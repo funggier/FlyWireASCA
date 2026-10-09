@@ -37,8 +37,8 @@ A typed graph is deferred until A005 evidence justifies it.
 
 - Generic embedding contracts and A005 activation: DONE.
 - Ollama embedding adapter: DONE.
-- Exact Vector + Metadata index: ACTIVE.
-- Portable benchmark/calibration/decision evaluator: PLANNED.
+- Exact Vector + Metadata index: DONE.
+- Portable benchmark/calibration/decision evaluator: ACTIVE.
 - Local physical embedding qualification: PLANNED.
 - Exact qualification, decision report, and closure: PLANNED.
 
@@ -91,8 +91,8 @@ Baseline:
 
 ## Current Action
 
-Implement Task 3 immutable exact-cosine Vector + Metadata memory index under TDD.
+Implement Task 4 portable benchmark, separate threshold calibration/qualification fixtures, and graph-decision evaluator under TDD.
 
 ## Next Action
 
-After the index is GREEN and committed, implement the frozen portable benchmark, calibration, and graph-decision evaluator.
+After portable benchmark qualification is GREEN and committed, implement the local physical embedding/vector-memory qualification runner.
