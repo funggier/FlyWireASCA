@@ -32,8 +32,8 @@ confidence as an activation boost.
 - A006 contracts and task activation: DONE.
 - SELECTIVE_CONVERGENCE selector: DONE.
 - SINGLE_BEST / EXHAUSTIVE baselines: DONE.
-- Portable benchmark/qualification: ACTIVE.
-- Physical A005+A006 qualification: PLANNED.
+- Portable benchmark/qualification: DONE.
+- Physical A005+A006 qualification: ACTIVE.
 - Exact qualification/review/integration: PLANNED.
 
 ## Physical Frozen Profile
@@ -87,13 +87,13 @@ Activation baseline:
 
 ## Current Action
 
-Implement Task 4 portable A006 benchmark, raw metrics, deterministic repeat
-checks, and engineering qualification gates under TDD.
+Implement Task 5 physical A005+A006 qualification runner under TDD using the
+frozen embedding model, threshold, top_k, and A006 budgets.
 
 ## Next Action
 
-After portable qualification is GREEN and committed, implement the physical
-A005+A006 qualification runner using the frozen embedding/retrieval profile.
+After physical experiment evidence is recorded, run exact branch qualification,
+write the A006 closure report, perform whole-branch review, and integrate.
 
 The next milestone after qualified A006 remains A007 — Surprise, Uncertainty &
 Expansion.

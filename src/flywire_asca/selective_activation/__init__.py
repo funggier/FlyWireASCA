@@ -1,3 +1,11 @@
+from .benchmark import (
+    SelectiveActivationBenchmarkCase,
+    SelectiveActivationBenchmarkReport,
+    SelectiveActivationCaseResult,
+    build_a006_portable_fixture,
+    qualify_a006_report,
+    run_a006_benchmark,
+)
 from .baselines import select_exhaustive, select_single_best
 from .selector import (
     bounded_union_activation,
@@ -12,6 +20,12 @@ from .models import (
 )
 
 __all__ = [
+    "SelectiveActivationBenchmarkCase",
+    "SelectiveActivationBenchmarkReport",
+    "SelectiveActivationCaseResult",
+    "build_a006_portable_fixture",
+    "qualify_a006_report",
+    "run_a006_benchmark",
     "select_exhaustive",
     "select_single_best",
     "bounded_union_activation",
