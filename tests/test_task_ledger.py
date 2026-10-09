@@ -13,11 +13,12 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_exactly_one_next_planned_task_a005():
+def test_current_points_to_exactly_one_active_task_a005():
     text = _read("CURRENT.md")
     assert "Current task: A005" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
+    assert "Status: ACTIVE" in text
+    assert "GitHub Issue: #5" in text
+    assert "Branch: research/a005-vector-memory" in text
     assert text.count("Current task:") == 1
 
 

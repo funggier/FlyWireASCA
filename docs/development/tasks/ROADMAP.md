@@ -6,7 +6,7 @@
 | A002 | ASCA Architecture Contract | DONE |
 | A003 | Familiarity System | DONE |
 | A004 | Local Model Adapter & Qwen3.5:4B Baseline | DONE |
-| A005 | Associative Memory & Recall | PLANNED |
+| A005 | Semantic Vector Memory Retrieval | ACTIVE |
 | A006 | Working Set / Selective Activation | PLANNED |
 | A007 | Surprise, Uncertainty & Expansion | PLANNED |
 | A008 | Procedural Memory / Skill Chunking | PLANNED |

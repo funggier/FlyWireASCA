@@ -41,11 +41,13 @@ Start with:
 
 ## Current stage
 
-A004 — Local Model Adapter & Qwen3.5:4B Baseline.
+A005 — Semantic Vector Memory Retrieval.
 
-A001-A003 are complete. A004 adds a backend-neutral model interface, a local
-Ollama adapter, and a reproducible Qwen-only control baseline so later ASCA
-cognitive components can be compared against the same model backend.
+A001-A004 are complete. A005 tests a **Vector + Metadata** retrieval path with
+a backend-neutral embedding interface and deterministic exact-cosine baseline.
+A typed graph is **deferred** until A005 evidence shows whether explicit
+relation/path semantics are actually necessary. The qualified generative
+model-under-test remains local `qwen3.5:4b` from A004.
 
 ## Claims boundary
 

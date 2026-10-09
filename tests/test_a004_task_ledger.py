@@ -13,11 +13,10 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_planned_a005_after_a004_closure():
-    text = _read(TASKS / "CURRENT.md")
-    assert "Current task: A005" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
+def test_a004_closure_report_records_a005_was_planned_at_closure():
+    text = _read(REPORT)
+    assert "A005 — Associative Memory & Recall" in text
+    assert "A005 remains **PLANNED**" in text
 
 
 def test_a004_task_is_done_with_required_recovery_sections():
@@ -36,7 +35,7 @@ def test_a004_task_is_done_with_required_recovery_sections():
         assert heading in text
 
 
-def test_roadmap_is_migrated_and_a004_done_a005_planned():
+def test_live_roadmap_preserves_a004_done_while_future_tasks_evolve():
     text = _read(TASKS / "ROADMAP.md")
     for number in range(1, 12):
         task_id = f"A{number:03d}"
@@ -45,7 +44,6 @@ def test_roadmap_is_migrated_and_a004_done_a005_planned():
     assert "| A002 | ASCA Architecture Contract | DONE |" in text
     assert "| A003 | Familiarity System | DONE |" in text
     assert "| A004 | Local Model Adapter & Qwen3.5:4B Baseline | DONE |" in text
-    assert "| A005 | Associative Memory & Recall | PLANNED |" in text
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
 
 
