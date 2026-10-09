@@ -36,9 +36,9 @@ Out of scope:
 
 ## Phases
 
-- Generic model contracts and roadmap migration: ACTIVE.
-- Ollama transport and adapter: PLANNED.
-- Qwen-only baseline and portable CI: PLANNED.
+- Generic model contracts and roadmap migration: DONE.
+- Ollama transport and adapter: DONE.
+- Qwen-only baseline and portable CI: ACTIVE.
 - Local physical Qwen qualification: PLANNED.
 - Exact qualification and closure: PLANNED.
 
@@ -83,10 +83,8 @@ Further evidence is appended only after fresh verification.
 
 ## Current Action
 
-Complete Task 1 generic model contracts, roadmap migration, and A004 activation
-under TDD.
+Implement Task 3 Qwen-only controlled baseline scoring and portable CI coverage under TDD.
 
 ## Next Action
 
-Implement the Ollama JSON transport and adapter with fake-transport TDD after
-Task 1 is GREEN and committed.
+After portable baseline software is GREEN and committed, implement the local physical Qwen qualification runner.

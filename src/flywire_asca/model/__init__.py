@@ -14,6 +14,7 @@ from .errors import (
     ModelTimeoutError,
     ModelUnavailableError,
 )
+from .ollama import OllamaModelAdapter, UrllibJsonTransport
 
 __all__ = [
     "ModelAdapter",
@@ -28,4 +29,6 @@ __all__ = [
     "ModelRole",
     "ModelTimeoutError",
     "ModelUnavailableError",
+    "OllamaModelAdapter",
+    "UrllibJsonTransport",
 ]
