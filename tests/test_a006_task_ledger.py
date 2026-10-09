@@ -110,3 +110,10 @@ def test_a006_report_records_merged_main_ci_evidence():
     assert "90ee1709bfd6a827246f5c6292e73f264bf07c2c" in text
     assert "37932246076" in text
     assert "Main integration evidence" in text
+
+def test_a006_report_records_closure_evidence_ci():
+    text = _read(REPORT)
+    assert "65438ed73a81d86c1c8fa7b6231d2f8466e7e3c2" in text
+    assert "37932522003" in text
+    task = _read(TASKS / "A006-working-set-selective-activation.md")
+    assert "Final closure-evidence main CI: DONE" in task

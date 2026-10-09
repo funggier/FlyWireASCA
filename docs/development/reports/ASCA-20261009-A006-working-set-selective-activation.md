@@ -456,8 +456,15 @@ The merged implementation was pushed to `main` and exact GitHub CI passed:
 - head SHA: `90ee1709bfd6a827246f5c6292e73f264bf07c2c`
 - conclusion: **success**
 
-A final documentation-only closure commit follows this evidence and must itself
-pass exact-main CI before Issue #6 is closed.
+The documentation-only closure-evidence commit also passed exact `main` CI:
+
+- commit: `65438ed73a81d86c1c8fa7b6231d2f8466e7e3c2`
+- run: `37932522003`
+- conclusion: **success**
+
+The final status-only closure record commit that marks these gates complete is
+verified once more before Issue #6 is closed; its exact run is recorded in the
+issue closure comment.
 
 ## Next milestone
 

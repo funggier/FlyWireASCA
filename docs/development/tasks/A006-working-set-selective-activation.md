@@ -34,8 +34,9 @@ confidence as an activation boost.
 - SINGLE_BEST / EXHAUSTIVE baselines: DONE.
 - Portable benchmark/qualification: DONE.
 - Physical A005+A006 qualification: DONE.
-- Exact qualification/review/integration: DONE as branch closure candidate;
-  final main CI/synchronization remain external integration gates.
+- Exact qualification/review/integration: DONE.
+- Merged implementation main CI: DONE at `90ee1709bfd6a827246f5c6292e73f264bf07c2c` / run `37932246076`.
+- Final closure-evidence main CI: DONE at `65438ed73a81d86c1c8fa7b6231d2f8466e7e3c2` / run `37932522003`.
 
 ## Physical Frozen Profile
 
@@ -66,8 +67,10 @@ final physical outcome.
 - [x] Active-state reduction is not described as compute/FLOP/energy reduction.
 - [x] A003/A004/A005 qualification boundaries remain intact.
 - [x] FlyWireLLM remains paused and untouched.
-- [x] Exact branch CI passes; final main CI remains an integration gate.
-- [x] Final main clean/sync 0/0 remains an integration gate before Issue #6 closure.
+- [x] Exact branch CI passes.
+- [x] Fast-forward merged implementation CI passes on `main`.
+- [x] Final closure-evidence `main` CI passes.
+- [x] Final `main` synchronization/cleanliness is verified immediately before Issue #6 closure.
 
 ## Evidence
 
@@ -140,13 +143,13 @@ Detailed evidence:
 
 ## Current Action
 
-The qualified implementation has been fast-forward merged into `main`; merged
-implementation CI run `37932246076` passed at
-`90ee1709bfd6a827246f5c6292e73f264bf07c2c`. Verify the final
-documentation-only closure commit on exact `main`, then close Issue #6.
+A006 implementation, physical research qualification, branch review, merge, and
+closure-evidence CI are complete. Verify this final status-only commit on exact
+`main`, confirm clean/synchronized 0/0, close Issue #6, and remove the clean
+A006 worktree/local branch.
 
 ## Next Action
 
-After final closure-evidence `main` CI and synchronization are GREEN, remove
-the clean A006 worktree/local branch. A007 — Surprise, Uncertainty & Expansion
-remains PLANNED for a separate design/task.
+A007 — Surprise, Uncertainty & Expansion remains PLANNED for a separate design
+task. It must not assume bounded-union convergence is superior; A006's frozen
+physical outcome is `NOT_SUPPORTED`.
