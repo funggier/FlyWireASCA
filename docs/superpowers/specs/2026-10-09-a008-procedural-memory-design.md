@@ -1,7 +1,7 @@
 # A008 Procedural Memory / Skill Chunking Design Specification
 
 Date: 2026-10-09
-Status: APPROVED CONVERSATIONAL DESIGN — WRITTEN SPEC FOR USER REVIEW
+Status: APPROVED DESIGN
 Planned task: A008 — Procedural Memory / Skill Chunking
 Branch: research/a008-procedural-memory
 Base: ASCA main at d5342fbb74f7dc49e5fcc5472847495ba1212434
@@ -366,11 +366,18 @@ After a child procedure body finishes:
    observation;
 2. the parent CALL_PROCEDURE step verifies that observation against its own
    `expected_outcome`;
-3. the CALL step expectation must be exactly equal to the callee
-   `ProcedureDefinition.completion_outcome`.
+3. the CALL step expectation must be contract-equivalent to the callee
+   `ProcedureDefinition.completion_outcome` on:
+   - `observation_kind`;
+   - `expected_payload_ref`;
+   - `matcher`.
 
-A library definition with a CALL_PROCEDURE expectation that differs from the
-callee completion contract is rejected before execution.
+The parent CALL step may use its own `expectation_id`; expectation identity is
+not part of completion-contract equivalence.
+
+A library definition with a CALL_PROCEDURE expectation whose kind, payload, or
+matcher differs from the callee completion contract is rejected before
+execution.
 
 This boundary is essential for the BLIND_CHUNKED negative control:
 
@@ -508,7 +515,18 @@ ProcedureInterruption(
 
 The interruption is emitted immediately after a checked mismatch.
 
-No subsequent action executes.
+If a checked primitive ACTION inside a child procedure mismatches:
+
+- the child returns interruption immediately;
+- the parent CALL_PROCEDURE completion observer is not invoked;
+- no CALL_PROCEDURE StepExecutionResult is synthesized for that unfinished
+  call;
+- no subsequent action executes.
+
+For audit semantics, `completed_primitive_step_paths` means primitive actions
+whose executor call completed, not primitive checkpoints that matched. The
+failing primitive path is therefore included when its action executed and its
+subsequent verification failed.
 
 ## 21. Explanation-memory provenance
 
