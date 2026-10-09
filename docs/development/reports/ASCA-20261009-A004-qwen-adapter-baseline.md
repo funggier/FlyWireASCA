@@ -7,16 +7,23 @@ Branch: research/a004-qwen-adapter
 
 ## Decision
 
-A004 implementation candidate is GREEN on exact branch commit
-`c7b710a36f2cdc8f97177418ccf371d995817d94`.
+The initial A004 candidate was GREEN on exact branch commit
+`c7b710a36f2cdc8f97177418ccf371d995817d94` with CI run `37891675731`.
+The first documentation closure commit was
+`9b800698d883c5233994a3781322f6a01ff7b648` with CI run `37891872173`.
+
+Whole-branch Native self-review then found two Important validation gaps. Both
+were reproduced RED and fixed in one review pass. The reviewed implementation
+is exact commit `b50a07667f96379aa6f72a9de50550764068580e`, which passed
+full local qualification, a fresh physical Qwen run, and branch CI run
+`37892333300`.
 
 The generic model contract remains backend-neutral. The local Ollama adapter
 and Qwen-only control baseline are qualified separately from ASCA familiarity,
 memory, routing, and other cognitive mechanisms.
 
-This report and task transition form the documentation closure layer. The
-closure commit itself must pass exact branch CI before fast-forward integration
-to `main`.
+This report update is the final documentation layer and must itself pass exact
+branch CI before fast-forward integration to `main`.
 
 ## Delivered boundary
 
@@ -155,6 +162,60 @@ After the fix:
 - repository qualifier: PASS
 - diff check: PASS
 - physical qualification rerun: PASS
+
+## Whole-branch review and one fix pass
+
+A fresh reviewer/subagent was not available in this harness, so the final
+review was an author self-review performed as a separate pass over the entire
+A004 branch. This is weaker than an independent fresh-context review and is
+recorded explicitly.
+
+Two Important findings were fixed:
+
+1. **Public contract boundary validation.** Generic model/baseline records
+   relied too heavily on Python type hints. Raw malformed role/message/content
+   and scoring/result values could reach downstream logic instead of failing at
+   the public contract boundary. Regression tests
+   `test_public_contracts_reject_malformed_runtime_types_at_boundary` and
+   `test_baseline_contract_rejects_malformed_scoring_messages_and_case_results`
+   were observed RED before the fix and GREEN afterward.
+2. **Non-streaming Ollama response completeness.** The adapter accepted
+   `stream:false` responses without requiring `done=true` or assistant role,
+   and treated returned boolean `thinking=false` as nonempty hidden thinking.
+   Regression tests
+   `test_generate_rejects_incomplete_or_wrong_role_nonstream_response` and
+   `test_generate_accepts_explicit_false_as_no_hidden_thinking_content` were
+   observed RED before the fix and GREEN afterward.
+
+Reviewed fix commit:
+
+`b50a07667f96379aa6f72a9de50550764068580e`
+
+Post-review evidence:
+
+- focused review regressions: 4 passed
+- full suite: **107 passed**
+- A003 familiarity qualification: PASS
+- architecture audit: PASS
+- repository qualifier: PASS
+- diff check: PASS
+- physical Qwen qualification rerun: **6/6, pass_rate 1.0**
+- post-review exact branch CI run: `37892333300` — success
+
+The post-review physical run retained the same model digest/profile and
+observed 293 prompt tokens, 16 generated tokens, and
+6,462,243,000 ns total duration. These timings are local-run evidence only and
+are not directly comparable as a general speed claim because model load/cache
+state differed between runs.
+
+Deferred minor review notes are limited to future hardening outside A004: some
+hand-crafted `ModelBaselineReport` aggregate totals are not fully
+cross-validated against case-result sums; the A004-specific qualification CLI
+exposes `--expected-digest` while its descriptor validator intentionally still
+pins the A004 digest; a successful adapter descriptor is cached for the
+lifetime of one adapter instance; and a generic future adapter could return a
+response whose request/model identity is inconsistent with `inspect()` unless
+that adapter validates it. None affects the qualified Ollama/Qwen A004 path.
 
 ## Model-agnostic boundary
 

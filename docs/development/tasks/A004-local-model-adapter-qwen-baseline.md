@@ -85,6 +85,10 @@ Physical qualification on implementation commit `3b8cdbb03db8cd959ce52639316a36e
 - Ollama runtime: `0.32.15`;
 - model: `qwen3.5:4b`;
 - full digest: `2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd`;
+- reviewed implementation commit: `b50a07667f96379aa6f72a9de50550764068580e`;
+- post-review full pytest: 107 passed;
+- post-review physical qualification: 6/6, pass rate 1.0;
+- post-review branch CI run `37892333300`: success;
 - architecture: `qwen35`;
 - exact parameter count: `4,659,865,088`;
 - quantization: `Q4_K_M`;
