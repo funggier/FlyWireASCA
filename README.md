@@ -41,19 +41,28 @@ Start with:
 
 ## Current stage
 
-A008 - Procedural Memory / Skill Chunking has a qualified closure candidate;
-A009 - Integrated Cognitive Loop remains planned.
+A009 - Integrated Cognitive Loop is **ACTIVE** on
+`research/a009-integrated-cognitive-loop` (GitHub Issue #9).
 
-A008's frozen deterministic qualification outcome is `SUPPORTED`.
-The recommended representation is `CHUNKED`: reusable hierarchical procedures
-with explicit step-level checkpoints. Across the declared success fixture,
-CHUNKED preserved FLAT primitive/final-state correctness while reducing
-root-visible dispatches from 13 to 8; the maximum declared control-state
-compression ratio was 2.0x. `BLIND_CHUNKED` remains a negative control because
-it localized the injected child failure only at the parent call boundary.
+A009 integrates A003 familiarity, A005 retrieval, A006 working-set selection,
+A007 bounded expansion, and A008 procedural execution while preserving each
+milestone's evidence boundary. The primary A009 path uses `SINGLE_BEST`,
+A007 `SIGNAL_DRIVEN`, and A008 `CHUNKED`, with
+`MISMATCH_DRIVEN_RECOVERY` as the primary integrated-loop policy.
 
-This result is a deterministic control-state/mechanism result, not evidence of
-lower hardware cost or faster real-world tool execution.
+Historical outcomes remain unchanged:
+
+- A006 selective-convergence hypothesis: `NOT_SUPPORTED`;
+- A007 structural-expansion hypothesis: `SUPPORTED`;
+- A008 procedural-memory hypothesis: `SUPPORTED`.
+
+A008's recommended representation remains `CHUNKED`: reusable hierarchical
+procedures with explicit step-level checkpoints. A009 keeps A008 zero-auto-retry
+and models every higher-level replay as a fresh bounded attempt from an
+immutable pre-execution snapshot.
+
+These are control/evidence boundaries; they are not claims of lower hardware
+cost, energy use, token use, or faster real-world tool execution.
 
 
 ## Claims boundary

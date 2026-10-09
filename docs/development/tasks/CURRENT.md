@@ -1,30 +1,31 @@
 # Current Development Task
 
 Current task: A009
-Status: PLANNED
-GitHub Issue: not created
+Status: ACTIVE
+GitHub Issue: #9
+Branch: research/a009-integrated-cognitive-loop
 A008 deterministic qualification: GREEN
 A008 main integration: GREEN
 
 ## Current Action
 
-No A009 implementation is active. A008 is fully qualified, reviewed, integrated
-into main, and closed GREEN. Final exact-main CI for the A008 integration
-ledger is `37962342825` at
-`f1833113c9739e4ecc1b700899b22bda9766ee12`.
+A009 — Integrated Cognitive Loop is active from exact activation base
+`8d0721a77abaae5d0cc6d6c7c81d4795c5d355fa`. The approved design and
+implementation plan are committed, exact activation-base CI `37989472394`
+succeeded, Issue #9 is open, and implementation is isolated on
+`research/a009-integrated-cognitive-loop`.
+
+Task 1 is implementing immutable A009 request/evidence/trace/result contracts
+and activating the task ledger under TDD.
 
 ## Next Action
 
-Start A009 — Integrated Cognitive Loop as a separate architectural task through
-the conversational design -> written spec -> implementation plan gates.
-
-Do not create an A009 GitHub issue until the approved A009 plan reaches task
-activation.
+Complete A009 Task 1 gates, commit the activation/contracts checkpoint, then
+continue Task 2 retrieval/expansion integration.
 
 ## Resume Rule
 
-Read the latest full-session handoff, this file, the A008
-task/spec/plan/report, and live Git/GitHub state before action. Treat
-Git/GitHub/runtime as authoritative over stale documentation. Do not recreate
-A008 work or resume A008 Task 4. Keep FlyWireLLM paused and untouched unless
-explicitly authorized.
+Read the latest full-session handoff, the approved A009 design/plan, the A009
+task ledger, and live Git/GitHub state before action. Treat Git/GitHub/runtime
+as authoritative over stale documentation. Do not reset/clean/rebase/force
+push, do not resume A008 Task 4, and keep FlyWireLLM untouched.
