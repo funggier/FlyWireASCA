@@ -549,10 +549,49 @@ Fix:
 
 Whole-branch review: GREEN.
 
+## Main integration evidence
+
+Main integration: GREEN.
+
+Reviewed branch head
+`05d3c743df84c4bf12fb8d2c1389db4d3afa39b5` was integrated into local
+`main` with a fast-forward-only update from the A009 activation-base main
+history. No merge commit, rebase, reset, clean, or force push was used.
+
+Merged-main local gate before push:
+
+- main HEAD:
+  `05d3c743df84c4bf12fb8d2c1389db4d3afa39b5`;
+- full pytest suite: 465 passed;
+- A009 portable qualification: PASS / `SUPPORTED`;
+- fixture fingerprint unchanged:
+  `2f92b5092de346f62879ac2cbb9f96d6de5d6f919e12d0693345c8228b01ab2a`;
+- architecture contract audit: PASS;
+- repository qualification: PASS;
+- A003 qualification: PASS;
+- A008 qualification: PASS;
+- `git diff --check origin/main..HEAD`: PASS.
+
+Reviewed main was pushed normally.
+
+Exact final-main integration CI:
+
+- run: `38000327254`;
+- head branch: `main`;
+- head SHA:
+  `05d3c743df84c4bf12fb8d2c1389db4d3afa39b5`;
+- conclusion: success;
+- A009 deterministic qualification step: success.
+
+This establishes that the reviewed A009 behavior itself is integrated and GREEN
+on main. The remaining repository-only step is this final evidence commit; it
+must itself pass exact main CI before Issue #9 is closed.
+
 ## Closure condition
 
-This report qualifies the reviewed branch behavior. Whole-branch author
-self-review and exact post-review branch CI are GREEN. A009 Issue #9 remains
-open until reviewed behavior is integrated to main, exact final-main CI is
-GREEN, final synchronization is 0/0 and clean, and final-main evidence is
-recorded.
+This report now records reviewed main integration and exact final-main
+integration CI as GREEN. A009 Issue #9 remains open until the final evidence
+commit itself passes exact main CI and the repository is synchronized cleanly
+at 0/0. GitHub issue closure will carry the final exact evidence-commit SHA and
+CI run so the repository does not require a self-referential documentation
+commit.

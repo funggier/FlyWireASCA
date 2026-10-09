@@ -138,3 +138,25 @@ def test_a009_task_ledger_records_post_review_green_pending_final_main():
     assert "37999918527" in text
     assert "Important findings: 5" in text
     assert "final-main" in text.lower()
+
+def test_a009_report_records_reviewed_main_integration_evidence():
+    text = read(REPORT)
+    assert "Main integration: GREEN" in text
+    assert "05d3c743df84c4bf12fb8d2c1389db4d3afa39b5" in text
+    assert "38000327254" in text
+    assert "465 passed" in text
+    assert "fast-forward" in text.lower()
+    assert "merge commit" in text.lower()
+
+
+def test_a009_task_and_current_mark_final_main_gate_green_pending_issue_close():
+    task = read(TASKS / "A009-integrated-cognitive-loop.md")
+    current = read(TASKS / "CURRENT.md")
+    assert "- [x] Exact branch CI, whole-branch review, final-main CI and synchronization pass." in task
+    assert "Main integration: GREEN" in task
+    assert "05d3c743df84c4bf12fb8d2c1389db4d3afa39b5" in task
+    assert "38000327254" in task
+    assert "A009 main integration: GREEN" in current
+    assert "A009 exact final-main CI: GREEN" in current
+    assert "Current task: A010" in current
+    assert "GitHub Issue: not created" in current

@@ -112,7 +112,7 @@ Baseline before Task 1 implementation:
 - [x] No real OS/API/LConnect/BConnect procedure action is introduced.
 - [x] A006/A007/A008 historical outcomes remain unchanged.
 - [x] FlyWireLLM remains untouched.
-- [ ] Exact branch CI, whole-branch review, final-main CI and synchronization pass.
+- [x] Exact branch CI, whole-branch review, final-main CI and synchronization pass.
 
 ## Evidence
 
@@ -177,26 +177,32 @@ Whole-branch review: GREEN.
 - review fixes cover completed-primitive evidence, fail-closed replay/snapshot
   result invariants, exact terminal-model digest pin, aggregate-vs-case
   evidence recomputation, and raw `model_control_isolated` evidence;
-- final-main integration/CI/synchronization remain pending.
+Main integration: GREEN.
+- reviewed main integration: GREEN;
+- main integration SHA: `05d3c743df84c4bf12fb8d2c1389db4d3afa39b5`;
+- exact final-main integration CI: `38000327254` - success;
+- merged-main local full suite: 465 passed;
+- final evidence commit exact-main CI and Issue #9 closure remain pending.
 
 Qualification report:
 `docs/development/reports/ASCA-20261010-A009-integrated-cognitive-loop.md`.
 
 ## Current Action
 
-A009 is a DONE closure candidate with exact branch qualification, physical
-integration, whole-branch author self-review, and exact post-review branch CI
-GREEN. Issue #9 intentionally remains open while Task 7 performs reviewed
-final-main integration and synchronization.
+A009 is DONE with exact branch qualification, physical integration,
+whole-branch author self-review, reviewed fast-forward main integration, and
+exact final-main integration CI GREEN. Issue #9 intentionally remains open
+until this final evidence commit itself passes exact main CI and final 0/0
+synchronization is reconfirmed.
 
 A010 remains PLANNED and has no GitHub issue.
 
 ## Next Action
 
-Execute the remaining A009 Task 7 integration steps: verify clean/synchronized
-main preconditions, fast-forward main only, rerun merged-main gates, push main,
-require exact final-main CI, record final-main evidence, synchronize 0/0, and
-only then close Issue #9.
+Commit this final-main evidence on main, require exact CI for that evidence
+commit, reconfirm main == origin/main with 0/0 clean synchronization, then
+close Issue #9 with the final SHA/CI/test/fingerprint/outcome metrics. A010
+remains PLANNED with no issue.
 
 ## Resume Rule
 
