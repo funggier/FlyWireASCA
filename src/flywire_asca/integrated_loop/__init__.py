@@ -59,3 +59,28 @@ __all__ += [
     "MemoryContextProvider",
     "run_cognitive_loop",
 ]
+from .benchmark import (
+    BenchmarkMemorySpec,
+    IntegratedLoopBenchmarkCase,
+    IntegratedLoopBenchmarkCaseResult,
+    IntegratedLoopBenchmarkReport,
+    IntegratedLoopPolicyCaseResult,
+    build_a009_deterministic_fixture,
+    classify_a009_hypothesis,
+    fixture_fingerprint,
+    qualify_a009_report,
+    run_a009_benchmark,
+)
+
+__all__ += [
+    "BenchmarkMemorySpec",
+    "IntegratedLoopBenchmarkCase",
+    "IntegratedLoopBenchmarkCaseResult",
+    "IntegratedLoopBenchmarkReport",
+    "IntegratedLoopPolicyCaseResult",
+    "build_a009_deterministic_fixture",
+    "classify_a009_hypothesis",
+    "fixture_fingerprint",
+    "qualify_a009_report",
+    "run_a009_benchmark",
+]

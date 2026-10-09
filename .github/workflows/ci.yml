@@ -39,5 +39,8 @@ jobs:
       - name: Qualify A008 procedural memory
         run: python scripts/qualify_procedural_memory_a008.py
 
+      - name: Qualify A009 integrated cognitive loop
+        run: python scripts/qualify_integrated_loop_a009.py
+
       - name: Check whitespace
         run: git diff --check HEAD^ HEAD

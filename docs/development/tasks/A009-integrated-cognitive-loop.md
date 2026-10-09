@@ -136,14 +136,16 @@ Task 2: `80b4ac1` — Add A009 integrated retrieval expansion. Full Task 2 gate:
 
 Task 3: `931211e` — Add A009 context-bound procedure replay. Full Task 3 gate: 417 passed; architecture/repository/A008 gates PASS.
 
+Task 4: `7b3b35a` — Add A009 bounded cognitive controller. Full Task 4 gate: 428 passed; architecture/repository/A003/A008 gates PASS.
+
 ## Current Action
 
-Task 4 is ACTIVE: implement the bounded integrated cognitive controller, mismatch-driven recovery policies, deterministic trace, and terminal-only model gate.
+Task 5 is ACTIVE: freeze the deterministic integrated-loop benchmark, add portable and local-physical qualification CLIs, and add the deterministic A009 qualifier to GitHub CI.
 
 ## Next Action
 
-Complete Task 4 RED -> GREEN gates and commit
-`Add A009 bounded cognitive controller`, then continue Task 5 without pausing.
+Complete Task 5 RED -> GREEN gates and commit
+`Add A009 integrated loop qualification`, then continue exact branch qualification and physical evidence in Task 6.
 
 ## Resume Rule
 
