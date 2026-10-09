@@ -30,3 +30,14 @@ def test_ci_keeps_a004_qwen_physical_qualification_local_only():
     assert "localhost" not in text
     assert "python -m pytest -q" in text
     assert "python scripts/run_familiarity_benchmark_a003.py --qualify" in text
+
+def test_ci_keeps_a005_embedding_physical_qualification_local_only():
+    text = WORKFLOW.read_text(encoding="utf-8").lower()
+    assert "ollama pull" not in text
+    assert "ollama run" not in text
+    assert "/api/embed" not in text
+    assert "qualify_vector_memory_a005.py" not in text
+    assert "127.0.0.1:11434" not in text
+    assert "localhost" not in text
+    assert "python -m pytest -q" in text
+    assert "python scripts/run_familiarity_benchmark_a003.py --qualify" in text

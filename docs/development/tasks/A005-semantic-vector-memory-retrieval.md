@@ -38,8 +38,8 @@ A typed graph is deferred until A005 evidence justifies it.
 - Generic embedding contracts and A005 activation: DONE.
 - Ollama embedding adapter: DONE.
 - Exact Vector + Metadata index: DONE.
-- Portable benchmark/calibration/decision evaluator: ACTIVE.
-- Local physical embedding qualification: PLANNED.
+- Portable benchmark/calibration/decision evaluator: DONE.
+- Local physical embedding qualification: ACTIVE.
 - Exact qualification, decision report, and closure: PLANNED.
 
 ## Acceptance Criteria
@@ -89,10 +89,19 @@ Baseline:
 - GitHub Issue: #5;
 - worktree initially clean.
 
+Portable benchmark evidence:
+
+- full suite after Task 4: 144 passed;
+- portable calibration threshold: `0.5`;
+- threshold origin: `portable_fake_geometry_only`;
+- this threshold tests calibration logic only and is **not** the physical Qwen threshold;
+- portable qualification includes 12 cases and 256 distractors;
+- graph decision evaluator exercises all three outcomes synthetically.
+
 ## Current Action
 
-Implement Task 4 portable benchmark, separate threshold calibration/qualification fixtures, and graph-decision evaluator under TDD.
+Implement Task 5 local physical embedding/vector-memory qualification CLI under TDD, then inspect/pull and qualify `qwen3-embedding:0.6b`.
 
 ## Next Action
 
-After portable benchmark qualification is GREEN and committed, implement the local physical embedding/vector-memory qualification runner.
+After physical development calibration freezes the real threshold and the disjoint physical qualification fixture runs, begin exact branch qualification and closure.
