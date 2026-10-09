@@ -5,7 +5,7 @@
 | A001 | Repository & Research Foundation | DONE |
 | A002 | ASCA Architecture Contract | DONE |
 | A003 | Familiarity System | DONE |
-| A004 | Local Model Adapter & Qwen3.5:4B Baseline | ACTIVE |
+| A004 | Local Model Adapter & Qwen3.5:4B Baseline | DONE |
 | A005 | Associative Memory & Recall | PLANNED |
 | A006 | Working Set / Selective Activation | PLANNED |
 | A007 | Surprise, Uncertainty & Expansion | PLANNED |

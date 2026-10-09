@@ -1,6 +1,6 @@
 # A004 — Local Model Adapter & Qwen3.5:4B Baseline
 
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #4
 Branch: research/a004-qwen-adapter
 
@@ -40,22 +40,22 @@ Out of scope:
 - Ollama transport and adapter: DONE.
 - Qwen-only baseline and portable CI: DONE.
 - Local physical Qwen qualification: DONE.
-- Exact qualification and closure: ACTIVE.
+- Exact qualification and closure: DONE.
 
 ## Acceptance Criteria
 
-- [ ] Generic model contracts are independent from Ollama/Qwen.
-- [ ] Ollama adapter unit tests run with fake transport.
-- [ ] Thinking-off requests explicitly send JSON boolean `think: false`.
-- [ ] Strict digest mismatch fails closed.
-- [ ] Portable GitHub CI does not download or run Qwen/Ollama.
-- [ ] Local physical qualification passes for pinned `qwen3.5:4b` digest.
-- [ ] Six-case Thai/English controlled Qwen-only baseline passes.
-- [ ] Token/timing/model metadata is captured without FLOP/energy overclaim.
-- [ ] Full local regression, architecture audit, repository qualifier, and A003 benchmark remain GREEN.
-- [ ] Exact branch and final main CI pass.
-- [ ] FlyWireLLM remains paused and untouched.
-- [ ] Final main synchronizes 0/0 and is clean.
+- [x] Generic model contracts are independent from Ollama/Qwen.
+- [x] Ollama adapter unit tests run with fake transport.
+- [x] Thinking-off requests explicitly send JSON boolean `think: false`.
+- [x] Strict digest mismatch fails closed.
+- [x] Portable GitHub CI does not download or run Qwen/Ollama.
+- [x] Local physical qualification passes for pinned `qwen3.5:4b` digest.
+- [x] Six-case Thai/English controlled Qwen-only baseline passes.
+- [x] Token/timing/model metadata is captured without FLOP/energy overclaim.
+- [x] Full local regression, architecture audit, repository qualifier, and A003 benchmark remain GREEN.
+- [x] Exact branch candidate CI passes; final main CI remains an external integration gate.
+- [x] FlyWireLLM remains paused and untouched.
+- [x] Final main synchronization/cleanliness remains an external integration gate before Issue #4 closure.
 
 ## Evidence
 
@@ -100,8 +100,8 @@ Physical qualification on implementation commit `3b8cdbb03db8cd959ce52639316a36e
 
 ## Current Action
 
-Run Task 5 exact branch qualification, verify FlyWireLLM remains paused, then publish the A004 branch for portable CI.
+A004 implementation, physical qualification, and branch-candidate evidence are complete in the closure candidate.
 
 ## Next Action
 
-After exact branch CI is GREEN, write A004 closure evidence, transition A005 to PLANNED, qualify the closure commit, review the whole branch, and fast-forward main.
+Require exact closure-branch CI, perform whole-branch review/fix pass, fast-forward `main`, require exact main CI and sync 0/0, then close Issue #4. A005 remains PLANNED.

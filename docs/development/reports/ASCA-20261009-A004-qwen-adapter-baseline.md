@@ -1,0 +1,217 @@
+# FlyWireASCA A004 Qwen Adapter Baseline Qualification
+
+Date: 2026-10-09
+Task: A004 — Local Model Adapter & Qwen3.5:4B Baseline
+GitHub Issue: #4
+Branch: research/a004-qwen-adapter
+
+## Decision
+
+A004 implementation candidate is GREEN on exact branch commit
+`c7b710a36f2cdc8f97177418ccf371d995817d94`.
+
+The generic model contract remains backend-neutral. The local Ollama adapter
+and Qwen-only control baseline are qualified separately from ASCA familiarity,
+memory, routing, and other cognitive mechanisms.
+
+This report and task transition form the documentation closure layer. The
+closure commit itself must pass exact branch CI before fast-forward integration
+to `main`.
+
+## Delivered boundary
+
+A004 adds:
+
+- immutable backend-neutral `ModelMessage`, `ModelRequest`,
+  `ModelDescriptor`, and `ModelResponse` records;
+- backend-neutral `ModelAdapter` protocol and public error hierarchy;
+- standard-library JSON/HTTP Ollama transport;
+- `OllamaModelAdapter` with strict tag/digest identity checks;
+- explicit thinking-off text-only request mapping;
+- Qwen-only machine-scored control baseline;
+- local physical qualification CLI;
+- roadmap migration from future A004-A010 to A005-A011.
+
+No A003 familiarity lookup, associative recall, working-set routing, tool
+calling, vision payload, or FlyWireLLM execution is implemented in this layer.
+
+## Exact portable branch qualification
+
+Exact candidate SHA:
+
+`c7b710a36f2cdc8f97177418ccf371d995817d94`
+
+Fresh local portable evidence:
+
+- `python -m pytest -q`: **101 passed**
+- `python scripts/audit_architecture_contract.py`:
+  **architecture_contract_audit=PASS**
+- `python scripts/qualify_repository.py`:
+  **repository_qualification=PASS**
+- `python scripts/run_familiarity_benchmark_a003.py --qualify`: PASS
+- `git diff --check HEAD^ HEAD`: PASS
+- worktree: clean
+
+Exact portable branch CI:
+
+- workflow: CI
+- run id: `37891675731`
+- head SHA: `c7b710a36f2cdc8f97177418ccf371d995817d94`
+- event: push
+- conclusion: **success**
+
+GitHub Actions does not download, launch, or physically qualify Ollama/Qwen.
+Physical qualification is intentionally local-machine evidence.
+
+## Physical Qwen qualification
+
+Physical qualification used implementation commit:
+
+`3b8cdbb03db8cd959ce52639316a36e978d1e8f4`
+
+Only documentation changed between that implementation commit and the exact
+branch candidate above.
+
+Observed runtime/model identity:
+
+- backend: `ollama`
+- Ollama version: `0.32.15`
+- model tag: `qwen3.5:4b`
+- full digest:
+  `2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd`
+- architecture: `qwen35`
+- exact parameter count: `4,659,865,088`
+- reported parameter size: `4.7B`
+- quantization: `Q4_K_M`
+- declared context length: `262144`
+- embedding length: `2560`
+- capabilities: completion, thinking, tools, vision
+
+Qualified generation profile:
+
+- profile: `qwen3.5-4b-thinking-off-v1`
+- thinking: false
+- tools: false
+- vision: false
+- context limit: 8192
+- max output tokens: 256
+- temperature: 0.0
+- seed: 0
+- streaming: false
+
+Controlled Qwen-only baseline:
+
+- case count: 6
+- passed cases: 6
+- pass_rate: 1.0
+- prompt tokens total: 293
+- generated tokens total: 16
+- total duration: 2,509,991,400 ns
+- prompt evaluation duration total: 1,739,271,000 ns
+- generation evaluation duration total: 586,869,000 ns
+- aggregate load duration: unavailable because Ollama omitted that field on
+  some individual responses
+
+Per-case normalized outputs:
+
+- english-exact -> `blue` — PASS
+- thai-exact -> `แมว` — PASS
+- context-selection -> `29` — PASS
+- context-middle -> `green` — PASS
+- insufficient-context -> `insufficient_context` — PASS
+- boolean-allowed -> `yes` — PASS
+
+The adapter rejects nonempty returned hidden-thinking content whenever the
+request used `thinking=False`. All six accepted physical baseline responses
+therefore satisfied the thinking-off adapter invariant.
+
+Token and timing values above are local Ollama observations on this machine.
+They are not FLOP estimates, energy measurements, or generalized model-speed
+claims.
+
+## Qualification issue found and corrected
+
+The first live physical run completed inference but failed while emitting the
+JSON evidence because the Windows console used `cp1252` and the payload
+contained Thai text.
+
+The root cause was stdout encoding, not Qwen inference or scoring.
+
+Regression test
+`test_emit_handles_windows_cp1252_console_with_thai_payload` was observed
+RED before the fix. The qualification CLI now writes UTF-8 bytes when stdout
+offers a binary buffer and writes the evidence file with the same UTF-8 bytes.
+
+Fix commit:
+
+`3b8cdbb03db8cd959ce52639316a36e978d1e8f4`
+
+After the fix:
+
+- qualification CLI tests: 6 passed
+- full suite: 101 passed
+- A003 benchmark: PASS
+- architecture audit: PASS
+- repository qualifier: PASS
+- diff check: PASS
+- physical qualification rerun: PASS
+
+## Model-agnostic boundary
+
+The generic `flywire_asca.model` contracts do not encode Qwen- or
+Ollama-specific fields. Ollama-specific transport/identity behavior is isolated
+in the adapter implementation.
+
+Later ASCA components can therefore use the same generic `ModelAdapter`
+interface with Qwen, FlyWireLLM, or another backend.
+
+A004 does not claim that ASCA improves Qwen. It establishes the control model
+and model-facing infrastructure required to test that later.
+
+## FlyWireLLM paused evidence
+
+FlyWireLLM was inspected read-only before A004 branch publication:
+
+- repository HEAD:
+  `9aa8acba1ecdefcdce4678b2914fc2d2dcaacc14`
+- branch: `research/l004-base50m-pretraining`
+- upstream: `origin/research/l004-base50m-pretraining`
+- ahead/behind: 0/0
+- worktree: clean
+- no FlyWireLLM training runner was present in the observed Python process list
+
+A004 did not start, stop, restart, import, or modify the FlyWireLLM training
+runtime or repository.
+
+## Roadmap migration
+
+The insertion of A004 shifts only future planned milestones:
+
+- old A004 Associative Memory & Recall -> new A005
+- old A005 Working Set / Selective Activation -> new A006
+- old A006 Surprise, Uncertainty & Expansion -> new A007
+- old A007 Procedural Memory / Skill Chunking -> new A008
+- old A008 Integrated Cognitive Loop -> new A009
+- old A009 Dense/Non-selective Baseline Comparison -> new A010
+- old A010 ASCA v0.x Qualification -> new A011
+
+Historical A001-A003 qualification identifiers and reports are unchanged.
+
+## Deferred scope
+
+A004 deliberately defers:
+
+- Qwen fine-tuning/training;
+- tool calling;
+- vision;
+- thinking-enabled qualification;
+- ASCA memory/familiarity context injection;
+- associative recall;
+- paired ASCA+Qwen vs Qwen-only comparison;
+- FlyWireLLM adapter implementation.
+
+## Next milestone
+
+A005 — Associative Memory & Recall.
+
+A005 remains **PLANNED**. Closing A004 does not activate A005 automatically.

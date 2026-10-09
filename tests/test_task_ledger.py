@@ -13,12 +13,11 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_exactly_one_active_task_a004():
+def test_current_points_to_exactly_one_next_planned_task_a005():
     text = _read("CURRENT.md")
-    assert "Current task: A004" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #4" in text
-    assert "Branch: research/a004-qwen-adapter" in text
+    assert "Current task: A005" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert text.count("Current task:") == 1
 
 
@@ -116,4 +115,14 @@ def test_a003_closure_report_records_exact_qualification():
     assert "exact_logical_probes: 9" in text
     assert "exhaustive_logical_probes: 2367" in text
     assert "same-name ambiguity" in text.lower()
+    assert "FlyWireLLM" in text
+
+def test_a004_closure_report_records_qwen_physical_qualification():
+    report = ROOT / "docs" / "development" / "reports" / "ASCA-20261009-A004-qwen-adapter-baseline.md"
+    assert report.exists(), "A004 closure report must exist"
+    text = report.read_text(encoding="utf-8")
+    assert "c7b710a36f2cdc8f97177418ccf371d995817d94" in text
+    assert "101 passed" in text
+    assert "37891675731" in text
+    assert "pass_rate: 1.0" in text
     assert "FlyWireLLM" in text
