@@ -170,10 +170,16 @@ def _emit(payload: dict[str, object], output_path: Path | None) -> None:
         sort_keys=True,
         separators=(",", ":"),
     ) + "\n"
-    sys.stdout.write(line)
+    encoded = line.encode("utf-8")
+    stdout_buffer = getattr(sys.stdout, "buffer", None)
+    if stdout_buffer is not None:
+        stdout_buffer.write(encoded)
+        stdout_buffer.flush()
+    else:
+        sys.stdout.write(line)
     if output_path is not None:
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(line, encoding="utf-8")
+        output_path.write_bytes(encoded)
 
 
 def main(argv: list[str] | None = None) -> int:

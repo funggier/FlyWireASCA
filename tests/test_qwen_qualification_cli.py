@@ -212,3 +212,16 @@ def test_descriptor_validation_pins_exact_qwen_runtime_identity():
         kwargs[field] = value
         errors = module.validate_descriptor(ModelDescriptor(**kwargs))
         assert any(needle in error for error in errors), (field, errors)
+
+def test_emit_handles_windows_cp1252_console_with_thai_payload(monkeypatch):
+    import io
+
+    module = _load_module()
+    raw = io.BytesIO()
+    stdout = io.TextIOWrapper(raw, encoding="cp1252", errors="strict")
+    monkeypatch.setattr(module.sys, "stdout", stdout)
+
+    module._emit({"answer": "แมว"}, None)
+    stdout.flush()
+
+    assert raw.getvalue().decode("utf-8") == '{"answer":"แมว"}\n'
