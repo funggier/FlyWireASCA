@@ -528,3 +528,20 @@ This proves the reviewed A007 tree passed the portable CI gates after
 fast-forward integration into main. A documentation-only closure-evidence
 commit may follow and is required to receive its own exact-main CI before
 Issue #7 is closed.
+
+## Closure-evidence main CI
+
+The documentation-only main integration evidence commit is:
+
+`794428389e632c241fbd8c15100b86c84cbd7dd4`
+
+Exact CI for that evidence commit:
+
+- run: `37945872610`;
+- head SHA: `794428389e632c241fbd8c15100b86c84cbd7dd4`;
+- conclusion: **success**.
+
+This CI validates the repository state that records the first merged-main
+behavior CI and integration evidence. One final ledger commit records this
+closure-evidence CI; Issue #7 remains open until that final ledger commit also
+receives exact-main CI and main is clean/synchronized 0/0.

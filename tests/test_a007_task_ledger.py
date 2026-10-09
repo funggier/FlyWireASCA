@@ -150,3 +150,17 @@ def test_current_no_longer_says_a007_integration_is_pending():
     assert "Status: PLANNED" in text
     assert "A007 integration: GREEN" in text
     assert "must complete whole-branch review" not in text
+
+def test_a007_report_records_closure_evidence_main_ci():
+    text = _read(REPORT)
+    assert "Closure-evidence main CI" in text
+    assert "794428389e632c241fbd8c15100b86c84cbd7dd4" in text
+    assert "37945872610" in text
+    task = _read(TASKS / "A007-surprise-uncertainty-expansion.md")
+    assert "Final closure-evidence main CI: DONE" in task
+
+
+def test_a007_all_acceptance_criteria_are_closed_before_issue_closure():
+    text = _read(TASKS / "A007-surprise-uncertainty-expansion.md")
+    acceptance = text.split("## Acceptance Criteria", 1)[1].split("## Evidence", 1)[0]
+    assert "- [ ]" not in acceptance

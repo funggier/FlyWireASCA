@@ -8,12 +8,13 @@ A007 integration: GREEN
 ## Current Action
 
 No implementation task is active. A007 is fast-forward integrated into main,
-its reviewed behavior tree passed exact final-main CI, and only the
-documentation-only closure-evidence CI / Issue #7 closure gates remain.
+its reviewed behavior tree and documentation-only closure-evidence commit both
+passed exact main CI. Only the final integration-ledger CI / Issue #7 closure
+and final synchronization gates remain.
 
 ## Next Action
 
-After A007 closure-evidence main CI and final synchronization are GREEN, design
+After A007 final integration-ledger CI, Issue #7 closure, and final synchronization are GREEN, design
 A008 — Procedural Memory / Skill Chunking as a separate architectural task.
 
 A008 may later provide real expected outcomes and execution failures that can

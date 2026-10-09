@@ -37,7 +37,7 @@ judge expansion.
 - Portable benchmark / engineering qualification: DONE.
 - Physical A005+A006+A007 qualification: DONE.
 - Exact qualification / branch CI / closure candidate: DONE.
-- Whole-branch review / final integration: pending external finishing gates.
+- Whole-branch review / final integration: DONE.
 
 ## Frozen Primary Profile
 
@@ -152,6 +152,24 @@ Post-review exact branch CI:
 
 `37942219656` — success
 
+Merged main behavior/evidence SHA:
+
+`61cf9053b39f8d4aed413058cd99e4ec664c8a42`
+
+First final-main CI:
+
+`37945417867` — success
+
+Main integration evidence commit:
+
+`794428389e632c241fbd8c15100b86c84cbd7dd4`
+
+Final closure-evidence main CI: DONE
+
+- exact CI: `37945872610` — success;
+- local integration-evidence suite: `320 passed`;
+- main integration remained fast-forward only.
+
 Whole-branch review resolved two Important findings: research-outcome drift in
 physical validation and impossible metric-counter relationships. Both were
 covered by RED -> GREEN regression tests. The required post-review physical
@@ -160,11 +178,12 @@ aggregate result: `SUPPORTED`, recovery 3, regression 0, rounds 8/15/24.
 
 ## Current Action
 
-A007 whole-branch review, fix pass, post-review physical rerun, and exact branch
-CI are GREEN. Prepare the evidence-only branch commit and final integration.
+A007 implementation, review/fix pass, post-review physical rerun, branch CI,
+fast-forward main integration, first final-main CI, and closure-evidence main
+CI are GREEN. Prepare the final integration-ledger commit and exact CI.
 
 ## Next Action
 
-After the evidence-only branch commit receives exact CI, fast-forward main,
-require final-main CI, close Issue #7, and leave A008 — Procedural Memory /
-Skill Chunking PLANNED with no issue.
+After the final integration-ledger commit receives exact CI, close Issue #7,
+verify main clean/synchronized 0/0, and leave A008 — Procedural Memory / Skill
+Chunking PLANNED with no issue.
