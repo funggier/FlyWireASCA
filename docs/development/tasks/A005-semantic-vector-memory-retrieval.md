@@ -98,6 +98,22 @@ Portable benchmark evidence:
 - portable qualification includes 12 cases and 256 distractors;
 - graph decision evaluator exercises all three outcomes synthetically.
 
+Physical development-calibration evidence:
+
+- Ollama runtime: `0.32.15`;
+- embedding model: `qwen3-embedding:0.6b`;
+- full digest: `ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d`;
+- architecture: `qwen3`;
+- exact parameter count: `595,776,512`;
+- reported parameter size: `595.78M`;
+- quantization: `Q8_0`;
+- embedding dimension: `1024`;
+- vector-health probes: 16/16 finite, nonzero, unit-normalized;
+- physical development threshold: `0.5037018224299838`;
+- threshold origin: `physical_development_fixture_v1`;
+- calibration case IDs: `physical-cal-bike`, `physical-cal-cat`;
+- final physical qualification fixture is separate and has not been run yet.
+
 ## Current Action
 
 Implement Task 5 local physical embedding/vector-memory qualification CLI under TDD, then inspect/pull and qualify `qwen3-embedding:0.6b`.

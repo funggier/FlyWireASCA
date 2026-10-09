@@ -36,7 +36,8 @@ MODEL_NAME = "qwen3-embedding:0.6b"
 PROFILE_NAME = "qwen3-embedding-0.6b-vector-memory-v1"
 BASE_URL = "http://127.0.0.1:11434"
 EXPECTED_DIMENSION = 1024
-EXPECTED_DIGEST: str | None = None
+EXPECTED_DIGEST = "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d"
+FROZEN_PHYSICAL_THRESHOLD = 0.5037018224299838
 TIMEOUT_SECONDS = 120.0
 HEALTH_REPEATS = 8
 CALIBRATION_ORIGIN = "physical_development_fixture_v1"
@@ -320,7 +321,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--timeout-seconds", type=float, default=TIMEOUT_SECONDS)
     parser.add_argument("--health-repeats", type=int, default=HEALTH_REPEATS)
     parser.add_argument("--calibrate", action="store_true")
-    parser.add_argument("--threshold", type=float)
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=FROZEN_PHYSICAL_THRESHOLD,
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
 

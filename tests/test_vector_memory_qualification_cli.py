@@ -172,26 +172,23 @@ def test_calibration_mode_emits_real_fixture_threshold_with_fake_adapter(monkeyp
     ]
 
 
-def test_qualification_mode_requires_threshold_and_reports_vector_decision(monkeypatch, capsys):
+def test_qualification_mode_uses_pinned_digest_and_threshold_defaults(monkeypatch, capsys):
     module = _load_module()
-    monkeypatch.setattr(module, "OllamaEmbeddingAdapter", _fake_adapter_class(module))
+    assert module.EXPECTED_DIGEST == "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d"
+    assert module.FROZEN_PHYSICAL_THRESHOLD == pytest.approx(0.5037018224299838)
+    monkeypatch.setattr(
+        module,
+        "OllamaEmbeddingAdapter",
+        _fake_adapter_class(module, digest=module.EXPECTED_DIGEST),
+    )
 
-    rc = module.main(["--expected-digest", DIGEST])
-    missing = json.loads(capsys.readouterr().out)
-    assert rc == 1
-    assert missing["experiment_valid"] is False
-    assert any("threshold" in error for error in missing["errors"])
-
-    rc = module.main([
-        "--expected-digest", DIGEST,
-        "--threshold", "0.5",
-    ])
+    rc = module.main([])
     payload = json.loads(capsys.readouterr().out)
     assert rc == 0
     assert payload["mode"] == "qualification"
     assert payload["experiment_valid"] is True
     assert payload["retrieval_qualified"] is True
-    assert payload["physical_threshold"] == 0.5
+    assert payload["physical_threshold"] == pytest.approx(module.FROZEN_PHYSICAL_THRESHOLD)
     assert payload["graph_decision"] == "VECTOR_SUFFICIENT"
     assert payload["qualification_case_ids"] == [
         "physical-en-paraphrase",
@@ -243,3 +240,16 @@ def test_payload_does_not_claim_flops_energy_or_generative_qwen(monkeypatch, cap
     assert "energy" not in encoded
     assert "tools" not in encoded
     assert "vision" not in encoded
+
+def test_pinned_digest_mismatch_fails_closed(monkeypatch, capsys):
+    module = _load_module()
+    monkeypatch.setattr(
+        module,
+        "OllamaEmbeddingAdapter",
+        _fake_adapter_class(module, digest="wrong-digest"),
+    )
+    rc = module.main([])
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 1
+    assert payload["experiment_valid"] is False
+    assert any("digest" in error for error in payload["errors"])
