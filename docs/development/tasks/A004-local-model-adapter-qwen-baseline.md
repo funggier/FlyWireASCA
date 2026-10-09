@@ -39,8 +39,8 @@ Out of scope:
 - Generic model contracts and roadmap migration: DONE.
 - Ollama transport and adapter: DONE.
 - Qwen-only baseline and portable CI: DONE.
-- Local physical Qwen qualification: ACTIVE.
-- Exact qualification and closure: PLANNED.
+- Local physical Qwen qualification: DONE.
+- Exact qualification and closure: ACTIVE.
 
 ## Acceptance Criteria
 
@@ -79,12 +79,29 @@ Baseline before implementation:
 - target full digest:
   `2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd`.
 
-Further evidence is appended only after fresh verification.
+Physical qualification on implementation commit `3b8cdbb03db8cd959ce52639316a36e978d1e8f4`:
+
+- local qualification: PASS;
+- Ollama runtime: `0.32.15`;
+- model: `qwen3.5:4b`;
+- full digest: `2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd`;
+- architecture: `qwen35`;
+- exact parameter count: `4,659,865,088`;
+- quantization: `Q4_K_M`;
+- generation profile: thinking off, tools off, vision off, context 8192, max output 256, temperature 0, seed 0;
+- controlled Qwen-only baseline: 6/6 passed, pass rate 1.0;
+- prompt tokens total: 293;
+- generated tokens total: 16;
+- total duration: 2,509,991,400 ns;
+- prompt-eval duration total: 1,739,271,000 ns;
+- generation eval duration total: 586,869,000 ns;
+- load-duration aggregate is intentionally `None` because Ollama omitted that field on some individual responses;
+- local evidence JSON remains scratch-only and is not committed.
 
 ## Current Action
 
-Implement Task 4 local physical Qwen qualification CLI under TDD, then run it against the installed local Ollama/Qwen runtime.
+Run Task 5 exact branch qualification, verify FlyWireLLM remains paused, then publish the A004 branch for portable CI.
 
 ## Next Action
 
-After physical qualification passes and evidence is captured, run exact branch qualification and closure.
+After exact branch CI is GREEN, write A004 closure evidence, transition A005 to PLANNED, qualify the closure commit, review the whole branch, and fast-forward main.
