@@ -13,11 +13,10 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_planned_a006_after_a005_closure():
-    text = _read(TASKS / "CURRENT.md")
-    assert "Current task: A006" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
+def test_a005_closure_report_records_a006_was_planned_at_closure():
+    text = _read(REPORT)
+    assert "A006" in text
+    assert "PLANNED" in text
 
 
 def test_a005_task_is_done_and_records_vector_decision_gate():
@@ -38,10 +37,10 @@ def test_a005_task_is_done_and_records_vector_decision_gate():
         assert heading in text
 
 
-def test_roadmap_marks_a005_done_and_a006_remains_planned():
+def test_live_roadmap_preserves_a005_done_while_a006_can_advance():
     text = _read(TASKS / "ROADMAP.md")
     assert "| A005 | Semantic Vector Memory Retrieval | DONE |" in text
-    assert "| A006 | Working Set / Selective Activation | PLANNED |" in text
+    assert "| A006 | Working Set / Selective Activation |" in text
     assert "| A007 | Surprise, Uncertainty & Expansion | PLANNED |" in text
     assert "Graph" not in text
 
