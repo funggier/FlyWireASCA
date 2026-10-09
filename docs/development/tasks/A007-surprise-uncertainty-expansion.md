@@ -32,8 +32,8 @@ judge expansion.
 ## Phases
 
 - A007 contracts / frozen profile / task activation: DONE.
-- Structural trigger derivation / controller: ACTIVE.
-- Bounded policy runner / controls: PLANNED.
+- Structural trigger derivation / controller: DONE.
+- Bounded policy runner / controls: ACTIVE.
 - Portable benchmark / engineering qualification: PLANNED.
 - Physical A005+A006+A007 qualification: PLANNED.
 - Exact qualification / review / integration: PLANNED.
@@ -89,13 +89,13 @@ Activation baseline:
 
 ## Current Action
 
-Implement Task 2 structural trigger derivation and fail-closed
-STOP / EXPAND / EXHAUSTED assessment under TDD.
+Implement Task 3 bounded policy runner and control baselines under TDD while
+keeping structural assessment distinct from policy termination.
 
 ## Next Action
 
-After Task 2 is GREEN and committed, implement the bounded policy runner and
-NO_EXPANSION / SIGNAL_DRIVEN / ALWAYS_EXPAND controls.
+After Task 3 is GREEN and committed, implement the portable A007 benchmark and
+engineering qualification gates.
 
 The next milestone after qualified A007 remains A008 — Procedural Memory /
 Skill Chunking.

@@ -1,3 +1,4 @@
+from .controller import assess_expansion, derive_expansion_triggers
 from .models import (
     ExpansionDecision,
     ExpansionDecisionKind,
@@ -10,6 +11,8 @@ from .models import (
 )
 
 __all__ = [
+    "assess_expansion",
+    "derive_expansion_triggers",
     "ExpansionDecision",
     "ExpansionDecisionKind",
     "ExpansionPolicy",
