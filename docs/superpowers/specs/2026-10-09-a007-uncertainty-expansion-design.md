@@ -1,7 +1,7 @@
 # A007 Surprise, Uncertainty & Expansion Design Specification
 
 Date: 2026-10-09
-Status: DESIGN FOR USER REVIEW
+Status: APPROVED DESIGN
 Planned task: A007 — Surprise, Uncertainty & Expansion
 Branch: research/a007-uncertainty-expansion
 Base: ASCA main at 8bdf87d19147cd30ccfbd8cd07238ab07c389dc0
