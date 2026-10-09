@@ -1,6 +1,6 @@
 # A008 — Procedural Memory / Skill Chunking
 
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #8
 Branch: research/a008-procedural-memory
 
@@ -34,26 +34,26 @@ FlyWireLLM remains paused and untouched.
 - Exact verifier / deterministic simulator: DONE.
 - FLAT / CHUNKED / BLIND_CHUNKED runner: DONE.
 - Deterministic benchmark / qualification CLI / CI: DONE.
-- Exact branch qualification / report / closure transition: ACTIVE.
-- Whole-branch review / integration: PLANNED.
+- Exact branch qualification / report / closure transition: DONE.
+- Whole-branch review / integration: ACTIVE.
 
 ## Acceptance Criteria
 
-- [ ] Immutable models/library and deterministic flattening validated.
-- [ ] Direct/indirect recursion and depth >8 fail closed.
-- [ ] CALL completion contracts validated by kind/payload/matcher.
-- [ ] Exact verifier ignores executor-supplied expected_match.
-- [ ] Deterministic simulator supports state, probes, and failure injection.
-- [ ] FLAT/CHUNKED success semantics equivalent on declared fixtures.
-- [ ] CHUNKED reduces root-visible dispatches in declared chunking fixtures.
-- [ ] CHUNKED localizes checked primitive failure exactly.
-- [ ] BLIND_CHUNKED demonstrates coarser CALL-boundary localization.
-- [ ] No primitive executes after checked interruption.
-- [ ] No automatic retry/recovery occurs.
-- [ ] Deterministic qualification runs in GitHub CI.
-- [ ] Valid primary outcome is exactly SUPPORTED/MIXED/NOT_SUPPORTED.
-- [ ] No real tool/model/Ollama/graph dependency is introduced.
-- [ ] FlyWireLLM remains paused/untouched.
+- [x] Immutable models/library and deterministic flattening validated.
+- [x] Direct/indirect recursion and depth >8 fail closed.
+- [x] CALL completion contracts validated by kind/payload/matcher.
+- [x] Exact verifier ignores executor-supplied expected_match.
+- [x] Deterministic simulator supports state, probes, and failure injection.
+- [x] FLAT/CHUNKED success semantics equivalent on declared fixtures.
+- [x] CHUNKED reduces root-visible dispatches in declared chunking fixtures.
+- [x] CHUNKED localizes checked primitive failure exactly.
+- [x] BLIND_CHUNKED demonstrates coarser CALL-boundary localization.
+- [x] No primitive executes after checked interruption.
+- [x] No automatic retry/recovery occurs.
+- [x] Deterministic qualification runs in GitHub CI.
+- [x] Valid primary outcome is exactly SUPPORTED/MIXED/NOT_SUPPORTED.
+- [x] No real tool/model/Ollama/graph dependency is introduced.
+- [x] FlyWireLLM remains paused/untouched.
 - [ ] Exact branch/review/final-main CI and synchronization gates pass.
 
 ## Evidence
@@ -73,14 +73,28 @@ Activation base:
 - branch: `research/a008-procedural-memory`;
 - A007 historical outcome: `SUPPORTED`.
 
+Exact branch qualification evidence:
+
+- candidate SHA: `0bfee1dfc424934ed783150f6c4d86140c6502d2`;
+- branch CI: `37956221852` — success;
+- full suite: `370 passed`;
+- fixture fingerprint:
+  `f52fbd4ab018386ff3cbfb62a68cc44a4b40e54ec4fd9a3b2e885dd2c5663fc6`;
+- primary outcome: `SUPPORTED`;
+- FLAT / CHUNKED root-visible dispatches: 13 / 8;
+- maximum compression ratio: 2.0;
+- shared `heat-water` parent reuse count: 2;
+- checked failure localization FLAT/CHUNKED/BLIND: 1/1, 1/1, 1/1.
+
 ## Current Action
 
-Run Task 5 exact branch qualification, write the A008 closure report, and
-transition A008 DONE / A009 PLANNED under TDD.
+A008 deterministic mechanism qualification is DONE on the branch candidate.
+Commit the closure transition, require exact closure-branch CI, then perform
+the required whole-branch review and integration gates.
 
 ## Next Action
 
-After exact closure-branch CI is GREEN, perform whole-branch review, rerun
-qualification after semantic fixes if needed, then integrate main.
+A009 — Integrated Cognitive Loop remains PLANNED with no issue. Do not start it
+until A008 review, final-main CI, Issue #8 closure, and synchronization are GREEN.
 
 A009 — Integrated Cognitive Loop remains PLANNED with no issue.

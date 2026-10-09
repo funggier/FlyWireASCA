@@ -41,16 +41,19 @@ Start with:
 
 ## Current stage
 
-A008 - Procedural Memory / Skill Chunking is active.
+A008 - Procedural Memory / Skill Chunking has a qualified closure candidate;
+A009 - Integrated Cognitive Loop remains planned.
 
-The primary architecture is `CHUNKED`: reusable hierarchical procedures with
-explicit step-level expected-outcome checkpoints. `FLAT` is the correctness
-baseline and `BLIND_CHUNKED` is a negative control for coarser failure
-localization.
+A008's frozen deterministic qualification outcome is `SUPPORTED`.
+The recommended representation is `CHUNKED`: reusable hierarchical procedures
+with explicit step-level checkpoints. Across the declared success fixture,
+CHUNKED preserved FLAT primitive/final-state correctness while reducing
+root-visible dispatches from 13 to 8; the maximum declared control-state
+compression ratio was 2.0x. `BLIND_CHUNKED` remains a negative control because
+it localized the injected child failure only at the parent call boundary.
 
-A008 uses a deterministic simulator only. It does not execute real tools/APIs,
-use Qwen3.5:4b or Ollama, traverse a semantic graph, or automatically retry
-failed actions. FlyWireLLM remains paused and independent.
+This result is a deterministic control-state/mechanism result, not evidence of
+lower hardware cost or faster real-world tool execution.
 
 
 ## Claims boundary

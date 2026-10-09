@@ -1,24 +1,23 @@
 # Current Development Task
 
-Current task: A008
-Status: ACTIVE
-GitHub Issue: #8
-Branch: research/a008-procedural-memory
-A007 integration: GREEN
+Current task: A009
+Status: PLANNED
+GitHub Issue: not created
+A008 deterministic qualification: GREEN
 
 ## Current Action
 
-Implement A008 — Procedural Memory / Skill Chunking from the approved design and
-Native plan. Primary architecture is CHUNKED hierarchy with explicit
-step-level checkpoints.
+No A009 implementation is active. A008 has a qualified closure candidate with
+primary deterministic outcome `SUPPORTED`; whole-branch review and final main
+integration remain A008 finishing gates.
 
 ## Next Action
 
-Finish models/library, then verifier/simulator, execution modes, deterministic
-qualification, review, and integration in plan order.
+After A008 review, exact final-main CI, Issue #8 closure, and clean/synchronized
+main are GREEN, design A009 — Integrated Cognitive Loop as a separate
+architectural task.
 
 ## Resume Rule
 
-Read this file, A008 task/spec/plan, live Git/GitHub state, and A007 closure
-evidence before action. Do not introduce real tool/OS/API execution, Qwen3.5:4b,
-Ollama, semantic graph traversal, automatic retry, or FlyWireLLM training.
+Read this file, the A008 task/spec/plan/report, live Git/GitHub state, and
+FlyWireLLM paused state before action. Do not create an A009 issue automatically.

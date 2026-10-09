@@ -6,22 +6,22 @@ A007=ROOT/"docs"/"development"/"reports"/"ASCA-20261009-A007-surprise-uncertaint
 
 def read(p): return p.read_text(encoding="utf-8")
 
-def test_current_activates_a008_issue_8_branch():
+def test_current_points_to_planned_a009_after_a008_closure_candidate():
     text=read(TASKS/"CURRENT.md")
-    assert "Current task: A008" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #8" in text
-    assert "Branch: research/a008-procedural-memory" in text
+    assert "Current task: A009" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
+    assert "A008 deterministic qualification: GREEN" in text
 
-def test_roadmap_a008_active_a009_a011_planned():
+def test_roadmap_a008_done_a009_a011_planned():
     text=read(TASKS/"ROADMAP.md")
-    assert "| A008 | Procedural Memory / Skill Chunking | ACTIVE |" in text
+    assert "| A008 | Procedural Memory / Skill Chunking | DONE |" in text
     assert "| A009 | Integrated Cognitive Loop | PLANNED |" in text
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
 
 def test_a008_task_records_approved_boundaries():
     text=read(TASKS/"A008-procedural-memory-skill-chunking.md")
-    assert "Status: ACTIVE" in text
+    assert "Status: DONE" in text
     assert "GitHub Issue: #8" in text
     assert "FLAT" in text and "CHUNKED" in text and "BLIND_CHUNKED" in text
     assert "max_call_depth = 8" in text
@@ -42,3 +42,47 @@ def test_readme_current_stage_a008():
 def test_a007_closure_remains_supported_historical_evidence():
     text=read(A007)
     assert "Final A007 hypothesis outcome: `SUPPORTED`" in text
+
+REPORT_A008 = ROOT / "docs" / "development" / "reports" / "ASCA-20261009-A008-procedural-memory-skill-chunking.md"
+
+def test_a008_closure_report_records_exact_qualification():
+    text=read(REPORT_A008)
+    assert "0bfee1dfc424934ed783150f6c4d86140c6502d2" in text
+    assert "37956221852" in text
+    assert "370 passed" in text
+    assert "f52fbd4ab018386ff3cbfb62a68cc44a4b40e54ec4fd9a3b2e885dd2c5663fc6" in text
+    assert "Final A008 hypothesis outcome: `SUPPORTED`" in text
+    assert "FLAT root-visible dispatches: 13" in text
+    assert "CHUNKED root-visible dispatches: 8" in text
+    assert "maximum deliberative compression ratio: 2.0" in text
+    assert "heat-water" in text
+    assert "BLIND_CHUNKED" in text
+    assert "FlyWireLLM" in text and "paused" in text.lower()
+
+def test_a008_report_has_exactly_one_primary_outcome():
+    text=read(REPORT_A008)
+    assert text.count("Final A008 hypothesis outcome:") == 1
+    assert "Final A008 hypothesis outcome: `SUPPORTED`" in text
+    assert "Final A008 hypothesis outcome: `MIXED`" not in text
+    assert "Final A008 hypothesis outcome: `NOT_SUPPORTED`" not in text
+
+def test_a008_closure_transitions_to_planned_a009_without_issue():
+    task=read(TASKS/"A008-procedural-memory-skill-chunking.md")
+    assert "Status: DONE" in task
+    roadmap=read(TASKS/"ROADMAP.md")
+    assert "| A008 | Procedural Memory / Skill Chunking | DONE |" in roadmap
+    assert "| A009 | Integrated Cognitive Loop | PLANNED |" in roadmap
+    current=read(TASKS/"CURRENT.md")
+    assert "Current task: A009" in current
+    assert "Status: PLANNED" in current
+    assert "GitHub Issue: not created" in current
+
+def test_a008_report_keeps_claims_and_integration_boundaries():
+    text=read(REPORT_A008).lower()
+    assert "deterministic simulator" in text
+    assert "no real tool" in text
+    assert "no ollama" in text
+    assert "no automatic retry" in text
+    assert "control-state" in text
+    assert "do not establish" in text
+    assert "a007" in text and "supported" in text
