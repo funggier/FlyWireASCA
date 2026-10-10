@@ -1,4 +1,5 @@
 name: CI
+# Qualification topology: docs/development/QUALIFICATION-MATRIX.md
 
 on:
   push:

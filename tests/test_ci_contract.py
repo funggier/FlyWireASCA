@@ -101,3 +101,35 @@ def test_ci_runs_a010_portable_baseline_qualification_only():
     assert "ollama run" not in lower
     assert "127.0.0.1:11434" not in lower
     assert "localhost" not in lower
+
+MATRIX = ROOT / "docs" / "development" / "QUALIFICATION-MATRIX.md"
+
+
+def _commands_under_heading(text: str, heading: str) -> tuple[str, ...]:
+    section = text.split(heading, 1)[1]
+    block = section.split("```text", 1)[1].split("```", 1)[0]
+    return tuple(line.strip() for line in block.splitlines() if line.strip())
+
+
+def test_ci_explicitly_points_to_canonical_qualification_matrix():
+    workflow = WORKFLOW.read_text(encoding="utf-8")
+    assert "docs/development/QUALIFICATION-MATRIX.md" in workflow
+
+
+def test_qualification_matrix_and_ci_command_topology_match():
+    workflow = WORKFLOW.read_text(encoding="utf-8")
+    matrix = MATRIX.read_text(encoding="utf-8")
+    portable = _commands_under_heading(matrix, "## 3. Portable GitHub CI commands")
+    physical = _commands_under_heading(matrix, "## 4. Local-only physical commands")
+    for command in portable:
+        assert command in workflow, command
+    for command in physical:
+        script = command.split("python ", 1)[1].split(" ", 1)[0]
+        assert script not in workflow, script
+    assert "local-only" in matrix.lower()
+    assert "A006: `NOT_SUPPORTED`" in matrix
+    assert "A007: `SUPPORTED`" in matrix
+    assert "A008: `SUPPORTED`" in matrix
+    assert "A009: `SUPPORTED`" in matrix
+    assert "A010: `NOT_SUPPORTED`" in matrix
+    assert "A valid `NOT_SUPPORTED` result" in matrix
