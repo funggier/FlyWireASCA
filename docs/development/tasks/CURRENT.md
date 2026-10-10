@@ -1,48 +1,40 @@
 # Current Development Task
 
-Current task: A011
-Status: DONE
-GitHub Issue: #12
+Current task: A012
+Status: ACTIVE
+GitHub Issue: #14
 
 ## Current Action
 
-A011 engineering implementation and integration are complete: FULL_SYSTEM,
-is_final=true, ENGINEERING_QUALIFIED;18 gates/94 frozen checks PASS and86
-indexed artifacts validated. Native execution and one fresh whole-change
-review completed; two Important infrastructure findings were repaired by TDD.
-PRE-A011 stays DONE / Issue11 CLOSED-COMPLETED; A001-A010 stay DONE.
+A011 is complete and remains ENGINEERING_QUALIFIED for the frozen
+`asca-v0x-a011-v1` profile. A012 has an approved design and implementation
+plan for a new relational-reasoning structure decision experiment.
 
-Qualified repaired feature: e96d71b033212668bc3ce98873903618c9c44bcf;
-exact branch CI38058426606 SUCCESS.
-Qualified integration/main: f83bf1febbb6ac0bdcba3d8bf05dc8d437edc5ac;
-exact push/main CI38058896880 SUCCESS. Separate fresh physical packs passed.
-PR13 used a normal history-preserving merge after exact feature/PR CI.
-Later closure/handoff commits are metadata with their own exact CI.
+A012 deliberately does not assume that an associative graph is required.
+A005 remains `VECTOR_SUFFICIENT` for its retrieval scope. The new milestone
+will compare the real A005 Vector + Metadata path with bounded explicit typed
+relation traversal on relation-dependent controlled workloads.
 
-Tasks1-11 complete. Issue12 CLOSED/COMPLETED at 2026-10-10T14:33:14Z,
-verified through a separate live fetch. Closure metadata4053cb4 exact main
-CI38059824196 SUCCESS; main clean/exactorigin0/0. Final handoff metadata
-receives its own exact CI before the final session completion claim.
+Activation base:
+`23b96f4502b81cddb9563b55c26fdd0adc731265`.
 
-- [A011 task and execution evidence](A011-asca-v0x-qualification.md)
-- [Final qualification report](../reports/ASCA-20261010-A011-v0x-qualification.md)
-- [Latest full session handoff](../reports/ASCA-20261010-full-session-handoff-a011-completed.md)
-- [Approved design](../../superpowers/specs/2026-10-10-a011-asca-v0x-qualification-design.md)
-- [Approved implementation plan](../../superpowers/plans/2026-10-10-a011-asca-v0x-qualification.md)
+Branch:
+`research/a012-relational-structure-decision`.
 
 Research outcomes remain A006 NOT_SUPPORTED, A007 SUPPORTED, A008 SUPPORTED,
-A009 SUPPORTED, A010 NOT_SUPPORTED. Version stays 0.1.0.dev0.
+A009 SUPPORTED, A010 NOT_SUPPORTED. A011 remains a frozen engineering
+qualification and does not automatically qualify A012.
 
 ## Next Action
 
-Read the final handoff and verify live Git/GitHub/runtime/exact current CI.
-Wait for an explicitly scoped user request; no new milestone, release, tag,
-retrieval optimization or version promotion is authorized.
+Execute A012 with TDD, beginning with strict relation records and bounded
+explicit traversal. Record evidence on Issue #14.
 
 ## Resume Rule
 
-Read the latest full handoff first, then verify live Git/GitHub/runtime and
-exact current main CI. Live state overrides historical stage labels.
-Do not repeat completed PRE-A011/design/spec/plan/implementation Tasks.
-Do not reset/clean/rebase/force-push or destroy WIP/history.
-Keep FlyWireLLM untouched; no cognitive, fixture, threshold or research retuning.
+Read the A011 completed handoff and the A012 design/plan first, then verify live
+Git/GitHub/runtime. Live state overrides stale prose.
+
+Do not reset/clean/rebase/force-push or destroy preserved A011 evidence.
+Do not modify any A011 `protected_source.paths` during A012.
+Keep FlyWireLLM untouched. No release/tag/version promotion is authorized.

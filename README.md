@@ -37,55 +37,47 @@ Start with:
 
 - [Architecture design](docs/superpowers/specs/2026-10-08-asca-architecture-design.md)
 - [Implementation plans](docs/superpowers/plans/)
-- [Development tasks](docs/development/tasks/) once A001 creates the task ledger
+- [Development tasks](docs/development/tasks/)
 
 ## Current stage
 
-A009 - Integrated Cognitive Loop has a **qualified closure candidate** with
-primary deterministic outcome `SUPPORTED`.
+A011 - ASCA v0.x Qualification is **DONE**. The frozen `asca-v0x-a011-v1`
+profile is `ENGINEERING_QUALIFIED` with separate preserved research outcomes:
 
-The frozen A009 fixture demonstrates:
+- A006: `NOT_SUPPORTED`
+- A007: `SUPPORTED`
+- A008: `SUPPORTED`
+- A009: `SUPPORTED`
+- A010: `NOT_SUPPORTED`
 
-- 2 genuine procedure-mismatch recoveries over `NO_PROCEDURE_RECOVERY`;
-- 0 regressions;
-- primary success coverage equal to `ALWAYS_MAX_SCOPE` (6 / 6 successful cases);
-- 19 primary scope evaluations versus 27 for `ALWAYS_MAX_SCOPE`;
-- maximum 3 procedure attempts and maximum scope index 2;
-- 0 duplicate-execution-ID failures;
-- 0 same-name ambiguity failures;
-- CHUNKED/FLAT diagnostic equivalence 6 / 6;
-- 0 model-control leakage failures;
-- deterministic replay.
+A009 - Integrated Cognitive Loop remains `SUPPORTED`. Its qualified primary path
+is `SINGLE_BEST` + A007 `SIGNAL_DRIVEN` + A008 `CHUNKED` with
+`MISMATCH_DRIVEN_RECOVERY`.
 
-The primary path remains `SINGLE_BEST` + A007 `SIGNAL_DRIVEN` + A008
-`CHUNKED`, with `MISMATCH_DRIVEN_RECOVERY` as the A009 recovery policy.
+A010 - Dense/Non-selective Baseline Comparison is **DONE** with portable outcome
+`NOT_SUPPORTED`: ASCA/dense query counts are 28/27, scored-vector counts are
+1984/1440, and cumulative selected counts are 66/480. This result answers a
+different comparison question and does not rewrite A009.
 
-Historical outcomes remain unchanged:
+A012 - Relational Reasoning / Structure Decision Gate is **ACTIVE** on GitHub
+Issue #14 after explicit user authorization. It will compare the real A005 Vector + Metadata
+retrieval primitive with bounded explicit typed relation traversal on causal,
+temporal, ownership, part-of, used-for, path and identity-sensitive controlled
+workloads.
 
-- A006 selective-convergence hypothesis: `NOT_SUPPORTED`;
-- A007 structural-expansion hypothesis: `SUPPORTED`;
-- A008 procedural-memory hypothesis: `SUPPORTED`;
-- A009 integrated-loop hypothesis: `SUPPORTED`.
+A012's frozen portable evidence now concludes
+`EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED` for the declared relation-dependent
+workload: bounded relation traversal recovers 6 cases that Vector + Metadata
+alone does not, with zero regressions and zero identity/provenance/budget/cycle
+failures. This is not a claim that a persistent graph database or graph-first
+architecture is generally superior.
 
-Local physical integration is also GREEN with pinned
-`qwen3-embedding:0.6b` retrieval and terminal-only `qwen3.5:4b` fallback.
-
-A009 is fully integrated and GitHub Issue #9 is closed as completed.
-
-A010 - Dense/Non-selective Baseline Comparison is **DONE** and GitHub Issue
-#10 is closed as completed. The frozen portable outcome is `NOT_SUPPORTED`:
-ASCA/dense query counts are 28/27, logical scored-vector counts are 1984/1440,
-and cumulative selected working-set items are 66/480. ASCA succeeds on 7
-primary cases versus 8 for dense, including 1 dense-only success. This
-preserves the historical A009 `SUPPORTED` integration result; A010 answers a
-different system-level comparison question.
-
-A011 - ASCA v0.x Qualification is **PLANNED** with no GitHub issue.
+A011 remains the qualification of its frozen v0.x profile; it does not
+automatically qualify A012.
 
 These results are control/retrieval/procedure evidence. They are not claims of
 lower FLOPs, lower energy, lower token use, general speed superiority, or safe
 real-world side-effect replay.
-
 
 ## Claims boundary
 

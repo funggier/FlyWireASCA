@@ -92,6 +92,43 @@ def test_audit_rejects_undeclared_reverse_package_dependency(tmp_path: Path):
     assert any("undeclared package dependency vector_memory -> integrated_loop" in e for e in errors)
 
 
+def test_audit_allows_declared_a012_relational_reasoning_dependencies(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    errors = audit(root)
+    assert not any("relational_reasoning" in error for error in errors)
+
+
+def test_audit_rejects_relational_reasoning_dependency_on_integrated_loop(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "relational_reasoning" / "bad.py"
+    injected.write_text(
+        "from flywire_asca.integrated_loop import run_cognitive_loop\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any(
+        "undeclared package dependency relational_reasoning -> integrated_loop" in error
+        for error in errors
+    )
+
+
+def test_audit_rejects_vector_memory_dependency_on_relational_reasoning(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "vector_memory" / "bad_relation.py"
+    injected.write_text(
+        "from flywire_asca.relational_reasoning import BoundedRelationIndex\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any(
+        "undeclared package dependency vector_memory -> relational_reasoning" in error
+        for error in errors
+    )
+
+
 def test_audit_rejects_cross_package_cycle_explicitly(tmp_path: Path):
     audit = _load_audit()
     root = _copy_fixture(tmp_path)

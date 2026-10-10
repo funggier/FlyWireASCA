@@ -31,6 +31,7 @@ ALLOWED_PACKAGE_DEPENDENCIES: dict[str, frozenset[str]] = {
     "familiarity": frozenset({"contracts"}),
     "procedural_memory": frozenset({"contracts"}),
     "vector_memory": frozenset({"contracts", "embedding"}),
+    "relational_reasoning": frozenset({"contracts", "embedding", "vector_memory"}),
     "selective_activation": frozenset({"contracts", "vector_memory"}),
     "uncertainty_expansion": frozenset({"contracts", "selective_activation"}),
     "integrated_loop": frozenset(

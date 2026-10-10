@@ -27,14 +27,15 @@ def test_a010_task_ledger_records_approved_design_plan_and_boundaries():
     assert "FlyWireLLM" in text and "untouched" in text.lower()
 
 
-def test_readme_records_a010_done_and_a011_planned():
+def test_readme_records_a010_done_a011_done_and_a012_active():
     text = read(ROOT / "README.md")
     assert "A009 Issue #9 remains open" not in text
     assert "A009" in text and "SUPPORTED" in text
     assert "A010" in text
     assert "Dense/Non-selective Baseline Comparison" in text
     assert "**DONE**" in text
-    assert "A011" in text and "**PLANNED**" in text
+    assert "A011" in text and "**DONE**" in text
+    assert "A012" in text and "**ACTIVE**" in text
 
 REPORT = ROOT / "docs" / "development" / "reports" / "ASCA-20261010-A010-dense-nonselective-baseline-comparison.md"
 
@@ -149,7 +150,7 @@ def test_a010_records_reviewed_main_integration_before_issue_close():
     assert "Status: DONE" in task
     assert "GitHub Issue: #10 (closed as completed)" in task
 
-def test_a010_repository_closure_state_is_done_and_a011_planned():
+def test_a010_repository_closure_state_is_done_after_later_milestones():
     task = read(TASKS / "A010-dense-nonselective-baseline-comparison.md")
     report = read(REPORT)
     readme = read(ROOT / "README.md")
@@ -158,6 +159,7 @@ def test_a010_repository_closure_state_is_done_and_a011_planned():
     assert "A010 repository state: DONE" in report
     assert "GitHub Issue #10 closure: completed" in report
     assert "A010" in readme and "NOT_SUPPORTED" in readme
-    assert "A011" in readme and "PLANNED" in readme
+    assert "A011" in readme and "DONE" in readme
+    assert "A012" in readme and "ACTIVE" in readme
     assert "remains open" not in task.lower()
     assert "pending" not in task.lower()
