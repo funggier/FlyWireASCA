@@ -98,3 +98,7 @@ def test_a010_physical_evidence_table_has_no_bullet_rows_inside_table():
     assert "- Dense physical query/scored-vector | 3 / 9" in text
     section = text.split("Observed physical comparison:", 1)[1].split("The physical case", 1)[0]
     assert section.index("| Cumulative selected count | 3 | 3 |") < section.index("- ASCA physical query/scored-vector | 1 / 3")
+
+def test_task_workflow_requires_staged_whitespace_check_before_commit():
+    text = read(TASK_README)
+    assert "git diff --cached --check" in text

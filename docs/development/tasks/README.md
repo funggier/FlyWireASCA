@@ -68,6 +68,19 @@ new qualified behavior SHA when behavior is unchanged.
 
 This terminology avoids self-referential evidence loops.
 
+## Local commit hygiene
+
+Before committing a task boundary:
+
+1. run the focused/full tests required by that task;
+2. stage only the intended files;
+3. run `git diff --cached --check` so newly added files are included in the
+   whitespace gate;
+4. inspect staged file names before committing.
+
+A pre-staging `git diff --check` is still useful while editing, but it does not
+cover untracked files. Exact CI remains the final committed-diff check.
+
 ## Handoffs
 
 Long or interrupted sessions should add a handoff under
