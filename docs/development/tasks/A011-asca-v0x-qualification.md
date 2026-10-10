@@ -52,8 +52,8 @@ interfaces, named RED/GREEN tests, commands, commit boundaries, physical
 evidence, review, integration, and closure in 11 execution Tasks. This file
 remains the canonical Q01-Q11 inventory; the written plan refines dependency
 order by implementing artifact publication before the runners that consume it.
-The plan is written and author self-reviewed; commit/push/exact CI publication
-is in progress. User plan approval and execution-method selection remain pending.
+The plan is written, author self-reviewed, committed/pushed, and exact-CI GREEN.
+User plan approval and execution-method selection remain pending.
 
 ## Approval gates
 
@@ -63,8 +63,8 @@ is in progress. User plan approval and execution-method selection remain pending
 | G01 | Explicit approval of complete conversational design; permits written spec | PASS — user approval in this session |
 | G02 | Written spec, inline self-review, commit/push, exact spec-commit CI | PASS — spec published at `6eb5fb1399bc21a05599b92d9aa8b312df70c9e1`; exact CI `38039670308` success |
 | G03 | User explicitly reviews/approves the written spec | PASS — user “โอเคครับ ทำต่อได้เลย”, 2026-10-10 16:11:41 +07:00 |
-| G04 | Invoke writing-plans, create/self-review/publish implementation plan, exact CI | IN PROGRESS — plan written/self-review PASS; exact publication CI pending |
-| G05 | User reviews/approves plan and selects execution method | WAITING — requires completed G04; method not selected |
+| G04 | Invoke writing-plans, create/self-review/publish implementation plan, exact CI | PASS — plan published at `9d17350a6e4f4305b797e7d2766bb619416a510b`; exact CI `38042470411` success |
+| G05 | User reviews/approves plan and selects execution method | WAITING USER REVIEW / METHOD NOT SELECTED |
 | G06 | Create A011 issue, isolated worktree, and coherent ACTIVE task/ledger | NOT STARTED — requires G05 |
 
 A reply approves the stage actually presented. G01 does not approve a
@@ -279,11 +279,24 @@ These are baseline/planning observations, not A011 implementation or fresh
 A011 full-system qualification evidence. No new physical qualifier replay is
 claimed in this documentation session.
 
+Implementation-plan publication:
+- plan commit: `9d17350a6e4f4305b797e7d2766bb619416a510b`;
+- exact plan CI [38042470411](https://github.com/funggier/FlyWireASCA/actions/runs/38042470411): completed/success, push/main;
+- plan Git blob: `758e91ba2e55dc09aa65b99229bace8b3fe365fc`;
+- local existing full suite: 563 passed in 4.79s; architecture/repository audits PASS;
+- author plan self-review and cached whitespace PASS; unresolved Critical/Important 0;
+- protected 67-path source SHA256: `8df49f05fe54de43667ab2f8ef5de2caae9376ffedf2cb8f8d26f0e4abcca6b6`, unchanged;
+- future profile preview: 7481 bytes / `add06f285bf6decc7d492b987d3769dc64db4cb3d0177c8c6586d50ee5f6d46d`; production profile not created;
+- clean/sync main at publication; no issue/worktree/activation/implementation.
+
+Latest full handoff:
+[ASCA-20261010-full-session-handoff-a011-plan-review.md](../reports/ASCA-20261010-full-session-handoff-a011-plan-review.md)
+
 ## Current Action
 
-A011 remains PLANNED. The written spec is explicitly approved; the detailed
-implementation plan is written and author self-reviewed. Complete exact
-publication CI, then wait for plan review/approval and execution-method choice.
+A011 remains PLANNED. The written spec is explicitly approved and the detailed
+implementation plan is published with exact CI GREEN. Wait for explicit user
+plan review/approval and execution-method choice.
 
 ## Next Action
 
