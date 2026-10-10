@@ -1,6 +1,6 @@
 # A013 — Selective Relational Activation / Hybrid Recall Integration Gate
 
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #16
 Branch: research/a013-selective-relational-activation
 Activation base: ff1f6e6b779a662f4a10aae955f8c7ce1a934b45
@@ -69,7 +69,7 @@ qualification fail.
 - [x] A011 protected source anchors remain unchanged.
 - [x] A012 portable qualifier remains unchanged and GREEN.
 - [x] Full tests/audit/repository qualification/whitespace pass.
-- [ ] Exact feature/PR/main CI and artifact evidence recorded.
+- [x] Exact feature/PR/main CI and artifact evidence recorded.
 - [x] FlyWireLLM remains untouched.
 
 ## Evidence
@@ -102,10 +102,34 @@ Activation preflight:
 
 ## Current Action
 
-Create and push the implementation candidate, then require exact feature-branch
-GitHub CI and A013 portable evidence artifact on that exact SHA.
+A013 is integrated and complete. Frozen primary result:
+`SIGNAL_GATED_RELATION_JUSTIFIED`.
+
+Exact GitHub chain:
+
+- final feature head: `1dcb0d243ad82cfa53faff2279bc667119faf77c`;
+- feature CI `38088579496`: GREEN;
+- feature A013 artifact digest:
+  `sha256:4c406ddfc95408f832d3c89dea667f9cc93a035feb9a05a96734ea0fb770fb4c`;
+- PR #17 exact CI `38088663875`: GREEN;
+- PR A013 artifact digest:
+  `sha256:a3b5fe924033492b6828a7c0e7364ae3348dcddf4d37a0177f41518df8d11245`;
+- normal merge commit:
+  `92f534a25771ffabf06f4076bc6b7deb27bd80b5`;
+- exact integration/main CI `38088760197`: GREEN;
+- integration A013 artifact digest:
+  `sha256:7cde5442f4d905a42d312e4a11e0707d9c82c610ba489f0af185cf9f666f0b1d`.
+
+Final report:
+`docs/development/reports/ASCA-20261011-A013-selective-relational-activation.md`
+
+Full-session handoff:
+`docs/development/reports/ASCA-20261011-full-session-handoff-a013-completed.md`
 
 ## Next Action
 
-After exact feature CI is GREEN, open the A013 PR, require exact PR CI GREEN,
-review the complete change, merge normally, and qualify the integration/main SHA.
+No A014 milestone is activated automatically.
+
+Issue #16 may be closed as completed only after the A013 closure-metadata commit
+on main receives exact CI GREEN. Future work must start from a separately scoped
+milestone and live-state verification.

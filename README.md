@@ -71,8 +71,25 @@ alone does not, with zero regressions and zero identity/provenance/budget/cycle
 failures. This is not a claim that a persistent graph database or graph-first
 architecture is generally superior.
 
+A013 - Selective Relational Activation / Hybrid Recall Integration Gate is
+**DONE**. A013 introduces target-free bounded relation expansion above the A005
+vector retrieval and A012 relation semantics, then compares `VECTOR_ONLY`,
+`ALWAYS_RELATION`, and `SIGNAL_GATED_RELATION` on a frozen mixed workload.
+
+A013's portable result is `SIGNAL_GATED_RELATION_JUSTIFIED` for that declared
+scope. Vector-only succeeds on 10/16 valid cases, while always-relation and
+signal-gated both succeed on 16/16. Signal-gated relation preserves all 6
+relation-dependent recoveries and all 6 direct-vector controls while reducing
+relation invocations from 16 to 10, scanned edges from 16 to 11, and relation
+visited nodes from 29 to 18. False/missed activation and all declared
+identity/provenance/budget/duplicate-visit failure counts are zero.
+
+The A013 signal is an explicit typed `StructuralNeed`. A013 does not claim that
+a model can infer that signal from unconstrained natural language.
+
 A011 remains the qualification of its frozen v0.x profile; it does not
-automatically qualify A012.
+automatically qualify A012 or A013. A012 and A013 are separate post-A011
+research gates with their own evidence.
 
 These results are control/retrieval/procedure evidence. They are not claims of
 lower FLOPs, lower energy, lower token use, general speed superiority, or safe
