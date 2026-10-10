@@ -10,17 +10,17 @@ def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_pre_a011_is_active_without_mutating_research_roadmap():
+def test_pre_a011_is_done_and_current_returns_to_unactivated_a011():
     current = read(TASKS / "CURRENT.md")
     roadmap = read(TASKS / "ROADMAP.md")
     task = read(TASKS / "PRE-A011-architecture-process-stabilization.md")
-    assert "Current task: PRE-A011" in current
-    assert "Status: ACTIVE" in current
-    assert "GitHub Issue: #11" in current
+    assert "Current task: A011" in current
+    assert "Status: PLANNED" in current
+    assert "GitHub Issue: not created" in current
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in roadmap
     assert "PRE-A011" not in roadmap
-    assert "Status: ACTIVE" in task
-    assert "GitHub Issue: #11" in task
+    assert "Status: DONE" in task
+    assert "GitHub Issue: #11 (closed as completed)" in task
 
 
 def test_pre_a011_task_records_approved_spec_plan_and_boundaries():
@@ -83,7 +83,7 @@ def test_pre_a011_closure_candidate_classifies_bounded_source_cleanup():
     assert "behavior-preserving" in report.lower()
 
 
-def test_pre_a011_task_marks_review_green_but_main_integration_pending():
+def test_pre_a011_task_marks_review_main_integration_issue_and_current_green():
     task = read(TASKS / "PRE-A011-architecture-process-stabilization.md")
     current = read(TASKS / "CURRENT.md")
     for line in (
@@ -94,12 +94,17 @@ def test_pre_a011_task_marks_review_green_but_main_integration_pending():
         "- [x] CI/qualification matrix aligned.",
         "- [x] Justified maintainability cleanup completed.",
         "- [x] Full portable and physical verification GREEN.",
+        "- [x] Whole-change review GREEN.",
+        "- [x] Reviewed main integration and exact main CI GREEN.",
+        "- [x] Issue #11 closed completed.",
+        "- [x] CURRENT returned to A011 / PLANNED / no issue.",
     ):
         assert line in task
-    assert "- [x] Whole-change review GREEN." in task
-    assert "- [ ] Reviewed main integration and exact main CI GREEN." in task
-    assert "Current task: PRE-A011" in current
-    assert "Status: ACTIVE" in current
+    assert "Current task: A011" in current
+    assert "Status: PLANNED" in current
+    assert "GitHub Issue: not created" in current
+    assert "de7b9ab7227afc6e914ca0435b780d30b41eeea3" in task
+    assert "38023542634" in task
 
 def test_pre_a011_records_whole_change_review_before_main_integration():
     task = read(TASKS / "PRE-A011-architecture-process-stabilization.md")
@@ -115,4 +120,13 @@ def test_pre_a011_records_whole_change_review_before_main_integration():
         assert "38022892597" in text
         assert "38022744129" in text
     assert "- [x] Whole-change review GREEN." in task
-    assert "- [ ] Reviewed main integration and exact main CI GREEN." in task
+    assert "- [x] Reviewed main integration and exact main CI GREEN." in task
+
+def test_pre_a011_report_records_reviewed_main_and_issue_closure():
+    report = read(REPORT)
+    assert "Reviewed/integration SHA" in report
+    assert "de7b9ab7227afc6e914ca0435b780d30b41eeea3" in report
+    assert "38023542634" in report
+    assert "Issue #11: closed as completed" in report
+    assert "CURRENT = A011 / PLANNED / no issue" in report
+    assert "A011 GitHub issue: not created" in report

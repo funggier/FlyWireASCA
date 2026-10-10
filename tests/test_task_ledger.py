@@ -13,11 +13,11 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_active_pre_a011_maintenance_gate():
+def test_current_points_to_planned_unactivated_a011():
     text = _read("CURRENT.md")
-    assert "Current task: PRE-A011" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #11" in text
+    assert "Current task: A011" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert text.count("Current task:") == 1
 
 
@@ -160,15 +160,15 @@ def test_historical_a004_a010_ledger_tests_do_not_own_mutable_current_or_roadmap
         assert "ROADMAP.md" not in text, path.name
 
 
-def test_pre_a011_current_state_is_centralized_without_mutating_research_roadmap():
+def test_pre_a011_closure_returns_current_to_a011_without_mutating_research_roadmap():
     current = _read("CURRENT.md")
     roadmap = _read("ROADMAP.md")
     pre = _read("PRE-A011-architecture-process-stabilization.md")
-    assert "Current task: PRE-A011" in current
-    assert "Status: ACTIVE" in current
-    assert "GitHub Issue: #11" in current
-    assert "Status: ACTIVE" in pre
-    assert "GitHub Issue: #11" in pre
+    assert "Current task: A011" in current
+    assert "Status: PLANNED" in current
+    assert "GitHub Issue: not created" in current
+    assert "Status: DONE" in pre
+    assert "GitHub Issue: #11 (closed as completed)" in pre
     assert "PRE-A011" not in roadmap
     for number in range(1, 11):
         task_id = f"A{number:03d}"

@@ -1,7 +1,7 @@
 # PRE-A011 — Architecture & Process Consistency Stabilization
 
-Status: ACTIVE
-GitHub Issue: #11
+Status: DONE
+GitHub Issue: #11 (closed as completed)
 Branch: maintenance/pre-a011-architecture-process-stabilization
 Activation base: c8211fff43523b80c66fcfecff9088970d6c9981
 Exact activation-base CI: 38020908291 — success
@@ -73,9 +73,9 @@ FlyWireLLM remains untouched.
 - [x] Justified maintainability cleanup completed.
 - [x] Full portable and physical verification GREEN.
 - [x] Whole-change review GREEN.
-- [ ] Reviewed main integration and exact main CI GREEN.
-- [ ] Issue #11 closed completed.
-- [ ] CURRENT returned to A011 / PLANNED / no issue.
+- [x] Reviewed main integration and exact main CI GREEN.
+- [x] Issue #11 closed completed.
+- [x] CURRENT returned to A011 / PLANNED / no issue.
 
 ## Acceptance Criteria
 
@@ -173,11 +173,33 @@ Minor finding fixed:
 No cognitive behavior, frozen fixture/fingerprint, model identity, threshold, or
 historical research outcome changed during review fixes.
 
+## Final Main Evidence
+
+Reviewed/integration SHA:
+
+`de7b9ab7227afc6e914ca0435b780d30b41eeea3`
+
+Exact reviewed-main CI:
+
+`38023542634` — success
+
+Reviewed-main local gate before push:
+- full suite: `562 passed`;
+- architecture contract audit: PASS;
+- repository qualification: PASS;
+- A003/A008/A009/A010 portable qualification: PASS.
+
+GitHub Issue #11 is closed as completed.
+
+A011 remains PLANNED with no GitHub issue.
+
 ## Current Action
 
-Task 8 — whole-change review GREEN; exact post-review branch CI pending.
+PRE-A011 is DONE. Final local closure gate is GREEN at `563 passed`; exact
+closure-metadata CI is the only remaining remote bookkeeping gate.
 
 ## Next Action
 
-Commit/push the review fixes, require exact post-review feature-branch CI, then
-verify integration preconditions and fast-forward reviewed behavior to main.
+Commit and push this closure metadata, require exact closure CI success, then
+clean the isolated PRE-A011 worktree/local branch and verify final authoritative
+state.

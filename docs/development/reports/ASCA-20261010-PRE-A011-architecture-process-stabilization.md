@@ -357,16 +357,43 @@ Review fixes after that CI changed only process/audit/docs/tests. They did not
 change the Task 7 adapter source cleanup, so the fresh A004/A005/A006/A007/A009/
 A010 physical evidence remains applicable.
 
-## 15. Remaining gates
+## 15. Reviewed-main integration and issue closure
 
-Before PRE-A011 may close:
+Reviewed/integration SHA:
 
-- whole-change review must complete;
-- every Critical/Important review finding must be resolved;
-- exact post-review feature-branch CI must be GREEN;
-- reviewed behavior must integrate to main without history rewriting;
-- exact main CI must be GREEN;
-- Issue #11 must close as completed;
-- CURRENT must return to A011 / PLANNED / no issue;
-- final closure metadata CI must be GREEN;
-- main must be clean and synchronized.
+`de7b9ab7227afc6e914ca0435b780d30b41eeea3`
+
+Exact reviewed-main CI:
+
+`38023542634` — success
+
+Reviewed-main local gate before push:
+
+- full suite: **562 passed**
+- architecture contract audit: PASS
+- repository qualification: PASS
+- portable A003/A008/A009/A010 qualification: PASS
+
+Issue #11: closed as completed.
+
+CURRENT = A011 / PLANNED / no issue.
+
+A011 GitHub issue: not created.
+
+The final closure metadata commit is documentation/test lifecycle bookkeeping.
+It does not replace the reviewed/integration SHA above and is not required to
+record its own SHA.
+
+## 16. Final closure-metadata gate
+
+After returning CURRENT to A011 and marking PRE-A011 DONE, the complete local
+portable gate completed with **563 passed**:
+
+- architecture contract audit: PASS
+- repository qualification: PASS
+- portable A003/A008/A009/A010 qualification: PASS
+- `git diff --check`: PASS
+
+The only remaining remote gate is exact CI for the final closure-metadata commit.
+After that succeeds, local cleanup may remove the clean isolated PRE-A011
+worktree and local feature branch while preserving remote feature history.
