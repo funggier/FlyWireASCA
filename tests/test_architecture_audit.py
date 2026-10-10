@@ -79,3 +79,26 @@ def test_audit_rejects_missing_contract_document(tmp_path: Path):
 def test_contract_document_has_no_trailing_whitespace():
     lines = DOC.read_text(encoding="utf-8").splitlines()
     assert [index for index, line in enumerate(lines, 1) if line != line.rstrip()] == []
+
+def test_audit_rejects_undeclared_reverse_package_dependency(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "vector_memory" / "bad.py"
+    injected.write_text(
+        "from flywire_asca.integrated_loop import run_cognitive_loop\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any("undeclared package dependency vector_memory -> integrated_loop" in e for e in errors)
+
+
+def test_audit_rejects_cross_package_cycle_explicitly(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "contracts" / "bad.py"
+    injected.write_text(
+        "from flywire_asca.model import OllamaModelAdapter\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any("package dependency cycle" in e and "contracts" in e and "model" in e for e in errors)

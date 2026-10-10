@@ -23,6 +23,42 @@ EXPECTED_BASELINE_MODES = (
     "asca_no_familiarity",
 )
 
+ALLOWED_PACKAGE_DEPENDENCIES: dict[str, frozenset[str]] = {
+    "contracts": frozenset(),
+    "model": frozenset({"contracts"}),
+    "embedding": frozenset({"contracts"}),
+    "familiarity": frozenset({"contracts"}),
+    "procedural_memory": frozenset({"contracts"}),
+    "vector_memory": frozenset({"contracts", "embedding"}),
+    "selective_activation": frozenset({"contracts", "vector_memory"}),
+    "uncertainty_expansion": frozenset({"contracts", "selective_activation"}),
+    "integrated_loop": frozenset(
+        {
+            "contracts",
+            "embedding",
+            "familiarity",
+            "model",
+            "procedural_memory",
+            "selective_activation",
+            "uncertainty_expansion",
+            "vector_memory",
+        }
+    ),
+    "baseline_comparison": frozenset(
+        {
+            "contracts",
+            "embedding",
+            "familiarity",
+            "integrated_loop",
+            "model",
+            "procedural_memory",
+            "selective_activation",
+            "uncertainty_expansion",
+            "vector_memory",
+        }
+    ),
+}
+
 
 def _parse(path: Path) -> ast.Module:
     return ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
@@ -94,6 +130,101 @@ def _flywirellm_imports(source_root: Path) -> list[str]:
     return findings
 
 
+def _source_package(source_root: Path, path: Path) -> str | None:
+    relative = path.relative_to(source_root)
+    if len(relative.parts) < 2:
+        return None
+    package = relative.parts[0]
+    return package if package in ALLOWED_PACKAGE_DEPENDENCIES else None
+
+
+def _absolute_dependency(module: str) -> str | None:
+    if not module.startswith("flywire_asca."):
+        return None
+    parts = module.split(".")
+    if len(parts) < 2:
+        return None
+    package = parts[1]
+    return package if package in ALLOWED_PACKAGE_DEPENDENCIES else None
+
+
+def _package_dependencies(source_root: Path) -> dict[str, set[str]]:
+    graph = {name: set() for name in ALLOWED_PACKAGE_DEPENDENCIES}
+    for path in sorted(source_root.rglob("*.py")):
+        source_package = _source_package(source_root, path)
+        if source_package is None:
+            continue
+        tree = _parse(path)
+        for node in ast.walk(tree):
+            dependencies: list[str] = []
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    dependency = _absolute_dependency(alias.name)
+                    if dependency is not None:
+                        dependencies.append(dependency)
+            elif isinstance(node, ast.ImportFrom):
+                if node.level == 0:
+                    dependency = _absolute_dependency(node.module or "")
+                    if dependency is not None:
+                        dependencies.append(dependency)
+                elif node.level >= 2 and node.module:
+                    dependency = node.module.split(".", 1)[0]
+                    if dependency in ALLOWED_PACKAGE_DEPENDENCIES:
+                        dependencies.append(dependency)
+            for dependency in dependencies:
+                if dependency != source_package:
+                    graph[source_package].add(dependency)
+    return graph
+
+
+def _cycle_paths(graph: dict[str, set[str]]) -> tuple[tuple[str, ...], ...]:
+    state: dict[str, int] = {name: 0 for name in graph}
+    stack: list[str] = []
+    cycles: set[tuple[str, ...]] = set()
+
+    def canonical(cycle: list[str]) -> tuple[str, ...]:
+        body = cycle[:-1]
+        rotations = [
+            tuple(body[index:] + body[:index])
+            for index in range(len(body))
+        ]
+        best = min(rotations)
+        return best + (best[0],)
+
+    def visit(node: str) -> None:
+        state[node] = 1
+        stack.append(node)
+        for neighbor in sorted(graph[node]):
+            if neighbor not in graph:
+                continue
+            if state[neighbor] == 0:
+                visit(neighbor)
+            elif state[neighbor] == 1:
+                index = stack.index(neighbor)
+                cycles.add(canonical(stack[index:] + [neighbor]))
+        stack.pop()
+        state[node] = 2
+
+    for node in sorted(graph):
+        if state[node] == 0:
+            visit(node)
+    return tuple(sorted(cycles))
+
+
+def _dependency_errors(graph: dict[str, set[str]]) -> list[str]:
+    errors: list[str] = []
+    for source in sorted(graph):
+        allowed = ALLOWED_PACKAGE_DEPENDENCIES[source]
+        for target in sorted(graph[source]):
+            if target not in allowed:
+                errors.append(
+                    f"undeclared package dependency {source} -> {target}"
+                )
+    for cycle in _cycle_paths(graph):
+        errors.append("package dependency cycle: " + " -> ".join(cycle))
+    return errors
+
+
 def audit_architecture_contract(root: Path) -> list[str]:
     root = Path(root)
     errors: list[str] = []
@@ -117,6 +248,13 @@ def audit_architecture_contract(root: Path) -> list[str]:
             "FlyWireLLM import is not allowed in A002 source: "
             + ", ".join(imports)
         )
+    if source_root.is_dir():
+        try:
+            graph = _package_dependencies(source_root)
+        except SyntaxError as exc:
+            errors.append(f"cannot parse source for dependency audit: {exc}")
+        else:
+            errors.extend(_dependency_errors(graph))
 
     contracts_root = source_root / "contracts"
     init_path = contracts_root / "__init__.py"
