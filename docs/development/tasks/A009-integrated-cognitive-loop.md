@@ -182,7 +182,7 @@ Main integration: GREEN.
 - main integration SHA: `05d3c743df84c4bf12fb8d2c1389db4d3afa39b5`;
 - exact final-main integration CI: `38000327254` - success;
 - merged-main local full suite: 465 passed;
-- final evidence commit exact-main CI and Issue #9 closure remain pending.
+- final closure-state main CI and GitHub Issue #9 closure are complete; later maintenance gates may update only repository-wide lifecycle state.
 
 Qualification report:
 `docs/development/reports/ASCA-20261010-A009-integrated-cognitive-loop.md`.

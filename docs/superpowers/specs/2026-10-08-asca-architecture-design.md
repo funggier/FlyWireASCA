@@ -1,5 +1,13 @@
 # FlyWireASCA Architecture Design Specification
 
+> **Historical initial design.** This file is the original ASCA design artifact
+> and is retained for provenance. Its milestone numbering predates the A004
+> local-model-adapter insertion. Current milestone numbering is defined by
+> `docs/development/roadmap-migrations/A004-qwen-insertion.md`, and the current
+> implemented architecture is summarized by
+> `docs/architecture/ASCA-PRE-A011-SNAPSHOT.md`. The historical body below is
+> intentionally not renumbered or rewritten.
+
 Date: 2026-10-08
 Status: DRAFT FOR USER REVIEW
 Planned repository: funggier/FlyWireASCA

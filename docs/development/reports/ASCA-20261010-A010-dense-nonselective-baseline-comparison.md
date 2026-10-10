@@ -230,11 +230,12 @@ Observed physical comparison:
 | Procedure success | true | true |
 | Final state correct | true | true |
 | Procedure attempts | 1 | 1 |
-- ASCA physical query/scored-vector | 1 / 3
-- Dense physical query/scored-vector | 3 / 9
 | Cumulative selected count | 3 | 3 |
 | Peak selected count | 3 | 3 |
 | Observed runner duration, ns | 145013000 | 158247300 |
+
+- ASCA physical query/scored-vector | 1 / 3
+- Dense physical query/scored-vector | 3 / 9
 
 The physical case is deliberately small and is **secondary** evidence. It shows
 that on this particular physical case the early selective path used fewer
