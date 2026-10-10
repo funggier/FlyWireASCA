@@ -6,30 +6,29 @@ GitHub Issue: #16
 
 ## Current Action
 
-A013 — Selective Relational Activation / Hybrid Recall Integration Gate is
-active from verified base
-`ff1f6e6b779a662f4a10aae955f8c7ce1a934b45`.
+A013 implementation and clean local qualification are complete on the isolated
+feature worktree. The frozen portable result is
+`SIGNAL_GATED_RELATION_JUSTIFIED` with 10/16/16 successes for
+vector-only/always-relation/signal-gated, 10/16 signal/always relation
+invocations, and 11/16 signal/always scanned edges. All declared safety,
+identity, provenance, budget, duplicate-visit, false-activation, missed-
+activation, and regression counts are zero.
 
-The implementation must remove the A012 benchmark-only target oracle from the
-runtime relation path by introducing target-free bounded neighborhood
-expansion. It will compare `VECTOR_ONLY`, `ALWAYS_RELATION`, and
-`SIGNAL_GATED_RELATION` on a frozen mixed workload.
+The runtime relation path is target-free: expected answer IDs remain benchmark
+evaluator metadata only. The primary signal is an explicit typed
+`StructuralNeed`; natural-language/LLM structural-intent inference remains out
+of scope.
 
-The signal-gated primary experiment uses an explicit typed structural-need
-contract. It does not use an LLM or natural-language classifier to decide
-whether relation traversal is required.
-
-A005 remains `VECTOR_SUFFICIENT` for its qualified retrieval workload. A012
-remains `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED` for its frozen
-relation-dependent workload. A011 remains historical frozen v0.x
-`ENGINEERING_QUALIFIED`.
+Clean local qualification: 1033 tests passed; architecture audit, repository,
+A003/A008/A009/A010, A011 frozen preservation, A012 portable, A013 portable,
+compile, and whitespace gates all passed. A005/A011/A012 historical boundaries
+remain unchanged and FlyWireLLM is untouched.
 
 ## Next Action
 
-Implement target-free relation-expansion contracts and bounded expansion,
-freeze the mixed A013 fixture and fingerprints, implement all three policies,
-then run the portable qualifier and full local qualification before the first
-feature push.
+Commit and push the implementation candidate, require exact feature-branch CI
+GREEN with the A013 evidence artifact, then proceed through PR exact CI, normal
+merge, integration/main CI, and closure evidence.
 
 ## Resume Rule
 

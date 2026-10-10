@@ -58,19 +58,19 @@ qualification fail.
 - [x] User explicitly authorized A013.
 - [x] GitHub Issue #16 exists.
 - [x] Activation base and clean worktree were verified from live Git.
-- [ ] Design/plan/lifecycle activation committed.
-- [ ] Runtime relation expansion accepts no expected target IDs.
-- [ ] StructuralNeed is explicit, typed, deterministic, and target-free.
-- [ ] Three policies share identical vector retrieval inputs.
-- [ ] Relation expansion is directed, bounded, cycle-safe, deterministic, and provenance-preserving.
-- [ ] Mixed portable fixture includes relation positives, structural negatives, and >=6 non-structural vector controls.
-- [ ] Fixture and per-case fingerprints are frozen and validated.
-- [ ] Decision is derived from predeclared rules.
-- [ ] A011 protected source anchors remain unchanged.
-- [ ] A012 portable qualifier remains unchanged and GREEN.
-- [ ] Full tests/audit/repository qualification/whitespace pass.
+- [x] Design/plan/lifecycle activation committed.
+- [x] Runtime relation expansion accepts no expected target IDs.
+- [x] StructuralNeed is explicit, typed, deterministic, and target-free.
+- [x] Three policies share identical vector retrieval inputs.
+- [x] Relation expansion is directed, bounded, cycle-safe, deterministic, and provenance-preserving.
+- [x] Mixed portable fixture includes relation positives, structural negatives, and >=6 non-structural vector controls.
+- [x] Fixture and per-case fingerprints are frozen and validated.
+- [x] Decision is derived from predeclared rules.
+- [x] A011 protected source anchors remain unchanged.
+- [x] A012 portable qualifier remains unchanged and GREEN.
+- [x] Full tests/audit/repository qualification/whitespace pass.
 - [ ] Exact feature/PR/main CI and artifact evidence recorded.
-- [ ] FlyWireLLM remains untouched.
+- [x] FlyWireLLM remains untouched.
 
 ## Evidence
 
@@ -82,14 +82,30 @@ Activation preflight:
 - worktree: clean;
 - exact closure CI run `38068100925`: success on the activation base;
 - Issue #14: closed/completed;
-- Issue #16: open.
+- Issue #16: open;
+- activation commit: `bfebc8dbb824a13c2e2312a9a18e144f1fe72668`;
+- activation push CI run `38087294056`: failed only because historical A012 ledger test still owned mutable `CURRENT.md`; Linux result was 997 passed / 1 failed;
+- A012 ledger ownership repaired so historical A012 tests no longer assert the mutable current milestone;
+- clean local full suite after repair: `1033 passed in 90.32s`;
+- architecture audit: PASS;
+- repository qualification: PASS;
+- A003/A008/A009/A010 portable gates: PASS;
+- A011 preservation: PASS, 67 protected paths with profile/protected anchors unchanged;
+- A012 portable decision remains `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED`;
+- A013 frozen fixture SHA256: `fcd805a5229bfad43f8eed6999be37ae61168dda1a8560f04370b3df0262baa5`;
+- A013 portable decision: `SIGNAL_GATED_RELATION_JUSTIFIED`;
+- A013 valid successes (vector/always/signal): `10/16/16`;
+- A013 relation invocations (signal/always): `10/16`;
+- A013 scanned edges (signal/always): `11/16`;
+- regressions, false/missed activation, identity, provenance, budget, and duplicate-visit failures: 0;
+- compile and `git diff --check`: PASS.
 
 ## Current Action
 
-Implement target-free relation-expansion contracts and tests in the isolated
-A013 worktree.
+Create and push the implementation candidate, then require exact feature-branch
+GitHub CI and A013 portable evidence artifact on that exact SHA.
 
 ## Next Action
 
-Freeze the mixed benchmark, implement all three policies and the portable
-qualifier, then run full local qualification before first feature push.
+After exact feature CI is GREEN, open the A013 PR, require exact PR CI GREEN,
+review the complete change, merge normally, and qualify the integration/main SHA.

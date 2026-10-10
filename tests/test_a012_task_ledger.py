@@ -6,30 +6,21 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TASKS = ROOT / "docs" / "development" / "tasks"
 TASK = TASKS / "A012-relational-reasoning-structure-decision.md"
-CURRENT = TASKS / "CURRENT.md"
-ROADMAP = TASKS / "ROADMAP.md"
 DESIGN = ROOT / "docs" / "superpowers" / "specs" / "2026-10-10-a012-relational-reasoning-structure-decision-design.md"
 PLAN = ROOT / "docs" / "superpowers" / "plans" / "2026-10-10-a012-relational-reasoning-structure-decision.md"
 REPORT = ROOT / "docs" / "development" / "reports" / "ASCA-20261010-A012-relational-reasoning-structure-decision.md"
 HANDOFF = ROOT / "docs" / "development" / "reports" / "ASCA-20261010-full-session-handoff-a012-completed.md"
 
 
-def test_a012_done_lifecycle_and_authority_are_coherent():
+def test_a012_historical_done_lifecycle_is_self_contained():
     task = TASK.read_text(encoding="utf-8")
-    current = CURRENT.read_text(encoding="utf-8")
-    roadmap = ROADMAP.read_text(encoding="utf-8")
 
     assert "Status: DONE" in task
     assert "GitHub Issue: #14" in task
-    assert "Current task: A012" in current
-    assert "Status: DONE" in current
-    assert "GitHub Issue: #14" in current
-    assert "| A012 | Relational Reasoning / Structure Decision Gate | DONE |" in roadmap
     assert DESIGN.exists()
     assert PLAN.exists()
     assert REPORT.exists()
     assert HANDOFF.exists()
-
 
 def test_a012_final_report_records_exact_integration_and_decision():
     report = REPORT.read_text(encoding="utf-8")

@@ -167,6 +167,7 @@ def test_a007_closure_report_records_structural_expansion_result():
 def test_historical_milestone_ledger_tests_do_not_own_mutable_current_or_roadmap():
     paths = [ROOT / "tests" / f"test_a{number:03d}_task_ledger.py" for number in range(4, 11)]
     paths.append(ROOT / "tests" / "test_pre_a011_task_ledger.py")
+    paths.append(ROOT / "tests" / "test_a012_task_ledger.py")
     for path in paths:
         text = path.read_text(encoding="utf-8")
         assert "CURRENT.md" not in text, path.name
