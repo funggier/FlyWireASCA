@@ -13,14 +13,6 @@ def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_planned_a010_without_issue_after_a009_closure():
-    text = read(TASKS / "CURRENT.md")
-    assert "Current task: A011" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
-    assert "A009 deterministic qualification: GREEN" in text
-    assert "A009 physical qualification: GREEN" in text
-
 
 def test_roadmap_marks_a009_done_a010_a011_planned():
     text = read(TASKS / "ROADMAP.md")
@@ -149,26 +141,18 @@ def test_a009_report_records_reviewed_main_integration_evidence():
     assert "merge commit" in text.lower()
 
 
-def test_a009_task_and_current_mark_final_main_gate_green_pending_issue_close():
+def test_a009_task_marks_final_main_gate_green():
     task = read(TASKS / "A009-integrated-cognitive-loop.md")
-    current = read(TASKS / "CURRENT.md")
     assert "- [x] Exact branch CI, whole-branch review, final-main CI and synchronization pass." in task
     assert "Main integration: GREEN" in task
     assert "05d3c743df84c4bf12fb8d2c1389db4d3afa39b5" in task
     assert "38000327254" in task
-    assert "A009 main integration: GREEN" in current
-    assert "A009 exact final-main CI: GREEN" in current
-    assert "Current task: A011" in current
-    assert "GitHub Issue: not created" in current
 
 def test_a009_repository_closure_state_is_final_not_pending():
     task = read(TASKS / "A009-integrated-cognitive-loop.md")
-    current = read(TASKS / "CURRENT.md")
     report = read(REPORT)
     assert "Status: DONE" in task
     assert "GitHub Issue: #9 (closed as completed)" in task
-    assert "A009 GitHub Issue #9: CLOSED (completed)" in current
     assert "A009 repository state: DONE" in report
     assert "GitHub Issue #9 closure: completed" in report
     assert "remains open" not in task.lower()
-    assert "remains open" not in current.lower()

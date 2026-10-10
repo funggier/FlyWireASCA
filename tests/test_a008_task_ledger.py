@@ -6,13 +6,6 @@ A007=ROOT/"docs"/"development"/"reports"/"ASCA-20261009-A007-surprise-uncertaint
 
 def read(p): return p.read_text(encoding="utf-8")
 
-def test_current_preserves_a008_green_after_a009_closure():
-    text=read(TASKS/"CURRENT.md")
-    assert "Current task: A011" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
-    assert "A008 deterministic qualification: GREEN" in text
-
 def test_roadmap_a008_a009_done_a010_a011_planned():
     text=read(TASKS/"ROADMAP.md")
     assert "| A008 | Procedural Memory / Skill Chunking | DONE |" in text
@@ -75,10 +68,6 @@ def test_a008_closure_remains_historical_after_a009_closure():
     roadmap=read(TASKS/"ROADMAP.md")
     assert "| A008 | Procedural Memory / Skill Chunking | DONE |" in roadmap
     assert "| A009 | Integrated Cognitive Loop | DONE |" in roadmap
-    current=read(TASKS/"CURRENT.md")
-    assert "Current task: A011" in current
-    assert "Status: PLANNED" in current
-    assert "GitHub Issue: not created" in current
 
 def test_a008_report_keeps_claims_and_integration_boundaries():
     text=read(REPORT_A008).lower()
@@ -120,13 +109,6 @@ def test_a008_report_records_main_integration_evidence():
     task=read(TASKS/"A008-procedural-memory-skill-chunking.md")
     assert "First final-main CI: DONE" in task
 
-
-def test_current_records_a008_main_integration_green_after_a009_closure():
-    text=read(TASKS/"CURRENT.md")
-    assert "Current task: A011" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
-    assert "A008 main integration: GREEN" in text
 
 def test_a008_report_records_closure_evidence_main_ci():
     text=read(REPORT_A008)

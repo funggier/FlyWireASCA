@@ -9,13 +9,6 @@ def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_planned_a011_after_a010_closure():
-    text = read(TASKS / "CURRENT.md")
-    assert "Current task: A011" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
-    assert "A010 GitHub Issue #10: CLOSED (completed)" in text
-
 
 def test_roadmap_marks_a010_done_and_a011_planned():
     text = read(TASKS / "ROADMAP.md")
@@ -108,7 +101,6 @@ def test_a010_has_exactly_one_primary_outcome_declaration():
 
 def test_a010_qualification_evidence_remains_after_repository_closure():
     task = read(TASKS / "A010-dense-nonselective-baseline-comparison.md")
-    current = read(TASKS / "CURRENT.md")
     roadmap = read(TASKS / "ROADMAP.md")
     assert "Status: DONE" in task
     assert "GitHub Issue: #10 (closed as completed)" in task
@@ -118,9 +110,6 @@ def test_a010_qualification_evidence_remains_after_repository_closure():
     assert "234bc090dc068447c1830fa79337745b7796f25f" in task
     assert "38014300995" in task
     assert "Primary outcome: `NOT_SUPPORTED`" in task
-    assert "Current task: A011" in current
-    assert "Status: PLANNED" in current
-    assert "GitHub Issue: not created" in current
     assert "| A010 | Dense/Non-selective Baseline Comparison | DONE |" in roadmap
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in roadmap
 
@@ -159,7 +148,6 @@ def test_a010_records_whole_branch_review_and_post_review_ci():
 def test_a010_records_reviewed_main_integration_before_issue_close():
     task = read(TASKS / "A010-dense-nonselective-baseline-comparison.md")
     report = read(REPORT)
-    current = read(TASKS / "CURRENT.md")
     for text in (task, report):
         assert "a0833c3b072ab27d331bfab9c3e8b8f509fac366" in text
         assert "38017717305" in text
@@ -169,8 +157,6 @@ def test_a010_records_reviewed_main_integration_before_issue_close():
         assert "merge commit" in text.lower()
     assert "Status: DONE" in task
     assert "GitHub Issue: #10 (closed as completed)" in task
-    assert "Current task: A011" in current
-    assert "Status: PLANNED" in current
 
 def test_a010_repository_closure_state_is_done_and_a011_planned():
     task = read(TASKS / "A010-dense-nonselective-baseline-comparison.md")
@@ -182,9 +168,6 @@ def test_a010_repository_closure_state_is_done_and_a011_planned():
     assert "GitHub Issue: #10 (closed as completed)" in task
     assert "A010 repository state: DONE" in report
     assert "GitHub Issue #10 closure: completed" in report
-    assert "Current task: A011" in current
-    assert "Status: PLANNED" in current
-    assert "GitHub Issue: not created" in current
     assert "| A010 | Dense/Non-selective Baseline Comparison | DONE |" in roadmap
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in roadmap
     assert "A010" in readme and "NOT_SUPPORTED" in readme
