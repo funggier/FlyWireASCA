@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import replace
 import hashlib
+import json
+import subprocess
 import pytest
 
 from flywire_asca.qualification.records import (
@@ -93,18 +95,46 @@ from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[2]
 
-POST_A011_COGNITIVE_PATHS = (
-    "src/flywire_asca/relational_reasoning",
-)
+A011_PROFILE_REL = "docs/development/qualification/a011-v0x-profile-v1.json"
+
+
+def _git_cognitive_python_paths(root: Path, revision: str = "HEAD") -> tuple[str, ...]:
+    result = subprocess.run(
+        ["git", "ls-tree", "-r", "--name-only", revision, "--", "src/flywire_asca"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    names = result.stdout.decode("utf-8").splitlines()
+    return tuple(
+        sorted(
+            name
+            for name in names
+            if name.endswith(".py")
+            and not name.startswith("src/flywire_asca/qualification/")
+        )
+    )
+
+
+def _frozen_a011_cognitive_paths(root: Path) -> tuple[str, ...]:
+    values = json.loads((root / A011_PROFILE_REL).read_text(encoding="utf-8"))
+    return tuple(
+        sorted(
+            name
+            for name in values["protected_source"]["paths"]
+            if name.startswith("src/flywire_asca/") and name.endswith(".py")
+        )
+    )
 
 
 def _prepare_frozen_a011_candidate(root: Path) -> str:
-    """Turn a post-A011 clone into the exact frozen A011 cognitive source universe.
+    """Reconstruct the exact frozen A011 cognitive source universe in a test clone.
 
-    A011 intentionally rejects any additional non-qualification cognitive Python
-    package. Later milestones therefore must not be treated as A011 candidates.
-    Historical A011 tests use this synthetic commit inside their temporary clone
-    instead of weakening the production provenance guard.
+    A011 intentionally rejects every additional non-qualification cognitive
+    Python source file. Historical A011 tests therefore derive the frozen
+    universe from the immutable profile itself and remove only post-A011
+    cognitive additions in their synthetic clone. The production provenance
+    guard remains unchanged and strict.
     """
     subprocess.run(
         ["git", "config", "user.email", "a011-tests@example.invalid"],
@@ -118,13 +148,25 @@ def _prepare_frozen_a011_candidate(root: Path) -> str:
         check=True,
         capture_output=True,
     )
-    for relative in POST_A011_COGNITIVE_PATHS:
+
+    expected = set(_frozen_a011_cognitive_paths(root))
+    observed = set(_git_cognitive_python_paths(root))
+    missing = sorted(expected - observed)
+    if missing:
+        raise RuntimeError(
+            "cannot reconstruct frozen A011 fixture; protected cognitive "
+            f"source is missing: {missing}"
+        )
+
+    extras = sorted(observed - expected)
+    if extras:
         subprocess.run(
-            ["git", "rm", "-r", "-f", "--ignore-unmatch", "--", relative],
+            ["git", "rm", "-f", "--ignore-unmatch", "--", *extras],
             cwd=root,
             check=True,
             capture_output=True,
         )
+
     staged = subprocess.run(
         ["git", "diff", "--cached", "--quiet"],
         cwd=root,
@@ -140,6 +182,14 @@ def _prepare_frozen_a011_candidate(root: Path) -> str:
             check=True,
             capture_output=True,
         )
+
+    reconstructed = set(_git_cognitive_python_paths(root))
+    if reconstructed != expected:
+        raise RuntimeError(
+            "synthetic frozen A011 cognitive source universe does not match "
+            "the protected profile"
+        )
+
     return subprocess.run(
         ["git", "rev-parse", "HEAD"],
         cwd=root,
@@ -334,8 +384,6 @@ def frozen_profile_fixture():
     return load_frozen_profile((ROOT / DEFAULT_PROFILE_PATH).read_bytes())
 
 # Shared clean local clone and injected child runner for Tasks 6-7.
-import json
-import subprocess
 from collections import Counter
 
 
@@ -392,7 +440,6 @@ def qualification_context(tmp_path):
         "--no-tags",ROOT.as_uri(),str(root)],capture_output=True)
     assert result.returncode == 0, result.stderr
     commit = _prepare_frozen_a011_candidate(root)
-    assert not (root/"src"/"flywire_asca"/"relational_reasoning").exists()
     runner = SystemFakeRunner()
     bridge = legacy_module("_a011_legacy_evidence.py")
     context = RunContext(root,commit,root/DEFAULT_PROFILE_PATH,
