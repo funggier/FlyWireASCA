@@ -160,16 +160,32 @@ metadata commit to name itself would create an infinite sequence of new commits.
 The process therefore needs explicit evidence roles rather than an implicit
 "latest commit is the qualified behavior" assumption.
 
-### 3.7 Non-blocking organization debt
+### 3.7 Organization and maintainability debt
 
-Two code-organization observations are real but are not PRE-A011 blockers:
+Two code-organization observations are real even though they do not currently
+change benchmark performance:
 
 - benchmark modules are large, including A009/A010 benchmark files;
-- model and embedding Ollama adapters contain structurally similar JSON/HTTP
-  transport and validation helpers.
+- model and embedding Ollama adapters contain duplicated JSON/HTTP validation
+  and transport structure.
 
-PRE-A011 must not refactor these solely for aesthetics. They are deferred unless
-a concrete correctness defect appears.
+PRE-A011 must distinguish **useful cleanup** from aesthetic churn.
+
+Useful cleanup is in scope when it measurably reduces duplicated maintenance
+logic, removes contradictory ownership, or makes a boundary easier to audit,
+while preserving behavior exactly. Purely stylistic file splitting is not a
+sufficient reason by itself.
+
+For the Ollama adapters, PRE-A011 should specifically evaluate whether the
+small duplicated response-validation helpers can be consolidated safely without
+changing exception classes, public adapter APIs, request payloads, timeouts,
+model identity checks, or physical qualification behavior. The HTTP transports
+may remain separate if unifying them would require a new abstraction layer with
+more complexity than the duplication it removes.
+
+For the large benchmark modules, PRE-A011 should only split code when a clear
+cohesion boundary is already present and characterization tests can prove an
+exactly behavior-preserving move. Otherwise the split remains deferred.
 
 ## 4. Selected approach
 
@@ -196,7 +212,7 @@ Rejected because it mixes process stabilization with cognitive/runtime changes
 and would invalidate the clean interpretation of A001-A010 evidence immediately
 before A011.
 
-### Approach C — Process hardening with cognitive source freeze
+### Approach C — Process hardening with behavior freeze and bounded cleanup
 
 Selected.
 
@@ -210,40 +226,57 @@ PRE-A011 will:
 5. enforce the current acyclic package dependency direction;
 6. create a canonical qualification matrix;
 7. clarify evidence roles to eliminate self-referential closure expectations;
-8. repair known stale documentation;
-9. rerun portable and physical evidence gates;
-10. prove that cognitive source code did not change.
+8. repair known stale documentation and formatting debt;
+9. perform bounded maintainability cleanup when duplication or ownership is
+   clearly harmful and behavior can be proven unchanged;
+10. rerun portable and physical evidence gates;
+11. prove that cognitive behavior, frozen fixtures, fingerprints, thresholds,
+   model identities, and historical outcomes did not change.
 
-## 5. Hard no-behavior-change boundary
+## 5. Hard behavior-freeze boundary
 
-PRE-A011 must not modify files under:
+PRE-A011 freezes **behavior**, not every source line.
 
-`src/flywire_asca/`
+The following must not change semantically:
 
-This includes:
+- architecture contracts used by A003-A010;
+- model adapter public behavior;
+- embedding adapter public behavior;
+- familiarity semantics;
+- vector-memory ranking/filtering semantics;
+- A006 selection semantics;
+- A007 expansion policies/triggers;
+- A008 procedure semantics;
+- A009 integrated-loop policy/recovery semantics;
+- A010 comparison/classifier semantics;
+- frozen fixtures, fingerprints, thresholds, model tags/digests, and research
+  outcomes.
 
-- contracts;
-- model adapter behavior;
-- embedding adapter behavior;
-- familiarity;
-- vector memory;
-- selective activation;
-- uncertainty expansion;
-- procedural memory;
-- integrated cognitive loop;
-- A010 baseline comparison behavior.
+A source refactor is allowed only when all are true:
 
-The final review must verify that:
+1. it is justified by concrete maintainability debt, duplication, contradictory
+   ownership, or auditability—not aesthetics alone;
+2. public APIs and serialized evidence contracts remain unchanged unless the
+   change is explicitly infrastructure-only and backward compatible;
+3. characterization tests are added before the refactor where the behavior is
+   not already pinned strongly enough;
+4. focused tests, full portable gates, and all relevant physical qualifiers pass
+   before and after;
+5. no frozen benchmark fixture/fingerprint/outcome changes;
+6. review can explain exactly why the diff is behavior-preserving.
 
-```text
-git diff <activation-base>..HEAD -- src/flywire_asca
-```
+The default assumption remains **do not touch cognitive logic**. Allowed source
+cleanup should be small and mechanical.
 
-is empty.
+A concrete in-scope candidate is duplicate private JSON response-validation
+logic in the model and embedding Ollama adapters. PRE-A011 may consolidate only
+the parts whose error semantics can remain exactly pinned. It should not force a
+shared HTTP transport abstraction if that would blur model-specific versus
+embedding-specific exception behavior.
 
-If PRE-A011 discovers a cognitive/runtime defect that truly requires source
-changes, that defect is recorded separately and PRE-A011 does not silently
-absorb the behavior change.
+If PRE-A011 discovers a true cognitive/runtime defect that requires a semantic
+change, that defect is recorded separately and PRE-A011 does not silently absorb
+it into cleanup.
 
 ## 6. Historical research outcomes are immutable inputs
 
@@ -729,10 +762,17 @@ When the pinned local runtimes are available:
 A physical gate failure caused by unavailable/mismatched local runtime is
 reported honestly and does not get disguised as a portable result.
 
-### 18.3 Final source-freeze proof
+### 18.3 Final behavior-preservation proof
 
-Final review must show no diff under `src/flywire_asca/` from the activation
-base.
+Final review must classify every diff under `src/flywire_asca/` from the
+activation base.
+
+If there is no source cleanup, the source diff should be empty.
+
+If bounded source cleanup was performed, the report must list each changed
+source file, the duplication/maintainability reason, characterization tests, and
+portable/physical evidence proving no behavior, fixture, fingerprint, model
+identity, or historical outcome changed.
 
 ### 18.4 Final repository gate
 
@@ -789,13 +829,33 @@ PRE-A011 must not claim:
 - biological fidelity;
 - AGI, consciousness, or production safety.
 
-## 21. Deferred code-organization debt
+## 21. Cleanup now versus defer
 
-The following are explicitly deferred beyond PRE-A011 unless a correctness bug
-requires them:
+PRE-A011 should clean debt now when it improves consistency/maintainability and
+has a small, well-characterized blast radius. Performance benefit is not
+required.
 
-- shared Ollama transport abstraction between model and embedding packages;
-- decomposition of large benchmark modules;
+### 21.1 Clean now when justified
+
+Candidates include:
+
+- duplicated private JSON validation helpers across Ollama adapters, if exact
+  exception semantics can be preserved;
+- redundant lifecycle/status assertions whose ownership is already centralized;
+- stale documentation and formatting debt;
+- duplicated qualification metadata declarations when a single documented
+  source of truth can replace them without changing runtime behavior;
+- dead test scaffolding or unreachable maintenance code discovered during the
+  audit, provided deletion is proven safe by tests and search evidence.
+
+### 21.2 Defer unless a correctness defect requires action
+
+The following remain deferred because they are larger design changes rather
+than cleanup:
+
+- forcing a shared Ollama HTTP transport abstraction between model and
+  embedding packages;
+- decomposition of large benchmark modules without a clear cohesion boundary;
 - generic benchmark framework unification;
 - retrieval caching/incremental-scope optimization;
 - real Action/Tool Adapter;
@@ -835,11 +895,15 @@ Expected process/test changes include:
 - `tests/test_ci_contract.py`;
 - CI workflow only if needed to align wording/coverage with the explicit matrix.
 
-Not expected to change:
+Not expected to change semantically:
 
-- any file under `src/flywire_asca/`;
+- cognitive behavior under `src/flywire_asca/`;
 - frozen research benchmark fixtures/classifiers;
+- public model/embedding request-response semantics;
 - A011 research implementation, because A011 has not started.
+
+A small source diff is allowed only for the bounded behavior-preserving cleanup
+criteria in Section 5.
 
 ## 23. Migration safety
 
@@ -882,7 +946,9 @@ PRE-A011 is complete only when all are true:
 - [ ] Full portable regression/qualification gates pass.
 - [ ] Local physical A004/A005/A006/A007/A009/A010 gates pass when pinned
   prerequisites are available.
-- [ ] No file under `src/flywire_asca/` changes from activation base.
+- [ ] Any source cleanup is explicitly classified as behavior-preserving with
+  characterization/regression evidence; no cognitive semantic change is mixed
+  into PRE-A011.
 - [ ] Historical outcomes remain A006 `NOT_SUPPORTED`, A007 `SUPPORTED`,
   A008 `SUPPORTED`, A009 `SUPPORTED`, A010 `NOT_SUPPORTED`.
 - [ ] FlyWireLLM remains untouched.
