@@ -125,8 +125,11 @@ def _physical_payload(gate_id):
         return {"qualification_scope": "local_physical_qwen_a004",
             "qualified": True, "errors": [],
             "model": {"name": values["terminal"]["model"], "digest": values["terminal"]["digest"]},
-            "generation_profile": {"thinking": False, "tools": False, "vision": False},
-            "baseline": {"case_count": 1, "passed_case_count": 1, "pass_rate": 1.0}}
+            "generation_profile": {"thinking": False, "tools": False, "vision": False,
+                                   "profile_name": "qwen3.5-4b-thinking-off-v1"},
+            "baseline": {"case_count": 6, "passed_case_count": 6, "pass_rate": 1.0,
+                         "case_results": [{"case_id":c.case_id,"passed":True} for c in
+                             legacy_module("qualify_qwen_a004.py").build_qwen_a004_baseline_cases()]}}
     if gate_id == "H02_A005":
         return {"qualification_scope": "local_physical_vector_memory_a005",
             "mode": "qualification", "experiment_valid": True, "retrieval_qualified": True,
@@ -181,7 +184,7 @@ def _physical_payload(gate_id):
                     "SIGNAL_DRIVEN": metric(9,9), "ALWAYS_EXPAND": metric(24,24)},
                 "cases": [], "hypothesis_outcome": "SUPPORTED", "experiment_valid": True}
         assert not module.validate_physical_experiment(experiment)
-        payload["experiment"] = experiment
+        payload.update(experiment)
         return payload
     milestone = "A009" if gate_id == "H05_A009" else "A010"
     metadata = {"embedding_model": values["embedding"]["model"],

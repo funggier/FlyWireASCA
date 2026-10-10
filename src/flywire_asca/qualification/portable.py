@@ -164,10 +164,9 @@ class _PackBuilder:
             ("profile.json", before_ref, audit_ref), tuple(errors), ()))
         return not errors
 
-    def finish_source(self):
+    def finish_source(self, after_ref="source/after.json"):
         context = self.context
         self.after = capture_source(context.repo_root, context.profile_path, self.paths)
-        after_ref = "source/after.json"
         write_json(context.store, after_ref, self.after, "source")
         errors = []
         if self.profile:
@@ -352,7 +351,7 @@ class _PackBuilder:
         return pack
 
 
-def run_portable(context):
+def _run_portable_builder(context):
     builder = _PackBuilder(context)
     ready = builder.start_source()
     cause = "P00_PROFILE_SOURCE" if not ready else None
@@ -370,4 +369,9 @@ def run_portable(context):
         builder.repeat_audit()
     builder.finish_source()
     builder.final_gate("P09_PACK_VALIDATION", Scope.PORTABLE_ONLY)
-    return builder.validate_pack(Scope.PORTABLE_ONLY)
+    builder.validate_pack(Scope.PORTABLE_ONLY)
+    return builder
+
+
+def run_portable(context):
+    return _run_portable_builder(context).validate_pack(Scope.PORTABLE_ONLY)

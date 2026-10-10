@@ -27,7 +27,7 @@ def load_legacy_validators(repo_root):
         spec.loader.exec_module(module)
         if milestone in ("A006", "A007"):
             def validate(payload, function=module.validate_physical_experiment):
-                return tuple(function(payload.get("experiment")))
+                return tuple(function(payload))
         else:
             def validate(payload, function=module.validate_qualification_payload):
                 return tuple(function(payload))

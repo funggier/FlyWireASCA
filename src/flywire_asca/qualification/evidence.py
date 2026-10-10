@@ -165,8 +165,17 @@ def normalize_child(gate_id, evidence, output_bytes, profile, validator=None):
                     for key in ("thinking", "tools", "vision"):
                         observed("A004."+key, False, generation.get(key))
                     baseline = payload.get("baseline", {})
-                    if successful_exit and (type(baseline.get("case_count")) is not int or baseline["case_count"] <= 0):
-                        error("EVIDENCE_INVALID", "A004 accepted baseline is missing")
+                    if successful_exit:
+                        cases = baseline.get("case_results")
+                        if (type(baseline.get("case_count")) is not int or baseline["case_count"] != 6 or
+                            type(baseline.get("passed_case_count")) is not int or baseline["passed_case_count"] != 6 or
+                            type(baseline.get("pass_rate")) is not float or baseline["pass_rate"] != 1.0 or
+                            type(cases) is not list or len(cases) != 6 or
+                            any(type(c) is not dict or c.get("passed") is not True or
+                                type(c.get("case_id")) is not str or not c["case_id"] for c in cases) or
+                            len({c["case_id"] for c in cases if type(c) is dict and type(c.get("case_id")) is str}) != 6):
+                            error("EVIDENCE_INVALID", "A004 baseline contradicts existing six-case/all-pass acceptance")
+                        observed("A004.generation.profile_name", "qwen3.5-4b-thinking-off-v1", generation.get("profile_name"))
                 else:
                     required_flag("experiment_valid")
                     observed(milestone+".dimension", 1024, model.get("embedding_dimension"))
@@ -181,7 +190,7 @@ def normalize_child(gate_id, evidence, output_bytes, profile, validator=None):
                             observed("A005.vector_health."+key, 0, health.get(key))
                     else:
                         frozen = payload.get("frozen_profile", {})
-                        experiment = payload.get("experiment", {})
+                        experiment = payload
                         observed(milestone+".frozen.model", identity["model"], frozen.get("model"))
                         observed(milestone+".frozen.digest", identity["digest"], frozen.get("digest"))
                         observed(milestone+".frozen.dimension", 1024, frozen.get("embedding_dimension"))
@@ -214,7 +223,7 @@ def normalize_child(gate_id, evidence, output_bytes, profile, validator=None):
                     observation = ResearchObservation(ResearchOutcome(payload["portable_primary_outcome"]),
                         EvidenceRole.PHYSICAL_SECONDARY, Freshness.FRESH_PHYSICAL, ref)
             diagnostic_without_experiment = (gate_id in ("H03_A006", "H04_A007") and
-                not successful_exit and "experiment" not in payload)
+                not successful_exit and "fixture_version" not in payload)
             if validator is not None and not diagnostic_without_experiment:
                 for message in validator(payload):
                     error("EVIDENCE_INVALID", "Existing validator: " + message)

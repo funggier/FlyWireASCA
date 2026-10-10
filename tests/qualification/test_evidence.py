@@ -156,3 +156,23 @@ def test_nonzero_diagnostic_variant_never_passes_or_invents_identity_drift(tmp_p
     assert result.status is GateStatus.FAIL
     assert result.observation is None
     assert all(r.code == "QUALIFIER_FAILED" for r in result.errors)
+
+@pytest.mark.parametrize("gate,milestone", [("H03_A006","A006"),("H04_A007","A007")])
+def test_actual_flattened_physical_cli_contract(tmp_path,physical_payload,frozen_profile,validators,gate,milestone):
+    payload = physical_payload(gate)
+    if "experiment" in payload:
+        payload.update(payload.pop("experiment"))
+    result = normalize_child(gate,child(tmp_path,gate,payload),raw(payload),frozen_profile,validators[milestone])
+    assert result.status is GateStatus.PASS
+    assert result.observation.outcome.value == frozen_profile.values["research_outcomes"][milestone]
+
+@pytest.mark.parametrize("contradiction", ["case_count","passed_count","pass_rate","per_case"])
+def test_a004_baseline_success_requires_actual_legacy_acceptance(tmp_path,physical_payload,frozen_profile,contradiction):
+    payload = physical_payload("H01_A004")
+    baseline = payload["baseline"]
+    if contradiction == "case_count": baseline["case_count"] = 1
+    if contradiction == "passed_count": baseline["passed_case_count"] = 0
+    if contradiction == "pass_rate": baseline["pass_rate"] = 0.0
+    if contradiction == "per_case": baseline["case_results"] = [{"case_id":"bad","passed":False}]
+    result = normalize_child("H01_A004",child(tmp_path,"H01_A004",payload),raw(payload),frozen_profile,None)
+    assert result.status is GateStatus.FAIL
