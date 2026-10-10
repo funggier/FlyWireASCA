@@ -148,7 +148,7 @@ def manifest_issues(pack):
         parsed = PurePosixPath(path)
         if (not path or "\\" in path or ":" in path or parsed.is_absolute() or
             ".." in parsed.parts or "." in path.split("/") or str(parsed) != path or
-            path in ("qualification.json", "qualification.md")):
+            path in ("qualification.json", "qualification.md", "artifact-index.json")):
             issue("Unsafe or circular indexed path")
     indexed = set(paths)
 
@@ -263,3 +263,9 @@ def manifest_issues(pack):
         if not env.evidence_refs:
             issue("Physical environment lacks raw evidence")
     return tuple(issues)
+
+
+def artifact_issues(pack, root):
+    """Artifact-aware validation is opt-in; decoding remains filesystem-independent."""
+    from .artifacts import artifact_issues as check_artifacts
+    return check_artifacts(pack, root)
