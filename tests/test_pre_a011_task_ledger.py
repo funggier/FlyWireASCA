@@ -83,7 +83,7 @@ def test_pre_a011_closure_candidate_classifies_bounded_source_cleanup():
     assert "behavior-preserving" in report.lower()
 
 
-def test_pre_a011_task_marks_implementation_and_qualification_green_but_review_pending():
+def test_pre_a011_task_marks_review_green_but_main_integration_pending():
     task = read(TASKS / "PRE-A011-architecture-process-stabilization.md")
     current = read(TASKS / "CURRENT.md")
     for line in (
@@ -96,7 +96,23 @@ def test_pre_a011_task_marks_implementation_and_qualification_green_but_review_p
         "- [x] Full portable and physical verification GREEN.",
     ):
         assert line in task
-    assert "- [ ] Whole-change review GREEN." in task
+    assert "- [x] Whole-change review GREEN." in task
     assert "- [ ] Reviewed main integration and exact main CI GREEN." in task
     assert "Current task: PRE-A011" in current
     assert "Status: ACTIVE" in current
+
+def test_pre_a011_records_whole_change_review_before_main_integration():
+    task = read(TASKS / "PRE-A011-architecture-process-stabilization.md")
+    report = read(REPORT)
+    for text in (task, report):
+        assert "Whole-change review: GREEN" in text
+        assert "author self-review" in text.lower()
+        assert "independent reviewer" in text.lower()
+        assert "Critical findings: 0" in text
+        assert "Important findings: 3" in text
+        assert "Minor findings: 1" in text
+        assert "561 passed" in text
+        assert "38022892597" in text
+        assert "38022744129" in text
+    assert "- [x] Whole-change review GREEN." in task
+    assert "- [ ] Reviewed main integration and exact main CI GREEN." in task

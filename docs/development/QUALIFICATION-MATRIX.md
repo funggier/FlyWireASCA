@@ -1,6 +1,6 @@
 # FlyWireASCA Qualification Matrix
 
-Date: 2026-10-10  
+Date: 2026-10-10
 Purpose: canonical map of portable CI gates, local physical gates, frozen
 outcome roles, and claims boundaries before A011.
 

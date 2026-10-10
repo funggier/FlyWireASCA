@@ -251,3 +251,63 @@ def test_broken_repository_relative_markdown_link_is_reported(tmp_path: Path):
         encoding="utf-8",
     )
     assert any("broken relative Markdown link" in e for e in qualify_repository(root))
+
+def test_duplicate_current_fields_are_rejected(tmp_path: Path):
+    qualify_repository = _load_qualifier()
+    root = _fixture_root(tmp_path)
+    current = root / "docs" / "development" / "tasks" / "CURRENT.md"
+    current.write_text(
+        "Current task: A002\n"
+        "Current task: A001\n"
+        "Status: PLANNED\n"
+        "GitHub Issue: not created\n",
+        encoding="utf-8",
+    )
+    assert any("duplicate CURRENT.md field Current task" in e for e in qualify_repository(root))
+
+
+def test_active_current_issue_must_match_task_document_issue(tmp_path: Path):
+    qualify_repository = _load_qualifier()
+    root = _fixture_root(tmp_path)
+    tasks = root / "docs" / "development" / "tasks"
+    (tasks / "ROADMAP.md").write_text(
+        (tasks / "ROADMAP.md")
+        .read_text(encoding="utf-8")
+        .replace("A002 | Two | PLANNED", "A002 | Two | ACTIVE"),
+        encoding="utf-8",
+    )
+    (tasks / "CURRENT.md").write_text(
+        "Current task: A002\nStatus: ACTIVE\nGitHub Issue: #99\n",
+        encoding="utf-8",
+    )
+    (tasks / "A002-two.md").write_text(
+        _task_text("A002", "ACTIVE", "#2"),
+        encoding="utf-8",
+    )
+    assert any("CURRENT GitHub Issue #99 does not match task GitHub Issue #2" in e for e in qualify_repository(root))
+
+
+def test_pre_current_issue_must_match_maintenance_task_issue(tmp_path: Path):
+    qualify_repository = _load_qualifier()
+    root = _fixture_root(tmp_path)
+    tasks = root / "docs" / "development" / "tasks"
+    (tasks / "CURRENT.md").write_text(
+        "Current task: PRE-A011\nStatus: ACTIVE\nGitHub Issue: #99\n",
+        encoding="utf-8",
+    )
+    (tasks / "PRE-A011-architecture-process-stabilization.md").write_text(
+        _task_text("PRE-A011", "ACTIVE", "#11"),
+        encoding="utf-8",
+    )
+    assert any("CURRENT GitHub Issue #99 does not match task GitHub Issue #11" in e for e in qualify_repository(root))
+
+
+def test_malformed_a_numbered_roadmap_row_is_rejected(tmp_path: Path):
+    qualify_repository = _load_qualifier()
+    root = _fixture_root(tmp_path)
+    roadmap = root / "docs" / "development" / "tasks" / "ROADMAP.md"
+    roadmap.write_text(
+        roadmap.read_text(encoding="utf-8") + "| A003 | malformed row |\n",
+        encoding="utf-8",
+    )
+    assert any("malformed ROADMAP task row A003" in e for e in qualify_repository(root))

@@ -102,3 +102,23 @@ def test_audit_rejects_cross_package_cycle_explicitly(tmp_path: Path):
     )
     errors = audit(root)
     assert any("package dependency cycle" in e and "contracts" in e and "model" in e for e in errors)
+
+def test_audit_rejects_sibling_relative_import_cycle(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "contracts" / "relative_bad.py"
+    injected.write_text(
+        "from .. import model\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any(
+        "undeclared package dependency contracts -> model" in error
+        for error in errors
+    )
+    assert any(
+        "package dependency cycle" in error
+        and "contracts" in error
+        and "model" in error
+        for error in errors
+    )

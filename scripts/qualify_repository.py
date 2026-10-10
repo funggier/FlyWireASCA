@@ -50,8 +50,11 @@ def _parse_current(text: str) -> CurrentTaskState:
     fields: dict[str, str] = {}
     for line in text.splitlines():
         match = _CURRENT_FIELD.match(line)
-        if match is not None and match.group(1) not in fields:
-            fields[match.group(1)] = match.group(2).strip()
+        if match is not None:
+            name = match.group(1)
+            if name in fields:
+                raise ValueError(f"duplicate CURRENT.md field {name}")
+            fields[name] = match.group(2).strip()
     missing = [name for name in ("Current task", "Status", "GitHub Issue") if name not in fields]
     if missing:
         raise ValueError("CURRENT.md missing fields: " + ", ".join(missing))
@@ -71,6 +74,20 @@ def _task_status(text: str) -> str | None:
         if line.startswith("Status:"):
             return line.split(":", 1)[1].strip()
     return None
+
+
+def _task_github_issue(text: str) -> str | None:
+    for line in text.splitlines():
+        if line.startswith("GitHub Issue:"):
+            return line.split(":", 1)[1].strip()
+    return None
+
+
+def _numeric_issue(value: str | None) -> str | None:
+    if value is None:
+        return None
+    match = re.match(r"^(#\d+)\b", value)
+    return match.group(1) if match is not None else None
 
 
 def _heading_task_id(text: str) -> str | None:
@@ -147,6 +164,12 @@ def _validate_lifecycle(root: Path) -> list[str]:
         return errors
 
     roadmap_text = roadmap_path.read_text(encoding="utf-8")
+    for line in roadmap_text.splitlines():
+        task_like = re.match(r"^\|\s*(A\d{3})\b", line)
+        if task_like is not None and _ROADMAP_ROW.match(line) is None:
+            errors.append(
+                f"malformed ROADMAP task row {task_like.group(1)}: {line.strip()}"
+            )
     entries = _parse_roadmap(roadmap_text)
     if not entries:
         errors.append("ROADMAP.md contains no A-numbered task rows")
@@ -201,6 +224,8 @@ def _validate_lifecycle(root: Path) -> list[str]:
 
     if current.status == "PLANNED" and _NUMERIC_ISSUE.match(current.github_issue):
         errors.append("PLANNED current task must not record a numeric GitHub issue")
+    if current.status == "ACTIVE" and _numeric_issue(current.github_issue) is None:
+        errors.append("ACTIVE current task must record a numeric GitHub issue")
 
     current_files = _task_files(tasks_root, current.task_id)
     if current.task_id.startswith("PRE-"):
@@ -216,10 +241,19 @@ def _validate_lifecycle(root: Path) -> list[str]:
                 errors.append(
                     f"{current.task_id} maintenance task status {task_status} does not match CURRENT status {current.status}"
                 )
-            if current.status == "ACTIVE" and not re.search(
-                r"^GitHub Issue:\s*#\d+\b", current_text, flags=re.MULTILINE
-            ):
-                errors.append("ACTIVE task file must record a numeric GitHub issue")
+            task_issue = _numeric_issue(_task_github_issue(current_text))
+            if current.status == "ACTIVE":
+                if task_issue is None:
+                    errors.append("ACTIVE task file must record a numeric GitHub issue")
+                current_issue = _numeric_issue(current.github_issue)
+                if (
+                    current_issue is not None
+                    and task_issue is not None
+                    and current_issue != task_issue
+                ):
+                    errors.append(
+                        f"CURRENT GitHub Issue {current_issue} does not match task GitHub Issue {task_issue}"
+                    )
     elif re.fullmatch(r"A\d{3}", current.task_id):
         entry = by_id.get(current.task_id)
         if entry is None:
@@ -230,10 +264,18 @@ def _validate_lifecycle(root: Path) -> list[str]:
             )
         if len(current_files) == 1 and current.status == "ACTIVE":
             current_text = current_files[0].read_text(encoding="utf-8")
-            if not re.search(
-                r"^GitHub Issue:\s*#\d+\b", current_text, flags=re.MULTILINE
-            ):
+            task_issue = _numeric_issue(_task_github_issue(current_text))
+            if task_issue is None:
                 errors.append("ACTIVE task file must record a numeric GitHub issue")
+            current_issue = _numeric_issue(current.github_issue)
+            if (
+                current_issue is not None
+                and task_issue is not None
+                and current_issue != task_issue
+            ):
+                errors.append(
+                    f"CURRENT GitHub Issue {current_issue} does not match task GitHub Issue {task_issue}"
+                )
     else:
         errors.append(f"CURRENT task ID {current.task_id} is not A### or PRE-A###")
 

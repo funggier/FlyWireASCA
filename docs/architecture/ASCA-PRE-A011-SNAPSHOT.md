@@ -1,8 +1,8 @@
 # ASCA PRE-A011 Architecture Snapshot
 
-Date: 2026-10-10  
-Repository: `funggier/FlyWireASCA`  
-Purpose: canonical implemented-architecture snapshot before A011  
+Date: 2026-10-10
+Repository: `funggier/FlyWireASCA`
+Purpose: canonical implemented-architecture snapshot before A011
 Research roadmap state: A001-A010 DONE; A011 PLANNED
 
 ## 1. Authority and provenance

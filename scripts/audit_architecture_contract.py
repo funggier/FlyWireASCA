@@ -167,10 +167,16 @@ def _package_dependencies(source_root: Path) -> dict[str, set[str]]:
                     dependency = _absolute_dependency(node.module or "")
                     if dependency is not None:
                         dependencies.append(dependency)
-                elif node.level >= 2 and node.module:
-                    dependency = node.module.split(".", 1)[0]
-                    if dependency in ALLOWED_PACKAGE_DEPENDENCIES:
-                        dependencies.append(dependency)
+                elif node.level >= 2:
+                    if node.module:
+                        candidates = (node.module.split(".", 1)[0],)
+                    else:
+                        candidates = tuple(
+                            alias.name.split(".", 1)[0] for alias in node.names
+                        )
+                    for dependency in candidates:
+                        if dependency in ALLOWED_PACKAGE_DEPENDENCIES:
+                            dependencies.append(dependency)
             for dependency in dependencies:
                 if dependency != source_package:
                     graph[source_package].add(dependency)

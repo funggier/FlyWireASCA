@@ -272,7 +272,92 @@ repository audits remained PASS.
 This does not redefine the qualified behavior SHA: the additional changes are
 documentation/test metadata around the already-qualified behavior.
 
-## 14. Remaining gates
+## 14. Whole-change review evidence
+
+Whole-change review: GREEN.
+
+Review method: **author self-review**. No independent reviewer was available in this harness. No reviewer/subagent
+mechanism was exposed, so the review is explicitly author self-review rather
+than peer-review evidence.
+
+- Critical findings: 0
+- Important findings: 3
+- Minor findings: 1
+- all Important findings: fixed
+- Minor finding: fixed
+- post-review local full suite: **561 passed**
+- architecture contract audit: PASS
+- repository qualification: PASS
+- post-review portable A003/A008/A009/A010 qualification: PASS
+
+### Important finding 1 — lifecycle coherence gaps
+
+The repository qualifier originally accepted duplicate/conflicting CURRENT
+fields and did not require the numeric GitHub Issue in ACTIVE CURRENT state to
+match the issue recorded in the matching task document.
+
+Review fix:
+
+- duplicate CURRENT fields now fail closed;
+- ACTIVE CURRENT must record a numeric issue;
+- ACTIVE A-numbered and PRE-* CURRENT issue numbers must equal their task-file
+  issue numbers.
+
+### Important finding 2 — sibling relative import bypass
+
+The package dependency audit originally missed sibling relative imports in the
+form:
+
+`from .. import model`
+
+That form can create the same forbidden edge/cycle as an absolute import.
+
+Review fix:
+
+- AST extraction now resolves sibling aliases for relative imports with
+  `level >= 2`;
+- regression coverage requires both the undeclared edge and cycle to be
+  detected.
+
+### Important finding 3 — malformed ROADMAP rows
+
+A malformed line beginning with an A-numbered task ID could fail the strict row
+regex and disappear from parsing.
+
+Review fix:
+
+- ROADMAP lines that look like `| A### ...` but do not match the canonical
+  task-row form now produce an explicit malformed-row qualification error.
+
+### Minor finding — whole-range whitespace
+
+Whole-range:
+
+`git diff --check c8211fff43523b80c66fcfecff9088970d6c9981..HEAD`
+
+identified trailing whitespace in the pre-A011 architecture snapshot and
+qualification matrix from earlier commits. Those spaces were removed.
+
+### CI process observation
+
+Exact branch CI `38022744129` initially failed only because the newly added
+report contained trailing whitespace that a pre-staging local
+`git diff --check` could not see while the file was untracked.
+
+The workflow documentation now requires:
+
+`git diff --cached --check`
+
+before commit.
+
+After that repair, exact pre-review branch CI `38022892597` completed
+successfully.
+
+Review fixes after that CI changed only process/audit/docs/tests. They did not
+change the Task 7 adapter source cleanup, so the fresh A004/A005/A006/A007/A009/
+A010 physical evidence remains applicable.
+
+## 15. Remaining gates
 
 Before PRE-A011 may close:
 

@@ -72,7 +72,7 @@ FlyWireLLM remains untouched.
 - [x] CI/qualification matrix aligned.
 - [x] Justified maintainability cleanup completed.
 - [x] Full portable and physical verification GREEN.
-- [ ] Whole-change review GREEN.
+- [x] Whole-change review GREEN.
 - [ ] Reviewed main integration and exact main CI GREEN.
 - [ ] Issue #11 closed completed.
 - [ ] CURRENT returned to A011 / PLANNED / no issue.
@@ -135,12 +135,49 @@ Qualification report:
 
 `docs/development/reports/ASCA-20261010-PRE-A011-architecture-process-stabilization.md`
 
+## Whole-change Review Evidence
+
+Whole-change review: GREEN
+
+Review method: **author self-review**. No independent reviewer/subagent mechanism
+is available in this harness, so this is not described as independent reviewer
+or peer-review evidence.
+
+- Critical findings: 0
+- Important findings: 3 — fixed
+- Minor findings: 1 — fixed
+- post-review local full suite: `561 passed`
+- architecture contract audit: PASS
+- repository qualification: PASS
+- post-review portable A003/A008/A009/A010 qualification: PASS
+- exact pre-review branch CI after whitespace-gate repair:
+  `38022892597` — success
+- earlier branch CI `38022744129`: failed only on trailing whitespace in a
+  newly committed report; this exposed the missing staged local whitespace
+  check and led to the `git diff --cached --check` workflow rule.
+
+Important findings fixed:
+
+1. lifecycle qualifier now rejects duplicate CURRENT fields, ACTIVE issue-number
+   mismatch between CURRENT and its task file, and ambiguous active issue state;
+2. architecture dependency audit now catches sibling relative imports such as
+   `from .. import model`;
+3. malformed A-numbered ROADMAP-like rows now fail closed instead of disappearing
+   from parsing.
+
+Minor finding fixed:
+
+- whole-range trailing whitespace in the canonical pre-A011 snapshot and
+  qualification matrix was removed.
+
+No cognitive behavior, frozen fixture/fingerprint, model identity, threshold, or
+historical research outcome changed during review fixes.
+
 ## Current Action
 
-Task 8 — closure candidate is qualification-ready; whole-change review pending.
+Task 8 — whole-change review GREEN; exact post-review branch CI pending.
 
 ## Next Action
 
-Commit/push the closure candidate, require exact feature-branch CI, perform the
-whole-change review, resolve every Critical/Important finding, then integrate
-reviewed behavior to main.
+Commit/push the review fixes, require exact post-review feature-branch CI, then
+verify integration preconditions and fast-forward reviewed behavior to main.
