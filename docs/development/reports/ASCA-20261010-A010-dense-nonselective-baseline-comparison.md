@@ -358,5 +358,5 @@ At this report stage:
 - exact final-main CI: pending;
 - A011: PLANNED with no GitHub issue.
 
-A010 must remain ACTIVE until review findings are resolved and reviewed behavior
-is integrated into main with exact final-main CI evidence.
+A010 must remain ACTIVE until the final-main evidence commit receives exact CI
+success and GitHub Issue #10 closure is recorded.

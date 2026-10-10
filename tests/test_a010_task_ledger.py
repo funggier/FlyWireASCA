@@ -153,7 +153,7 @@ def test_a010_records_whole_branch_review_and_post_review_ci():
         assert "NOT_SUPPORTED" in text
     assert "- [x] Whole-branch review GREEN." in task
     assert "Whole-branch review: GREEN" in task
-    assert "reviewed main integration: pending" in report.lower()
+    assert "reviewed main integration: green" in report.lower()
 
 def test_a010_records_reviewed_main_integration_before_issue_close():
     task = read(TASKS / "A010-dense-nonselective-baseline-comparison.md")
