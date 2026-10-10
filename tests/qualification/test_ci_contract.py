@@ -19,17 +19,20 @@ def test_ci_retains_every_existing_standalone_gate():
     assert all([line.strip() for line in text.splitlines()].count("run: "+c) == 1 for c in commands)
     assert "fetch-depth: 2" in text and 'python-version: "3.11"' in text
 
-def test_ci_adds_nonfinal_a011_and_uploads_even_on_failure():
+def test_ci_preserves_a011_then_qualifies_a012_and_uploads_even_on_failure():
     text = CI.read_text(encoding="utf-8")
-    name = "Qualify A011 portable system"
-    assert text.count("name: "+name) == 1
-    assert 'python scripts/qualify_asca_v0x_a011.py --expected-source-sha "$(git rev-parse HEAD)"' in text
-    assert '--output-dir "$RUNNER_TEMP/a011-portable-${{ github.run_id }}-${{ github.run_attempt }}"' in text
-    assert text.index("Qualify A010") < text.index(name) < text.index("Check whitespace")
-    upload = text[text.index("- name: Upload A011 portable qualification pack"):text.index("- name: Check whitespace")]
+    preserve = "Preserve A011 frozen v0.x source anchors"
+    qualify = "Qualify A012 relational reasoning"
+    assert text.count("name: "+preserve) == 1
+    assert text.count("name: "+qualify) == 1
+    assert "python scripts/verify_a011_frozen_profile_preservation.py" in text
+    assert "python scripts/qualify_asca_v0x_a011.py" not in text
+    assert "python scripts/qualify_relational_reasoning_a012.py" in text
+    assert text.index("Qualify A010") < text.index(preserve) < text.index(qualify) < text.index("Check whitespace")
+    upload = text[text.index("- name: Upload A012 portable qualification evidence"):text.index("- name: Check whitespace")]
     assert "if: always()" in upload and "uses: actions/upload-artifact@v4" in upload
     assert "if-no-files-found: error" in upload
-    assert "path: ${{ runner.temp }}/a011-portable-${{ github.run_id }}-${{ github.run_attempt }}/" in upload
+    assert "a012-relational-${{ github.run_id }}-${{ github.run_attempt }}.json" in upload
 
 def test_ci_has_no_physical_model_or_calibration_command():
     text = CI.read_text(encoding="utf-8")

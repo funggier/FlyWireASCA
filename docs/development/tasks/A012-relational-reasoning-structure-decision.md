@@ -59,24 +59,51 @@ fail.
 ## Acceptance Criteria
 
 - [x] A012 lifecycle is activated with a real GitHub issue.
-- [ ] Both variants share the real A005 retrieval primitive and frozen shared inputs.
-- [ ] Explicit traversal is directed, deterministic, bounded and cycle-safe.
-- [ ] Relation and identity semantics are not inferred beyond explicit evidence.
-- [ ] Edge/evidence provenance is retained for accepted paths.
-- [ ] Frozen portable workload includes positive, negative and vector-direct controls.
-- [ ] Fixture/shared-input fingerprints are stable and validated.
-- [ ] Architecture decision is evidence-derived.
-- [ ] Portable qualifier is Ollama-free and present in CI.
-- [ ] Physical secondary replay is local-only.
-- [ ] A011 frozen protected-source identities remain unchanged.
-- [ ] Full tests, architecture audit, repository qualifier and whitespace check pass.
+- [x] Both variants share the real A005 retrieval primitive and frozen shared inputs.
+- [x] Explicit traversal is directed, deterministic, bounded and cycle-safe.
+- [x] Relation and identity semantics are not inferred beyond explicit evidence.
+- [x] Edge/evidence provenance is retained for accepted paths.
+- [x] Frozen portable workload includes positive, negative and vector-direct controls.
+- [x] Fixture/shared-input fingerprints are stable and validated.
+- [x] Architecture decision is evidence-derived.
+- [x] Portable qualifier is Ollama-free and prepared for CI.
+- [x] Physical secondary replay is local-only and development replay is GREEN.
+- [x] A011 frozen profile/67 protected-source identities remain guarded by a
+  preservation check; the post-A011 HEAD is not relabelled A011-qualified.
+- [x] Full tests, architecture audit, repository qualifier and whitespace check pass.
 - [ ] Exact feature/main CI and final evidence are recorded before closure.
-- [ ] FlyWireLLM remains untouched.
+- [x] FlyWireLLM remains untouched.
 
 ## Evidence
 
-Activation and implementation evidence will be appended after the task becomes
-ACTIVE. Historical authority:
+Development evidence before the exact candidate commit:
+
+- Full repository test suite: `994 passed in 81.97s`.
+- Architecture audit: PASS.
+- Repository qualification: PASS.
+- A003/A008/A009/A010 portable gates: PASS.
+- A011 frozen-profile preservation: profile SHA256
+  `add06f285bf6decc7d492b987d3769dc64db4cb3d0177c8c6586d50ee5f6d46d`,
+  67 protected paths, protected SHA256
+  `8df49f05fe54de43667ab2f8ef5de2caae9376ffedf2cb8f8d26f0e4abcca6b6`.
+- A012 portable fixture SHA256:
+  `dcabd86117f22e35c18fe605c8411da143962f112645a78c9124ec5987179aea`.
+- A012 portable result: `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED`; Vector +
+  Metadata success 5/11, bounded-relation success 11/11, relation-only
+  recoveries 6, regressions/identity/provenance/budget/duplicate-visit failures 0.
+- Development physical replay on local `qwen3-embedding:0.6b`, digest
+  `ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d`,
+  dimension 1024, frozen threshold `0.5037018224299838`: experiment valid,
+  observed decision `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED`, Vector success
+  2/11, relation-aware success 6/11, relation-only recoveries 4, deterministic
+  repeat, zero regression/identity/provenance/budget/duplicate-visit failures.
+- Whole-change review: no Critical/Important finding remains after TDD repairs
+  for post-A011 CI topology, empty physical seed handling, and historical README
+  compatibility.
+- `git diff --check`: PASS.
+- FlyWireLLM: untouched.
+
+Historical authority:
 
 - A005 final graph decision: `VECTOR_SUFFICIENT` for retrieval scope.
 - A005 report explicitly allows a later relation/path reasoning experiment.
@@ -84,9 +111,12 @@ ACTIVE. Historical authority:
 
 ## Current Action
 
-A012 is ACTIVE on GitHub Issue #14. Begin TDD implementation of strict records
-and bounded explicit relation traversal.
+Full local development qualification and whole-change review are GREEN. Freeze
+an exact implementation candidate commit, push it, rerun physical evidence on
+that exact clean SHA, and require exact feature-branch CI GREEN.
 
 ## Next Action
 
-Implement Task 2 records/models RED -> GREEN, then Task 3 bounded traversal.
+Commit/push the implementation candidate, verify the checkout is clean, rerun
+A012 physical evidence on that exact SHA, then require exact feature-branch CI
+GREEN before integration.

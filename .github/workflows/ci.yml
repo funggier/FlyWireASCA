@@ -46,15 +46,18 @@ jobs:
       - name: Qualify A010 dense non-selective baseline
         run: python scripts/qualify_baseline_comparison_a010.py
 
-      - name: Qualify A011 portable system
-        run: python scripts/qualify_asca_v0x_a011.py --expected-source-sha "$(git rev-parse HEAD)" --output-dir "$RUNNER_TEMP/a011-portable-${{ github.run_id }}-${{ github.run_attempt }}"
+      - name: Preserve A011 frozen v0.x source anchors
+        run: python scripts/verify_a011_frozen_profile_preservation.py
 
-      - name: Upload A011 portable qualification pack
+      - name: Qualify A012 relational reasoning
+        run: python scripts/qualify_relational_reasoning_a012.py --output "$RUNNER_TEMP/a012-relational-${{ github.run_id }}-${{ github.run_attempt }}.json"
+
+      - name: Upload A012 portable qualification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: a011-portable-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/a011-portable-${{ github.run_id }}-${{ github.run_attempt }}/
+          name: a012-relational-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/a012-relational-${{ github.run_id }}-${{ github.run_attempt }}.json
           if-no-files-found: error
 
       - name: Check whitespace

@@ -123,7 +123,9 @@ Requirements:
 - nonzero exit only for invalid experiment/qualification errors, not because a
   valid research result is MIXED or VECTOR_METADATA_REMAINS_SUFFICIENT;
 - A012 portable CI remains Ollama-free;
-- existing A003/A008/A009/A010/A011 CI gates remain present.
+- existing A003/A008/A009/A010 gates remain present;
+- do not rerun A011 against the post-A011 HEAD. Preserve the unchanged frozen
+  A011 profile/67 protected blobs with a dedicated preservation check instead.
 
 ## Task 6 — Local physical secondary replay
 
@@ -150,9 +152,11 @@ Update:
 Add `relational_reasoning` to the dependency audit with allowed dependencies
 `contracts`, `embedding`, and `vector_memory`.
 
-Explicitly verify the A011 frozen protected-source hash remains unchanged. A012
-must not edit any path listed by
+Explicitly verify the A011 frozen profile bytes and all listed protected blobs
+remain unchanged. A012 must not edit any path listed by
 `docs/development/qualification/a011-v0x-profile-v1.json::protected_source.paths`.
+The original A011 qualifier remains strict and historical; do not weaken its
+complete-source-universe check merely to admit the new A012 package.
 
 ## Task 8 — Evidence, review, and repair
 
@@ -162,7 +166,7 @@ Run:
 - architecture audit;
 - repository qualifier;
 - A012 portable qualifier;
-- A011 portable qualifier on the exact candidate;
+- A011 frozen-profile/blob preservation check on the exact candidate;
 - local A012 physical qualifier;
 - `git diff --check`.
 

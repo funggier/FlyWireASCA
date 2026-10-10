@@ -50,10 +50,14 @@ profile is `ENGINEERING_QUALIFIED` with separate preserved research outcomes:
 - A009: `SUPPORTED`
 - A010: `NOT_SUPPORTED`
 
-The qualified A009 primary path remains `SINGLE_BEST` + A007 `SIGNAL_DRIVEN` +
-A008 `CHUNKED` with `MISMATCH_DRIVEN_RECOVERY`. A010's dense/non-selective
-comparison remains a valid `NOT_SUPPORTED` research result and does not rewrite
-A009.
+A009 - Integrated Cognitive Loop remains `SUPPORTED`. Its qualified primary path
+is `SINGLE_BEST` + A007 `SIGNAL_DRIVEN` + A008 `CHUNKED` with
+`MISMATCH_DRIVEN_RECOVERY`.
+
+A010 - Dense/Non-selective Baseline Comparison is **DONE** with portable outcome
+`NOT_SUPPORTED`: ASCA/dense query counts are 28/27, scored-vector counts are
+1984/1440, and cumulative selected counts are 66/480. This result answers a
+different comparison question and does not rewrite A009.
 
 A012 - Relational Reasoning / Structure Decision Gate is **ACTIVE** on GitHub
 Issue #14 after explicit user authorization. It will compare the real A005 Vector + Metadata
@@ -61,9 +65,12 @@ retrieval primitive with bounded explicit typed relation traversal on causal,
 temporal, ownership, part-of, used-for, path and identity-sensitive controlled
 workloads.
 
-A012 does not assume that a graph is required. Its portable evidence may
-conclude `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED`,
-`VECTOR_METADATA_REMAINS_SUFFICIENT`, or `MIXED`.
+A012's frozen portable evidence now concludes
+`EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED` for the declared relation-dependent
+workload: bounded relation traversal recovers 6 cases that Vector + Metadata
+alone does not, with zero regressions and zero identity/provenance/budget/cycle
+failures. This is not a claim that a persistent graph database or graph-first
+architecture is generally superior.
 
 A011 remains the qualification of its frozen v0.x profile; it does not
 automatically qualify A012.

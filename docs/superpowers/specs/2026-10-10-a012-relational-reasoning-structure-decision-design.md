@@ -287,6 +287,16 @@ A011 remains a qualification of the declared frozen v0.x profile. A012 is a new
 experimental layer and must carry its own evidence. Passing A011 on a later
 repository SHA must not be described as qualifying A012.
 
+**Post-activation topology ruling.** Inspection of the implemented A011 source
+provenance guard established that the frozen profile requires the complete
+non-qualification cognitive Python source set to equal its 67 protected paths.
+Adding the new `relational_reasoning` package therefore makes a post-A011 HEAD
+intentionally outside that profile, even when every protected blob is unchanged.
+A012 must not weaken that guard or relabel the new HEAD as A011-qualified.
+Post-A011 CI replaces live-head A011 replay with a narrow preservation check of
+the literal profile bytes and all 67 protected Git mode/path/blob identities.
+Historical A011 qualification evidence remains bound to its exact qualified SHA.
+
 The A012 portable qualifier must be network/Ollama-free.
 
 Physical A012 qualification is local-only and must not appear in GitHub CI.

@@ -102,6 +102,27 @@ def test_ci_runs_a010_portable_baseline_qualification_only():
     assert "127.0.0.1:11434" not in lower
     assert "localhost" not in lower
 
+
+def test_ci_preserves_historical_a011_without_requalifying_post_a011_head():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert "python scripts/verify_a011_frozen_profile_preservation.py" in text
+    assert "python scripts/qualify_asca_v0x_a011.py" not in text
+    assert "a011-portable-" not in text
+
+
+def test_ci_runs_a012_portable_qualification_and_uploads_evidence():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    lower = text.lower()
+    assert "python scripts/qualify_relational_reasoning_a012.py" in text
+    assert "qualify_relational_reasoning_a012_physical.py" not in text
+    assert "Upload A012 portable qualification evidence" in text
+    assert "actions/upload-artifact@v4" in text
+    assert "if-no-files-found: error" in text
+    assert "ollama pull" not in lower
+    assert "ollama run" not in lower
+    assert "127.0.0.1:11434" not in lower
+    assert "localhost" not in lower
+
 MATRIX = ROOT / "docs" / "development" / "QUALIFICATION-MATRIX.md"
 
 
@@ -132,4 +153,6 @@ def test_qualification_matrix_and_ci_command_topology_match():
     assert "A008: `SUPPORTED`" in matrix
     assert "A009: `SUPPORTED`" in matrix
     assert "A010: `NOT_SUPPORTED`" in matrix
+    assert "A012" in matrix
+    assert "EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED" in matrix
     assert "A valid `NOT_SUPPORTED` result" in matrix
