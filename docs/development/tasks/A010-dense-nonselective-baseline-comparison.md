@@ -1,7 +1,7 @@
 # A010 — Dense/Non-selective Baseline Comparison
 
-Status: ACTIVE
-GitHub Issue: #10
+Status: DONE
+GitHub Issue: #10 (closed as completed)
 Branch: research/a010-dense-nonselective-baseline-comparison
 Activation base: 6846c17d17fd4f6fa2963fd4ad0586b60f5e4fee
 
@@ -53,8 +53,8 @@ FlyWireLLM remains untouched.
 - [x] Portable and physical qualification completed.
 - [x] Exact feature-branch CI GREEN.
 - [x] Whole-branch review GREEN.
-- [ ] Reviewed main integration and exact final-main CI GREEN.
-- [ ] Issue closed after final-main evidence.
+- [x] Reviewed main integration and exact final-main CI GREEN.
+- [x] Issue closed after final-main evidence.
 
 ## Acceptance criteria
 
@@ -134,12 +134,22 @@ Main integration: GREEN
 - merge commit: none
 - main behavior is identical to the reviewed feature SHA
 
-A010 remains ACTIVE and GitHub Issue #10 remains open until the final evidence/closure-state commits receive exact main CI.
+Final-main evidence is GREEN and GitHub Issue #10 is closed as completed.
+
+## Repository closure
+
+A010 repository state: DONE
+
+- GitHub Issue #10 closure: completed
+- final-main evidence SHA: `fc41a238877e51599f451b811246129b77b006e1`
+- exact final-main evidence CI: `38017919305` — success
+- local final-main gate: `530 passed`
+- A011 remains PLANNED with no GitHub issue
 
 ## Current action
 
-Task 6 — reviewed main integration GREEN; final evidence commit pending.
+A010 is closed with primary outcome `NOT_SUPPORTED`.
 
 ## Next action
 
-Commit/push final-main evidence, require exact CI, then close Issue #10 and finalize repository closure state.
+A011 - ASCA v0.x Qualification may be activated later under a separate design/plan/task gate.

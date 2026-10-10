@@ -343,20 +343,22 @@ Main integration: GREEN.
 
 The integrated main tree is the exact reviewed feature SHA; no behavior was changed during integration.
 
-## 15. Closure candidate state
+## 15. Final repository closure
 
-At this report stage:
+A010 repository state: DONE
 
 - portable qualification: GREEN;
 - physical qualification: GREEN;
 - exact feature-branch CI: GREEN;
-- primary outcome: `NOT_SUPPORTED`;
-- GitHub Issue #10: OPEN;
-- A010 repository status: ACTIVE;
 - whole-branch review: GREEN;
 - reviewed main integration: GREEN;
-- exact final-main CI: pending;
-- A011: PLANNED with no GitHub issue.
+- final-main evidence SHA: `fc41a238877e51599f451b811246129b77b006e1`;
+- exact final-main evidence CI: `38017919305` — success;
+- local final-main gate: `530 passed`;
+- primary outcome: `NOT_SUPPORTED`;
+- GitHub Issue #10 closure: completed;
+- A011: PLANNED with no GitHub issue;
+- FlyWireLLM: untouched.
 
-A010 must remain ACTIVE until the final-main evidence commit receives exact CI
-success and GitHub Issue #10 closure is recorded.
+The final repository closure preserves A006 `NOT_SUPPORTED`, A007 `SUPPORTED`,
+A008 `SUPPORTED`, A009 `SUPPORTED`, and A010 `NOT_SUPPORTED` exactly.

@@ -8,16 +8,16 @@ def read(p): return p.read_text(encoding="utf-8")
 
 def test_current_preserves_a008_green_after_a009_closure():
     text=read(TASKS/"CURRENT.md")
-    assert "Current task: A010" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #10" in text
+    assert "Current task: A011" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert "A008 deterministic qualification: GREEN" in text
 
 def test_roadmap_a008_a009_done_a010_a011_planned():
     text=read(TASKS/"ROADMAP.md")
     assert "| A008 | Procedural Memory / Skill Chunking | DONE |" in text
     assert "| A009 | Integrated Cognitive Loop | DONE |" in text
-    assert "| A010 | Dense/Non-selective Baseline Comparison | ACTIVE |" in text
+    assert "| A010 | Dense/Non-selective Baseline Comparison | DONE |" in text
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
 
 def test_a008_task_records_approved_boundaries():
@@ -76,9 +76,9 @@ def test_a008_closure_remains_historical_after_a009_closure():
     assert "| A008 | Procedural Memory / Skill Chunking | DONE |" in roadmap
     assert "| A009 | Integrated Cognitive Loop | DONE |" in roadmap
     current=read(TASKS/"CURRENT.md")
-    assert "Current task: A010" in current
-    assert "Status: ACTIVE" in current
-    assert "GitHub Issue: #10" in current
+    assert "Current task: A011" in current
+    assert "Status: PLANNED" in current
+    assert "GitHub Issue: not created" in current
 
 def test_a008_report_keeps_claims_and_integration_boundaries():
     text=read(REPORT_A008).lower()
@@ -123,9 +123,9 @@ def test_a008_report_records_main_integration_evidence():
 
 def test_current_records_a008_main_integration_green_after_a009_closure():
     text=read(TASKS/"CURRENT.md")
-    assert "Current task: A010" in text
-    assert "Status: ACTIVE" in text
-    assert "GitHub Issue: #10" in text
+    assert "Current task: A011" in text
+    assert "Status: PLANNED" in text
+    assert "GitHub Issue: not created" in text
     assert "A008 main integration: GREEN" in text
 
 def test_a008_report_records_closure_evidence_main_ci():

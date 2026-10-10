@@ -72,14 +72,15 @@ Local physical integration is also GREEN with pinned
 
 A009 is fully integrated and GitHub Issue #9 is closed as completed.
 
-A010 - Dense/Non-selective Baseline Comparison is **ACTIVE** under GitHub
-Issue #10 with a qualified closure candidate. The frozen portable outcome is
-`NOT_SUPPORTED`: ASCA/dense query counts are 28/27, logical scored-vector
-counts are 1984/1440, and cumulative selected working-set items are 66/480.
-ASCA succeeds on 7 primary cases versus 8 for dense, including 1 dense-only
-success. This preserves the historical A009 `SUPPORTED` integration result;
-A010 answers a different system-level comparison question. Whole-branch review
-and reviewed main integration are still required before A010 closes.
+A010 - Dense/Non-selective Baseline Comparison is **DONE** and GitHub Issue
+#10 is closed as completed. The frozen portable outcome is `NOT_SUPPORTED`:
+ASCA/dense query counts are 28/27, logical scored-vector counts are 1984/1440,
+and cumulative selected working-set items are 66/480. ASCA succeeds on 7
+primary cases versus 8 for dense, including 1 dense-only success. This
+preserves the historical A009 `SUPPORTED` integration result; A010 answers a
+different system-level comparison question.
+
+A011 - ASCA v0.x Qualification is **PLANNED** with no GitHub issue.
 
 These results are control/retrieval/procedure evidence. They are not claims of
 lower FLOPs, lower energy, lower token use, general speed superiority, or safe
