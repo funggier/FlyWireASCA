@@ -1,7 +1,7 @@
 # A012 — Relational Reasoning / Structure Decision Gate
 
-Status: PLANNED
-GitHub Issue: not created
+Status: ACTIVE
+GitHub Issue: #14
 Branch: research/a012-relational-structure-decision
 Activation base: 23b96f4502b81cddb9563b55c26fdd0adc731265
 
@@ -58,7 +58,7 @@ fail.
 
 ## Acceptance Criteria
 
-- [ ] A012 lifecycle is activated with a real GitHub issue.
+- [x] A012 lifecycle is activated with a real GitHub issue.
 - [ ] Both variants share the real A005 retrieval primitive and frozen shared inputs.
 - [ ] Explicit traversal is directed, deterministic, bounded and cycle-safe.
 - [ ] Relation and identity semantics are not inferred beyond explicit evidence.
@@ -84,10 +84,9 @@ ACTIVE. Historical authority:
 
 ## Current Action
 
-Publish the approved design/plan and verify the PLANNED lifecycle locally before
-creating the GitHub issue.
+A012 is ACTIVE on GitHub Issue #14. Begin TDD implementation of strict records
+and bounded explicit relation traversal.
 
 ## Next Action
 
-Create the real A012 GitHub issue, change the task to ACTIVE, then execute the
-implementation plan with TDD.
+Implement Task 2 records/models RED -> GREEN, then Task 3 bounded traversal.

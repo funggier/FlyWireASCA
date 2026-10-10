@@ -55,8 +55,8 @@ A008 `CHUNKED` with `MISMATCH_DRIVEN_RECOVERY`. A010's dense/non-selective
 comparison remains a valid `NOT_SUPPORTED` research result and does not rewrite
 A009.
 
-A012 - Relational Reasoning / Structure Decision Gate is **PLANNED** after
-explicit user authorization. It will compare the real A005 Vector + Metadata
+A012 - Relational Reasoning / Structure Decision Gate is **ACTIVE** on GitHub
+Issue #14 after explicit user authorization. It will compare the real A005 Vector + Metadata
 retrieval primitive with bounded explicit typed relation traversal on causal,
 temporal, ownership, part-of, used-for, path and identity-sensitive controlled
 workloads.

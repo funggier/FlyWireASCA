@@ -1,8 +1,8 @@
 # Current Development Task
 
 Current task: A012
-Status: PLANNED
-GitHub Issue: not created
+Status: ACTIVE
+GitHub Issue: #14
 
 ## Current Action
 
@@ -27,8 +27,8 @@ qualification and does not automatically qualify A012.
 
 ## Next Action
 
-Verify the PLANNED lifecycle locally, create the real A012 GitHub issue, change
-A012 to ACTIVE, then execute the approved implementation plan with TDD.
+Execute A012 with TDD, beginning with strict relation records and bounded
+explicit traversal. Record evidence on Issue #14.
 
 ## Resume Rule
 

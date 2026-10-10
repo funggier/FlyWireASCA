@@ -12,17 +12,17 @@ DESIGN = ROOT / "docs" / "superpowers" / "specs" / "2026-10-10-a012-relational-r
 PLAN = ROOT / "docs" / "superpowers" / "plans" / "2026-10-10-a012-relational-reasoning-structure-decision.md"
 
 
-def test_a012_planned_lifecycle_and_authority_are_coherent():
+def test_a012_active_lifecycle_and_authority_are_coherent():
     task = TASK.read_text(encoding="utf-8")
     current = CURRENT.read_text(encoding="utf-8")
     roadmap = ROADMAP.read_text(encoding="utf-8")
 
-    assert "Status: PLANNED" in task
-    assert "GitHub Issue: not created" in task
+    assert "Status: ACTIVE" in task
+    assert "GitHub Issue: #14" in task
     assert "Current task: A012" in current
-    assert "Status: PLANNED" in current
-    assert "GitHub Issue: not created" in current
-    assert "| A012 | Relational Reasoning / Structure Decision Gate | PLANNED |" in roadmap
+    assert "Status: ACTIVE" in current
+    assert "GitHub Issue: #14" in current
+    assert "| A012 | Relational Reasoning / Structure Decision Gate | ACTIVE |" in roadmap
     assert DESIGN.exists()
     assert PLAN.exists()
 
