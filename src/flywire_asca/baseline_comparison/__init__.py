@@ -37,3 +37,24 @@ __all__ += [
     "run_familiarity_disabled_ablation",
     "run_no_structural_expansion_ablation",
 ]
+from .benchmark import (
+    BaselineComparisonCase,
+    BenchmarkMemorySpec,
+    a010_fixture_fingerprint,
+    build_a010_deterministic_fixture,
+    classify_a010_hypothesis,
+    qualify_a010_report,
+    run_a010_benchmark,
+    shared_input_fingerprint,
+)
+
+__all__ += [
+    "BaselineComparisonCase",
+    "BenchmarkMemorySpec",
+    "a010_fixture_fingerprint",
+    "build_a010_deterministic_fixture",
+    "classify_a010_hypothesis",
+    "qualify_a010_report",
+    "run_a010_benchmark",
+    "shared_input_fingerprint",
+]
