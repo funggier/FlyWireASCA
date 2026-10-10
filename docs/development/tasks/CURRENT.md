@@ -12,10 +12,15 @@ PRE-A011 — Architecture & Process Consistency Stabilization is complete and
 GitHub Issue #11 is closed as completed. A001-A010 remain DONE.
 
 Conversational design approval was received in this session. The detailed
-written spec and advance Task are being published for written-spec review.
+written spec and advance Task are published; exact spec CI is GREEN.
+The current gate is explicit written-spec review/approval.
 
 - [A011 planned Task](A011-asca-v0x-qualification.md)
 - [A011 written spec](../../superpowers/specs/2026-10-10-a011-asca-v0x-qualification-design.md)
+- [Latest full handoff](../reports/ASCA-20261010-full-session-handoff-a011-written-spec-review.md)
+
+Spec publication SHA: `6eb5fb1399bc21a05599b92d9aa8b312df70c9e1`
+Exact spec CI: `38039670308` — success
 
 Historical outcomes remain unchanged:
 

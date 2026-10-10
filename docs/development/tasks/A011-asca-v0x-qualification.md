@@ -52,7 +52,7 @@ commits, and execution scheduling are decided only after written-spec approval.
 | --- | --- | --- |
 | G00 | Read handoff and verify live Git/GitHub/runtime baseline | PASS at `c1498e8e30a23fb67965239d13f0531d5326079e` |
 | G01 | Explicit approval of complete conversational design; permits written spec | PASS — user approval in this session |
-| G02 | Written spec, inline self-review, commit/push, exact spec-commit CI | Publication verification pending |
+| G02 | Written spec, inline self-review, commit/push, exact spec-commit CI | PASS — spec published at `6eb5fb1399bc21a05599b92d9aa8b312df70c9e1`; exact CI `38039670308` success |
 | G03 | User explicitly reviews/approves the written spec | WAITING USER REVIEW |
 | G04 | Invoke writing-plans, create/self-review/publish implementation plan, exact CI | NOT STARTED — requires G03 |
 | G05 | User reviews/approves plan and selects execution method | NOT STARTED — requires G04 |
@@ -256,14 +256,24 @@ Live baseline:
 - Issue #11 closed/completed; no A011 issue;
 - runtime metadata: Ollama 0.32.15; pinned models/digests/dimension match.
 
+Written-spec publication:
+- spec/advance Task commit: `6eb5fb1399bc21a05599b92d9aa8b312df70c9e1`;
+- exact spec CI [38039670308](https://github.com/funggier/FlyWireASCA/actions/runs/38039670308): success;
+- local full suite: 563 passed in 4.83s;
+- architecture contract audit and repository qualification: PASS;
+- staged whitespace: PASS;
+- spec self-review: incomplete markers/contradictions/ambiguity/scope PASS;
+- unresolved Critical/Important spec findings: 0;
+- publication main clean/synced at the spec commit.
+
 These are baseline/planning observations, not A011 implementation or fresh
 A011 full-system qualification evidence. No new physical qualifier replay is
 claimed in this documentation session.
 
 ## Current Action
 
-A011 remains PLANNED. Prepare and publish written spec, advance Task, and
-next-session handoff after author self-review and exact CI.
+A011 remains PLANNED. Written spec and advance Task are published with exact
+CI GREEN. Wait for explicit user written-spec review/approval.
 
 ## Next Action
 
