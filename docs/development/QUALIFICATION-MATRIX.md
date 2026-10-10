@@ -2,7 +2,7 @@
 
 Date: 2026-10-10
 Purpose: canonical map of portable CI gates, local physical gates, frozen
-outcome roles, and claims boundaries before A011.
+outcome roles, and A011 qualification claims boundaries.
 
 ## 1. Principles
 
@@ -12,7 +12,7 @@ outcome roles, and claims boundaries before A011.
   qualification.
 - Where a milestone defines a portable primary outcome, physical evidence is
   secondary and cannot rewrite that outcome.
-- Historical outcomes and pinned identities are not retuned during PRE-A011.
+- Historical outcomes and pinned identities remain frozen through A011.
 
 ## 2. Milestone matrix
 
@@ -40,6 +40,7 @@ python scripts/run_familiarity_benchmark_a003.py --qualify
 python scripts/qualify_procedural_memory_a008.py
 python scripts/qualify_integrated_loop_a009.py
 python scripts/qualify_baseline_comparison_a010.py
+python scripts/qualify_asca_v0x_a011.py --expected-source-sha "$(git rev-parse HEAD)" --output-dir "$RUNNER_TEMP/a011-portable-${{ github.run_id }}-${{ github.run_attempt }}"
 ```
 
 A004-A007 physical scripts and A009/A010 physical scripts are intentionally
@@ -95,3 +96,44 @@ unless a milestone defines a statistical timing protocol.
 
 The qualification matrix documents evidence topology; it does not itself add a
 new ASCA research claim.
+
+## 8. A011 system qualification topology
+
+A011 is an engineering qualification layer over the existing milestones.
+Research evidence remains five separate milestone outcomes; a valid negative
+outcome is preserved, and no aggregate intelligence score is defined.
+
+| Scope | Mandatory gates | Final state |
+| --- | --- | --- |
+| Portable CI/local | P00-P09: profile/source, tests, architecture, repository, A003/A008/A009/A010, frozen repeat audit, pack validation | PORTABLE_ONLY; is_final=false; engineering_verdict=null |
+| Full local system | Fresh local P00-P09 plus H00-H07: metadata prerequisites, A004/A005/A006/A007/A009/A010, completion audit | FULL_SYSTEM; is_final=true; one engineering verdict |
+
+The portable workflow retains every preexisting standalone gate, binds the pack
+to its actual Git HEAD (including a PR merge checkout), and uploads the indexed
+pack with actions/upload-artifact@v4 and if:always(). Missing artifacts fail the
+upload. It does not invoke physical models.
+
+Full local command:
+
+```text
+python scripts/qualify_asca_v0x_a011_physical.py --expected-source-sha <exact-git-head-40hex> --output-dir <new-outside-checkout-directory>
+```
+
+The full command runs fresh portable and sequential physical replay on one clean
+candidate/profile. A005 receives the frozen threshold 0.5037018224299838.
+Metadata inspection and source capture run before and after the physical path.
+Confirmed missing runtime/model prerequisites yield QUALIFICATION_BLOCKED only
+when no verified hard failure exists. Identity/profile/source drift, malformed
+evidence, and unexplained child failure yield ENGINEERING_NOT_QUALIFIED.
+Every mandatory gate PASS is required for ENGINEERING_QUALIFIED.
+
+The reviewed frozen profile is
+docs/development/qualification/a011-v0x-profile-v1.json; its literal SHA256 is
+add06f285bf6decc7d492b987d3769dc64db4cb3d0177c8c6586d50ee5f6d46d.
+Protected Git mode/path/blob records are shallow-checkout safe and hash to
+8df49f05fe54de43667ab2f8ef5de2caae9376ffedf2cb8f8d26f0e4abcca6b6.
+A011 adds no calibration, workload, threshold/model override, hidden retry,
+model pull/restart, or new physical process deadline. It changes no cognitive
+semantics and makes no external certification, FLOPs, energy, or general speed
+claim. Exact candidate/main CI and fresh physical evidence are recorded in the
+A011 task and final report; this topology document alone is not completion proof.
