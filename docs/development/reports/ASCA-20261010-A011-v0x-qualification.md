@@ -165,7 +165,9 @@ Execution/review/raw audit logs and all13 ordered rulings remain at `T:\Space\Pr
 
 Engineering implementation/integration and physical evidence gates are complete. At this report's first publication, GitHub Issue12 completion is pending the closure metadata commit's exact main CI. The live completion response is recorded in the final handoff after that gate; no requested GitHub operation alone establishes CLOSED.
 
-*GitHub completion verified:* pending exact closure metadata CI / live operation.
+*GitHub completion verified:* Issue12 CLOSED/COMPLETED at `2026-10-10T14:33:14Z`; independent live fetch confirmed. Closure metadata `4053cb42bb50a683965d83bee20cbffb25668f02`/[38059824196](https://github.com/funggier/FlyWireASCA/actions/runs/38059824196) SUCCESS; main clean/exactorigin0/0.
+
+[Full session handoff](ASCA-20261010-full-session-handoff-a011-completed.md) records the exhaustive rulings, approvals and resume instructions. Its containing metadata SHA/own exact CI are resolved from Git/live state after publication.
 
 PRE-A011 remains DONE / Issue11 CLOSED-COMPLETED; A001-A010 remain DONE. Package version remains `0.1.0.dev0`. No FlyWireLLM change, A012, tag/release or0.1.0 promotion is part of this work.
 

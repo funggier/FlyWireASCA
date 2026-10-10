@@ -19,12 +19,14 @@ exact push/main CI38058896880 SUCCESS. Separate fresh physical packs passed.
 PR13 used a normal history-preserving merge after exact feature/PR CI.
 Later closure/handoff commits are metadata with their own exact CI.
 
-Task11 final bookkeeping is in progress: closure metadata exact CI, then
-live Issue12 completion and full session handoff. Issue12 is not claimed
-closed until the live response is verified.
+Tasks1-11 complete. Issue12 CLOSED/COMPLETED at 2026-10-10T14:33:14Z,
+verified through a separate live fetch. Closure metadata4053cb4 exact main
+CI38059824196 SUCCESS; main clean/exactorigin0/0. Final handoff metadata
+receives its own exact CI before the final session completion claim.
 
 - [A011 task and execution evidence](A011-asca-v0x-qualification.md)
 - [Final qualification report](../reports/ASCA-20261010-A011-v0x-qualification.md)
+- [Latest full session handoff](../reports/ASCA-20261010-full-session-handoff-a011-completed.md)
 - [Approved design](../../superpowers/specs/2026-10-10-a011-asca-v0x-qualification-design.md)
 - [Approved implementation plan](../../superpowers/plans/2026-10-10-a011-asca-v0x-qualification.md)
 
@@ -33,10 +35,9 @@ A009 SUPPORTED, A010 NOT_SUPPORTED. Version stays 0.1.0.dev0.
 
 ## Next Action
 
-Finish exact closure metadata CI, verify GitHub Issue12 CLOSED-COMPLETED,
-publish the final handoff and verify its exact CI/clean synchronization.
-After closure, wait for an explicitly scoped user request; no new milestone,
-release, tag or version promotion is authorized.
+Read the final handoff and verify live Git/GitHub/runtime/exact current CI.
+Wait for an explicitly scoped user request; no new milestone, release, tag,
+retrieval optimization or version promotion is authorized.
 
 ## Resume Rule
 

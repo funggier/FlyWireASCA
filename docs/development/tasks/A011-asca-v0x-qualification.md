@@ -235,12 +235,11 @@ Do not create an A012 or release as part of closure.
 
 ## Closure publication gate
 
-- [ ] Final report/issue/task/CURRENT/ROADMAP coherent; final main clean/synced.
+- [x] Final report/issue/task/CURRENT/ROADMAP coherent; final main clean/synced.
 
-This unchanged requirement remains mandatory. Engineering acceptance is complete;
-publication closes only after metadata CI, live Issue12 completion and final
-handoff verification. Intermediate DONE describes the Step3 engineering state
-required by the approved plan, not a fabricated GitHub CLOSED response.
+This requirement is complete: closure metadata4053cb4/exactCI38059824196 PASS,
+Issue12 CLOSED/COMPLETED separately fetched, main clean/exactorigin0/0.
+The final handoff metadata receives its own exact CI before final session claim.
 
 ## Preserved evidence
 
@@ -297,7 +296,7 @@ Implementation-plan publication:
 - future profile preview: 7481 bytes / `add06f285bf6decc7d492b987d3769dc64db4cb3d0177c8c6586d50ee5f6d46d`; production profile not created;
 - clean/sync main at publication; no issue/worktree/activation/implementation.
 
-Latest full handoff:
+Historical plan-review handoff:
 [ASCA-20261010-full-session-handoff-a011-plan-review.md](../reports/ASCA-20261010-full-session-handoff-a011-plan-review.md)
 
 ## Execution progress
@@ -322,7 +321,7 @@ test_pre_a011_stays_completed_during_a011_lifecycle failed on ACTIVE assertion;
 | 8 Portable CI | DONE |
 | 9 Fresh qualification | DONE |
 | 10 Review/integration | DONE — independent review, TDD repairs, exact branch/main CI and fresh main pack |
-| 11 Closure/handoff | CLOSING — report/lifecycle ready; exact metadata CI, live issue completion and final handoff pending |
+| 11 Closure/handoff | DONE — report/lifecycle exact CI, live Issue12 completion and final handoff; handoff commit exact CI verified after publication |
 
 Ruling: Skill helper/reference resources were not available via advertised
 paths; an equivalent ignored local Python task driver retains briefs/BASE/
@@ -335,17 +334,17 @@ Task 1: Ruling: full suite exposed two PRE-A011 historical tests still owning mu
 
 ## Current Action
 
-Engineering implementation and reviewed integration are DONE. Task10 passed
-fresh qualification on repaired feature e96d71b and exact integration/main
-f83bf1f. All18 gates/94 frozen checks PASS;86 artifacts validated in each pack.
-Task11 report/lifecycle closure is being published under exact metadata CI.
-Issue12 is still open until its live completion operation passes that gate.
+A011 DONE / ENGINEERING_QUALIFIED. Tasks1-11 complete; Issue12 verified
+CLOSED/COMPLETED at 2026-10-10T14:33:14Z. PRE-A011 remains completed.
+Qualified integration/main f83bf1f and repaired feature e96d71b retain separate
+fresh physical packs; closure metadata4053cb4/exactCI38059824196 PASS.
+Final handoff metadata receives its own exact CI before final session claim.
 
 ## Next Action
 
-Finish Task11: require the exact closure metadata main CI, close actual
-Issue12 as completed and verify live, then publish the full handoff and require
-its exact CI/clean sync. No new milestone or release is authorized.
+Read the final handoff and verify live state. Wait for an explicitly scoped
+user request; no next milestone, optimization, release or version promotion
+is authorized. Do not redo completed Tasks.
 
 ## Historical candidate qualification — 2026-10-10
 
@@ -463,4 +462,6 @@ models, profile/protected hashes, separate five research roles, full pack and
 downloaded CI artifact hashes. Later closure/handoff metadata commits receive
 their own exact CI and do not relabel the qualified integration SHA.
 
-GitHub completion verified: pending exact closure metadata CI / live operation.
+GitHub completion verified: Issue12 CLOSED/COMPLETED at 2026-10-10T14:33:14Z; separate fetch confirmed. Closure metadata `4053cb42bb50a683965d83bee20cbffb25668f02`/exactCI38059824196 PASS.
+
+Latest full handoff: [ASCA-20261010-full-session-handoff-a011-completed.md](../reports/ASCA-20261010-full-session-handoff-a011-completed.md).
