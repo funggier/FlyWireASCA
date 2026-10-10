@@ -123,10 +123,23 @@ Review method: author self-review only; no independent reviewer/subagent mechani
 
 The five Important findings hardened frozen identity, shared-input fingerprint coverage, final-state correctness, A003 preservation in the structural ablation, and primary/diagnostic variant membership validation.
 
+## Main integration evidence
+
+Main integration: GREEN
+
+- reviewed main SHA: `a0833c3b072ab27d331bfab9c3e8b8f509fac366`
+- exact reviewed-main CI: `38017717305` — success
+- merged-main local full suite: `529 passed`
+- integration method: fast-forward only
+- merge commit: none
+- main behavior is identical to the reviewed feature SHA
+
+A010 remains ACTIVE and GitHub Issue #10 remains open until the final evidence/closure-state commits receive exact main CI.
+
 ## Current action
 
-Task 6 — reviewed branch GREEN; main integration pending.
+Task 6 — reviewed main integration GREEN; final evidence commit pending.
 
 ## Next action
 
-Verify integration preconditions, integrate the reviewed branch to main without rewriting history, then require exact final-main CI before repository closure.
+Commit/push final-main evidence, require exact CI, then close Issue #10 and finalize repository closure state.

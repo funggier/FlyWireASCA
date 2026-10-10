@@ -329,7 +329,21 @@ Post-review physical rerun is GREEN with pinned `qwen3-embedding:0.6b` and diges
 
 Observed post-review physical counts remain ASCA / dense queries 1 / 3 and scored-vector counts 3 / 9. The portable primary outcome remains `NOT_SUPPORTED`; physical evidence is secondary and cannot change it.
 
-## 14. Closure candidate state
+## 14. Reviewed main integration evidence
+
+Main integration: GREEN.
+
+- reviewed main SHA: `a0833c3b072ab27d331bfab9c3e8b8f509fac366`
+- exact reviewed-main CI: `38017717305`
+- conclusion: `success`
+- merged-main local full suite: `529 passed`
+- architecture/repository/A003/A008/A009/A010 gates: PASS
+- integration method: fast-forward only
+- merge commit: none
+
+The integrated main tree is the exact reviewed feature SHA; no behavior was changed during integration.
+
+## 15. Closure candidate state
 
 At this report stage:
 
@@ -340,7 +354,7 @@ At this report stage:
 - GitHub Issue #10: OPEN;
 - A010 repository status: ACTIVE;
 - whole-branch review: GREEN;
-- reviewed main integration: pending;
+- reviewed main integration: GREEN;
 - exact final-main CI: pending;
 - A011: PLANNED with no GitHub issue.
 

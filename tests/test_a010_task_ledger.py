@@ -154,3 +154,19 @@ def test_a010_records_whole_branch_review_and_post_review_ci():
     assert "- [x] Whole-branch review GREEN." in task
     assert "Whole-branch review: GREEN" in task
     assert "reviewed main integration: pending" in report.lower()
+
+def test_a010_records_reviewed_main_integration_before_issue_close():
+    task = read(TASKS / "A010-dense-nonselective-baseline-comparison.md")
+    report = read(REPORT)
+    current = read(TASKS / "CURRENT.md")
+    for text in (task, report):
+        assert "a0833c3b072ab27d331bfab9c3e8b8f509fac366" in text
+        assert "38017717305" in text
+        assert "529 passed" in text
+        assert "Main integration: GREEN" in text
+        assert "fast-forward" in text.lower()
+        assert "merge commit" in text.lower()
+    assert "Status: ACTIVE" in task
+    assert "GitHub Issue: #10" in task
+    assert "Current task: A010" in current
+    assert "Status: ACTIVE" in current
