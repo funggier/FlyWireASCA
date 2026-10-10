@@ -91,3 +91,13 @@ def test_ci_runs_a009_deterministic_integrated_loop_qualification():
     assert "ollama run" not in lower
     assert "127.0.0.1:11434" not in lower
     assert "localhost" not in lower
+
+def test_ci_runs_a010_portable_baseline_qualification_only():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    lower = text.lower()
+    assert "python scripts/qualify_baseline_comparison_a010.py" in text
+    assert "qualify_baseline_comparison_a010_physical.py" not in text
+    assert "ollama pull" not in lower
+    assert "ollama run" not in lower
+    assert "127.0.0.1:11434" not in lower
+    assert "localhost" not in lower

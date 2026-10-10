@@ -42,5 +42,8 @@ jobs:
       - name: Qualify A009 integrated cognitive loop
         run: python scripts/qualify_integrated_loop_a009.py
 
+      - name: Qualify A010 dense non-selective baseline
+        run: python scripts/qualify_baseline_comparison_a010.py
+
       - name: Check whitespace
         run: git diff --check HEAD^ HEAD
