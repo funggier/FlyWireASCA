@@ -136,3 +136,21 @@ def test_readme_records_a010_qualified_candidate_without_overclaim():
     assert "a010 proves lower energy" not in lower
     assert "a010 proves superiority over dense llms" not in lower
     assert "flywireasca does **not** currently claim:" in lower
+
+def test_a010_records_whole_branch_review_and_post_review_ci():
+    task = read(TASKS / "A010-dense-nonselective-baseline-comparison.md")
+    report = read(REPORT)
+    for text in (task, report):
+        assert "4db95323a0b5d8476c85f114a702f4371ab76ba9" in text
+        assert "38017518584" in text
+        assert "528 passed" in text
+        assert "Critical findings: 0" in text
+        assert "Important findings: 5" in text
+        assert "Minor findings: 1" in text
+        assert "author self-review" in text.lower()
+        assert "independent reviewer" in text.lower()
+        assert "qwen3-embedding:0.6b" in text
+        assert "NOT_SUPPORTED" in text
+    assert "- [x] Whole-branch review GREEN." in task
+    assert "Whole-branch review: GREEN" in task
+    assert "reviewed main integration: pending" in report.lower()

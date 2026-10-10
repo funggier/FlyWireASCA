@@ -52,7 +52,7 @@ FlyWireLLM remains untouched.
 - [x] Deterministic fixture/classifier frozen.
 - [x] Portable and physical qualification completed.
 - [x] Exact feature-branch CI GREEN.
-- [ ] Whole-branch review GREEN.
+- [x] Whole-branch review GREEN.
 - [ ] Reviewed main integration and exact final-main CI GREEN.
 - [ ] Issue closed after final-main evidence.
 
@@ -103,10 +103,30 @@ Physical secondary evidence is GREEN with pinned `qwen3-embedding:0.6b`;
 ASCA / dense physical query counts are 1 / 3 and scored-vector counts are 3 / 9.
 Physical evidence cannot change the frozen portable primary outcome.
 
+## Whole-branch review evidence
+
+Whole-branch review: GREEN
+
+Review method: author self-review only; no independent reviewer/subagent mechanism was available in this harness.
+
+- Critical findings: 0
+- Important findings: 5 — fixed
+- Minor findings: 1 — deferred documentation-formatting issue only
+- post-review hardening SHA: `4db95323a0b5d8476c85f114a702f4371ab76ba9`
+- exact post-review branch CI: `38017518584` — success
+- local post-review full suite: `528 passed`
+- post-review physical rerun: GREEN
+- physical model: `qwen3-embedding:0.6b`
+- physical ASCA / dense query counts: 1 / 3
+- physical ASCA / dense scored-vector counts: 3 / 9
+- portable primary outcome remains `NOT_SUPPORTED`
+
+The five Important findings hardened frozen identity, shared-input fingerprint coverage, final-state correctness, A003 preservation in the structural ablation, and primary/diagnostic variant membership validation.
+
 ## Current action
 
-Task 6 — closure candidate and whole-branch review.
+Task 6 — reviewed branch GREEN; main integration pending.
 
 ## Next action
 
-Run whole-branch review, resolve every Critical/Important finding with RED→GREEN evidence, then integrate reviewed behavior to main.
+Verify integration preconditions, integrate the reviewed branch to main without rewriting history, then require exact final-main CI before repository closure.

@@ -293,7 +293,43 @@ FlyWireLLM was untouched.
 A010 does not import FlyWireLLM code, read or modify its checkpoints, restart
 training, or use it as an embedding/generative model.
 
-## 13. Closure candidate state
+## 13. Whole-branch review evidence
+
+Whole-branch review status: GREEN.
+
+The available harness had no independent reviewer/subagent mechanism, so this was an author self-review rather than an independent reviewer pass. That limitation is recorded explicitly.
+
+Review findings:
+
+- Critical findings: 0
+- Important findings: 5
+- Minor findings: 1
+
+All five Important findings were fixed before integration. The fixes cover:
+
+1. hard pinning portable frozen fingerprint, ordered case IDs, and frozen outcome;
+2. expanding shared-input fingerprint coverage to procedure/action/A007/query-text execution contracts;
+3. validating final-state correctness independently from procedure success;
+4. preserving A003 familiarity assessment in the no-structural-expansion ablation;
+5. pinning `expected_primary_case` and the exact declared variant set/order per frozen case.
+
+The one Minor finding is deferred: the physical evidence table contains two bullet rows inside the Markdown table. This is documentation formatting only and has no runtime/evidence effect.
+
+Post-review hardening evidence:
+
+- SHA: `4db95323a0b5d8476c85f114a702f4371ab76ba9`
+- exact branch CI: `38017518584`
+- CI conclusion: `success`
+- local full suite: `528 passed`
+- architecture contract audit: PASS
+- repository qualification: PASS
+- A003/A008/A009/A010 portable qualification gates: PASS
+
+Post-review physical rerun is GREEN with pinned `qwen3-embedding:0.6b` and digest `ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d`.
+
+Observed post-review physical counts remain ASCA / dense queries 1 / 3 and scored-vector counts 3 / 9. The portable primary outcome remains `NOT_SUPPORTED`; physical evidence is secondary and cannot change it.
+
+## 14. Closure candidate state
 
 At this report stage:
 
@@ -303,7 +339,7 @@ At this report stage:
 - primary outcome: `NOT_SUPPORTED`;
 - GitHub Issue #10: OPEN;
 - A010 repository status: ACTIVE;
-- whole-branch review: pending;
+- whole-branch review: GREEN;
 - reviewed main integration: pending;
 - exact final-main CI: pending;
 - A011: PLANNED with no GitHub issue.
