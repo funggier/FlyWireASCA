@@ -18,12 +18,14 @@ def git(root, *args, check=True):
 
 
 @pytest.fixture
-def source_repo(tmp_path, request):
+def source_repo(tmp_path, request, prepare_frozen_a011_candidate):
     root = tmp_path / "shallow"
     autocrlf = "true" if request.node.name == "test_crlf_checkout_keeps_protected_git_identity" else "false"
     result = subprocess.run(["git", "-c", f"core.autocrlf={autocrlf}", "clone", "--depth=1",
         "--no-tags", ROOT.as_uri(), str(root)], capture_output=True)
     assert result.returncode == 0, result.stderr
+    prepare_frozen_a011_candidate(root)
+    assert not (root / "src/flywire_asca/relational_reasoning").exists()
     raw = (ROOT / PROFILE_REL).read_bytes()
     dest = root / PROFILE_REL
     dest.parent.mkdir(parents=True, exist_ok=True)

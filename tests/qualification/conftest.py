@@ -93,6 +93,65 @@ from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[2]
 
+POST_A011_COGNITIVE_PATHS = (
+    "src/flywire_asca/relational_reasoning",
+)
+
+
+def _prepare_frozen_a011_candidate(root: Path) -> str:
+    """Turn a post-A011 clone into the exact frozen A011 cognitive source universe.
+
+    A011 intentionally rejects any additional non-qualification cognitive Python
+    package. Later milestones therefore must not be treated as A011 candidates.
+    Historical A011 tests use this synthetic commit inside their temporary clone
+    instead of weakening the production provenance guard.
+    """
+    subprocess.run(
+        ["git", "config", "user.email", "a011-tests@example.invalid"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "A011 frozen fixture"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    for relative in POST_A011_COGNITIVE_PATHS:
+        subprocess.run(
+            ["git", "rm", "-r", "--ignore-unmatch", "--", relative],
+            cwd=root,
+            check=True,
+            capture_output=True,
+        )
+    staged = subprocess.run(
+        ["git", "diff", "--cached", "--quiet"],
+        cwd=root,
+        check=False,
+        capture_output=True,
+    )
+    if staged.returncode not in (0, 1):
+        raise RuntimeError("cannot inspect frozen A011 fixture staging state")
+    if staged.returncode == 1:
+        subprocess.run(
+            ["git", "commit", "-m", "Test fixture: frozen A011 cognitive source"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+        )
+    return subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    ).stdout.decode("ascii").strip()
+
+
+@pytest.fixture(name="prepare_frozen_a011_candidate")
+def prepare_frozen_a011_candidate_fixture():
+    return _prepare_frozen_a011_candidate
+
 
 def legacy_module(filename):
     name = "_a011_test_" + filename.replace(".", "_")
@@ -332,7 +391,8 @@ def qualification_context(tmp_path):
     result = subprocess.run(["git","-c","core.autocrlf=false","clone","--depth=1",
         "--no-tags",ROOT.as_uri(),str(root)],capture_output=True)
     assert result.returncode == 0, result.stderr
-    commit = subprocess.run(["git","rev-parse","HEAD"],cwd=root,check=True,capture_output=True).stdout.decode().strip()
+    commit = _prepare_frozen_a011_candidate(root)
+    assert not (root/"src"/"flywire_asca"/"relational_reasoning").exists()
     runner = SystemFakeRunner()
     bridge = legacy_module("_a011_legacy_evidence.py")
     context = RunContext(root,commit,root/DEFAULT_PROFILE_PATH,
