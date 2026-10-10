@@ -1,8 +1,8 @@
 # Current Development Task
 
 Current task: A010
-Status: PLANNED
-GitHub Issue: not created
+Status: ACTIVE
+GitHub Issue: #10
 
 A008 deterministic qualification: GREEN
 A008 main integration: GREEN
@@ -22,13 +22,13 @@ review, and final-main gates are GREEN.
 
 A009 GitHub Issue #9: CLOSED (completed).
 
-A010 - Dense/Non-selective Baseline Comparison remains PLANNED. No A010 GitHub
-issue has been created.
+A010 - Dense/Non-selective Baseline Comparison is ACTIVE under GitHub Issue #10.
+A011 - ASCA v0.x Qualification remains PLANNED with no GitHub issue.
 
 ## Next Action
 
-A010 may be activated later under a separate design/plan/task gate. No A009
-implementation work remains.
+Execute A010 from the approved design and implementation plan. A009 remains
+closed and no A009 implementation work remains.
 
 ## Resume Rule
 

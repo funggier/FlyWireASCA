@@ -70,10 +70,12 @@ Historical outcomes remain unchanged:
 Local physical integration is also GREEN with pinned
 `qwen3-embedding:0.6b` retrieval and terminal-only `qwen3.5:4b` fallback.
 
-A010 - Dense/Non-selective Baseline Comparison remains **PLANNED**. No A010
-GitHub issue has been created. A009 Issue #9 remains open until whole-branch
-review, reviewed main integration, exact final-main CI, and final
-synchronization are GREEN.
+A009 is fully integrated and GitHub Issue #9 is closed as completed.
+
+A010 - Dense/Non-selective Baseline Comparison is now **ACTIVE** under GitHub
+Issue #10. It compares the real A009 selective path against a deliberately
+non-selective A005+A006 exhaustive baseline while preserving the historical
+A009 `SUPPORTED` result.
 
 These results are control/retrieval/procedure evidence. They are not claims of
 lower FLOPs, lower energy, lower token use, general speed superiority, or safe

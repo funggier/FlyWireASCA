@@ -16,8 +16,8 @@ def _read(name: str) -> str:
 def test_current_points_to_exactly_one_planned_task_a010():
     text = _read("CURRENT.md")
     assert "Current task: A010" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
+    assert "Status: ACTIVE" in text
+    assert "GitHub Issue: #10" in text
     assert text.count("Current task:") == 1
 
 

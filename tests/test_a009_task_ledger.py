@@ -16,8 +16,8 @@ def read(path: Path) -> str:
 def test_current_points_to_planned_a010_without_issue_after_a009_closure():
     text = read(TASKS / "CURRENT.md")
     assert "Current task: A010" in text
-    assert "Status: PLANNED" in text
-    assert "GitHub Issue: not created" in text
+    assert "Status: ACTIVE" in text
+    assert "GitHub Issue: #10" in text
     assert "A009 deterministic qualification: GREEN" in text
     assert "A009 physical qualification: GREEN" in text
 
@@ -26,7 +26,7 @@ def test_roadmap_marks_a009_done_a010_a011_planned():
     text = read(TASKS / "ROADMAP.md")
     assert "| A008 | Procedural Memory / Skill Chunking | DONE |" in text
     assert "| A009 | Integrated Cognitive Loop | DONE |" in text
-    assert "| A010 | Dense/Non-selective Baseline Comparison | PLANNED |" in text
+    assert "| A010 | Dense/Non-selective Baseline Comparison | ACTIVE |" in text
     assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
 
 
@@ -105,7 +105,7 @@ def test_readme_current_stage_records_a009_supported_and_a010_planned():
     assert "SUPPORTED" in text
     assert "A010" in text
     assert "Dense/Non-selective Baseline Comparison" in text
-    assert "PLANNED" in text
+    assert "ACTIVE" in text
     assert "SINGLE_BEST" in text
     assert "CHUNKED" in text
 
@@ -159,7 +159,7 @@ def test_a009_task_and_current_mark_final_main_gate_green_pending_issue_close():
     assert "A009 main integration: GREEN" in current
     assert "A009 exact final-main CI: GREEN" in current
     assert "Current task: A010" in current
-    assert "GitHub Issue: not created" in current
+    assert "GitHub Issue: #10" in current
 
 def test_a009_repository_closure_state_is_final_not_pending():
     task = read(TASKS / "A009-integrated-cognitive-loop.md")
