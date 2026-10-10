@@ -46,12 +46,12 @@ FlyWireLLM remains untouched.
 - [x] Design spec approved.
 - [x] Implementation plan approved.
 - [x] Task activated and GitHub Issue #10 created.
-- [ ] A010 comparison contracts implemented.
-- [ ] Dense exhaustive runner implemented.
-- [ ] ASCA normalization and ablations implemented.
-- [ ] Deterministic fixture/classifier frozen.
-- [ ] Portable and physical qualification completed.
-- [ ] Exact feature-branch CI GREEN.
+- [x] A010 comparison contracts implemented.
+- [x] Dense exhaustive runner implemented.
+- [x] ASCA normalization and ablations implemented.
+- [x] Deterministic fixture/classifier frozen.
+- [x] Portable and physical qualification completed.
+- [x] Exact feature-branch CI GREEN.
 - [ ] Whole-branch review GREEN.
 - [ ] Reviewed main integration and exact final-main CI GREEN.
 - [ ] Issue closed after final-main evidence.
@@ -70,10 +70,43 @@ FlyWireLLM remains untouched.
 - A006/A007/A008/A009 historical outcomes remain unchanged.
 - FlyWireLLM remains untouched.
 
+## Qualification evidence
+
+Portable qualification: GREEN
+Physical qualification: GREEN
+Exact feature-branch CI: GREEN
+Primary outcome: `NOT_SUPPORTED`
+
+Frozen fixture fingerprint:
+`a1792f471409db74e436f63765d6c0330a6544575edfd45585b9eef30767dd68`
+
+Qualified implementation candidate:
+`234bc090dc068447c1830fa79337745b7796f25f`
+
+Exact candidate CI:
+`38014300995` — success
+
+Local full suite at candidate: `515 passed`
+
+Key frozen metrics:
+- ASCA / dense procedure success: 7 / 8
+- dense-only / ASCA-only success: 1 / 0
+- ASCA / dense query count: 28 / 27
+- ASCA / dense scored-vector count: 1984 / 1440
+- ASCA / dense cumulative selected count: 66 / 480
+- ASCA / dense procedure attempts: 14 / 9
+- identity failures: 0
+- duplicate execution-ID failures: 0
+- post-completion extra-attempt failures: 0
+
+Physical secondary evidence is GREEN with pinned `qwen3-embedding:0.6b`;
+ASCA / dense physical query counts are 1 / 3 and scored-vector counts are 3 / 9.
+Physical evidence cannot change the frozen portable primary outcome.
+
 ## Current action
 
-Task 1 — comparison contracts and activation ledger.
+Task 6 — closure candidate and whole-branch review.
 
 ## Next action
 
-Implement the dense exhaustive runner after Task 1 RED→GREEN verification.
+Run whole-branch review, resolve every Critical/Important finding with RED→GREEN evidence, then integrate reviewed behavior to main.

@@ -23,12 +23,18 @@ review, and final-main gates are GREEN.
 A009 GitHub Issue #9: CLOSED (completed).
 
 A010 - Dense/Non-selective Baseline Comparison is ACTIVE under GitHub Issue #10.
+Portable qualification: GREEN.
+Physical qualification: GREEN.
+Exact feature-branch CI: GREEN (`38014300995`).
+Primary A010 outcome: `NOT_SUPPORTED`.
+Whole-branch review and reviewed main integration remain pending.
+
 A011 - ASCA v0.x Qualification remains PLANNED with no GitHub issue.
 
 ## Next Action
 
-Execute A010 from the approved design and implementation plan. A009 remains
-closed and no A009 implementation work remains.
+Complete A010 whole-branch review, resolve Critical/Important findings, then
+integrate reviewed behavior to main and require exact final-main CI.
 
 ## Resume Rule
 
