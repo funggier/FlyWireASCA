@@ -120,7 +120,7 @@ def _prepare_frozen_a011_candidate(root: Path) -> str:
     )
     for relative in POST_A011_COGNITIVE_PATHS:
         subprocess.run(
-            ["git", "rm", "-r", "--ignore-unmatch", "--", relative],
+            ["git", "rm", "-r", "-f", "--ignore-unmatch", "--", relative],
             cwd=root,
             check=True,
             capture_output=True,
