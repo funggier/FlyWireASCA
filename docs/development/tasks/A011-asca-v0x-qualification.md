@@ -1,9 +1,9 @@
 # A011 — ASCA v0.x Qualification
 
-Status: PLANNED
-GitHub Issue: not created
-Branch: not created
-Activation base: not assigned
+Status: ACTIVE
+GitHub Issue: #12
+Branch: qualification/a011-asca-v0x
+Activation base: e8f75a862e0cb0d28b7e4efe25a77fa088ad646f
 
 ## Goal
 
@@ -53,7 +53,7 @@ evidence, review, integration, and closure in 11 execution Tasks. This file
 remains the canonical Q01-Q11 inventory; the written plan refines dependency
 order by implementing artifact publication before the runners that consume it.
 The plan is written, author self-reviewed, committed/pushed, and exact-CI GREEN.
-User plan approval and execution-method selection remain pending.
+User approved the plan and Native execution with “ทำ Native ได้เลยครับ ถ้าจำเป็นก็ Subagent-driven ได้” on 2026-10-10 16:52:26 +07:00.
 
 ## Approval gates
 
@@ -64,12 +64,12 @@ User plan approval and execution-method selection remain pending.
 | G02 | Written spec, inline self-review, commit/push, exact spec-commit CI | PASS — spec published at `6eb5fb1399bc21a05599b92d9aa8b312df70c9e1`; exact CI `38039670308` success |
 | G03 | User explicitly reviews/approves the written spec | PASS — user “โอเคครับ ทำต่อได้เลย”, 2026-10-10 16:11:41 +07:00 |
 | G04 | Invoke writing-plans, create/self-review/publish implementation plan, exact CI | PASS — plan published at `9d17350a6e4f4305b797e7d2766bb619416a510b`; exact CI `38042470411` success |
-| G05 | User reviews/approves plan and selects execution method | WAITING USER REVIEW / METHOD NOT SELECTED |
-| G06 | Create A011 issue, isolated worktree, and coherent ACTIVE task/ledger | NOT STARTED — requires G05 |
+| G05 | User reviews/approves plan and selects execution method | PASS — explicit user approval 2026-10-10 16:52:26 +07:00; Native |
+| G06 | Create A011 issue, isolated worktree, and coherent ACTIVE task/ledger | PASS — Issue #12; isolated qualification/a011-asca-v0x; ACTIVE ledger |
 
 A reply approves the stage actually presented. G01 does not approve a
 previously nonexistent written spec or plan. Do not collapse G03 and G05.
-All future implementation work items remain PLANNED until G06.
+G06 is complete. Execution status is recorded below; historical approval and publication observations remain preserved.
 
 ## Advance work-item inventory
 
@@ -222,8 +222,8 @@ Do not create an A012 or release as part of closure.
 ## Acceptance Criteria
 
 - [x] Written spec explicitly approved.
-- [ ] Implementation plan reviewed/approved and execution method selected.
-- [ ] A011 issue/worktree/activation follow G06.
+- [x] Implementation plan reviewed/approved and execution method selected.
+- [x] A011 issue/worktree/activation follow G06.
 - [ ] Portable pack passes from a clean checkout without Ollama.
 - [ ] Fresh local physical qualification reproduces pinned identities.
 - [ ] Frozen fingerprints, threshold, A010 counts/sentinel, and outcomes preserved.
@@ -292,16 +292,45 @@ Implementation-plan publication:
 Latest full handoff:
 [ASCA-20261010-full-session-handoff-a011-plan-review.md](../reports/ASCA-20261010-full-session-handoff-a011-plan-review.md)
 
+## Execution progress
+
+Method: Native. Necessary subagent use authorized; final independent review required.
+Activation base: `e8f75a862e0cb0d28b7e4efe25a77fa088ad646f` / exact CI38042756382 success.
+Issue #12 created open, isolated worktree created from exact base.
+Baseline suite:563 passed in6.29s.
+Task 1 RED: test_current_points_to_active_a011_with_actual_issue and
+test_pre_a011_stays_completed_during_a011_lifecycle failed on ACTIVE assertion;
+2 failed,14 passed. No historical closure assertions weakened.
+
+| Execution Task | State |
+| --- | --- |
+| 1 Activation | DONE — mutable ledger RED/GREEN verified |
+| 2 Records/schema/classifier | NEXT |
+| 3 Frozen profile/provenance | PLANNED |
+| 4 Process/evidence adapters | PLANNED |
+| 5 Artifacts/publication | PLANNED |
+| 6 Portable pack | PLANNED |
+| 7 Physical pack | PLANNED |
+| 8 Portable CI | PLANNED |
+| 9 Fresh qualification | PLANNED |
+| 10 Review/integration | PLANNED |
+| 11 Closure/handoff | PLANNED |
+
+Ruling: Skill helper/reference resources were not available via advertised
+paths; an equivalent ignored local Python task driver retains briefs/BASE/
+test logs/progress. Main skill requirements still apply. Cost if wrong:
+bookkeeping gaps, checked against Git and raw logs.
+Ruling: Preserve execution workspace/worktree through closure; no automatic
+cleanup of evidence. Cost: local disk use.
+
+Task 1: Ruling: full suite exposed two PRE-A011 historical tests still owning mutable CURRENT/ROADMAP, a file omitted from plan Task1 — move their live-state ownership to canonical test_task_ledger while preserving all PRE closure assertions/documents/Issue#11 — cost if wrong: historical resume assertion weakened; mitigated by keeping the exact checked historical resume line and current-state canonical coverage.
+
 ## Current Action
 
-A011 remains PLANNED. The written spec is explicitly approved and the detailed
-implementation plan is published with exact CI GREEN. Wait for explicit user
-plan review/approval and execution-method choice.
+A011 ACTIVE. Task1 activation and historical lifecycle ownership repaired under
+RED/GREEN; full suite/audits verified. Execute Task2 under TDD.
 
 ## Next Action
 
-Stop for explicit user review/approval of the implementation plan and selection
-of Native or Subagent-driven execution. Native is recommended by the plan
-because the record, evidence, artifact, and runner interfaces are tightly shared.
-Only after both choices may G06/Task 1 create the actual issue and isolated
-worktree, change A011 to ACTIVE, and begin TDD implementation.
+Continue approved plan Tasks2-11 without repeating approval gates.
+Preserve pinned research results/source and full physical/exact-CI evidence.
