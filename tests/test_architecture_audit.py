@@ -185,3 +185,41 @@ def test_audit_allows_qualification_to_contracts(tmp_path: Path):
     injected.parent.mkdir(exist_ok=True)
     injected.write_text("from flywire_asca.contracts import CONTRACT_VERSION\n", encoding="utf-8")
     assert audit(root) == []
+
+
+def test_audit_allows_declared_a013_relational_activation_dependencies(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    errors = audit(root)
+    assert not any("relational_activation" in error for error in errors)
+
+
+def test_audit_rejects_relational_activation_dependency_on_integrated_loop(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "relational_activation" / "bad.py"
+    injected.write_text(
+        "from flywire_asca.integrated_loop import run_cognitive_loop\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any(
+        "undeclared package dependency relational_activation -> integrated_loop" in error
+        for error in errors
+    )
+
+
+def test_audit_rejects_relational_reasoning_reverse_dependency_on_activation(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "relational_reasoning" / "bad_activation.py"
+    injected.write_text(
+        "from flywire_asca.relational_activation import HybridRecallRequest\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any(
+        "undeclared package dependency relational_reasoning -> relational_activation" in error
+        for error in errors
+    )
+    assert any("package dependency cycle" in error for error in errors)

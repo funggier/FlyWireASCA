@@ -1,6 +1,6 @@
 # FlyWireASCA Qualification Matrix
 
-Date: 2026-10-10
+Date: 2026-10-11
 Purpose: canonical map of portable CI gates, local physical gates, frozen
 outcome roles, and A011 qualification claims boundaries.
 
@@ -27,6 +27,7 @@ outcome roles, and A011 qualification claims boundaries.
 | A009 | integrated-loop qualifier | integrated physical qualifier | `SUPPORTED` |
 | A010 | baseline-comparison qualifier | A010 physical qualifier | `NOT_SUPPORTED` |
 | A012 | relational-reasoning structure qualifier | A012 embedding replay (secondary) | `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED` |
+| A013 | target-free relational-activation qualifier | none required | `SIGNAL_GATED_RELATION_JUSTIFIED` |
 
 ## 3. Portable GitHub CI commands
 
@@ -43,10 +44,12 @@ python scripts/qualify_integrated_loop_a009.py
 python scripts/qualify_baseline_comparison_a010.py
 python scripts/verify_a011_frozen_profile_preservation.py
 python scripts/qualify_relational_reasoning_a012.py --output "$RUNNER_TEMP/a012-relational-${{ github.run_id }}-${{ github.run_attempt }}.json"
+python scripts/qualify_relational_activation_a013.py --output "$RUNNER_TEMP/a013-relational-activation-${{ github.run_id }}-${{ github.run_attempt }}.json"
 ```
 
 A004-A007, A009/A010, and A012 physical scripts are intentionally absent from
-GitHub CI. Post-A011 CI does not rerun the A011 portable qualifier against the
+GitHub CI. A013 defines no mandatory physical replay because its primary variable
+is deterministic activation policy after a vector seed, not embedding quality. Post-A011 CI does not rerun the A011 portable qualifier against the
 new HEAD: A012 adds a cognitive package outside the frozen v0.x source universe.
 Instead it verifies the literal A011 profile and all 67 protected Git blobs are
 unchanged. This is preservation evidence, not a claim that the A012 HEAD is
@@ -185,3 +188,36 @@ This does not replace A005 Vector + Metadata, justify a persistent graph
 database, or establish general graph superiority. Physical A012 embedding replay
 is secondary and cannot rewrite the frozen portable decision. A011 remains
 historical qualification of exact integration `f83bf1febbb6ac0bdcba3d8bf05dc8d437edc5ac`.
+
+
+## 11. A013 selective relational-activation decision topology
+
+A013 is a post-A011 research layer built above the A005 vector-retrieval and
+A012 relation semantics without modifying the A011-protected cognitive source
+blobs. It removes the A012 benchmark-only expected-target oracle from runtime
+control by introducing target-free bounded neighborhood expansion.
+
+The frozen portable mixed workload contains 17 cases: 16 valid and 1 invalid
+contract control. Among valid cases, 6 are relation-dependent positives, 4 are
+structural fail-closed controls, and 6 are direct-vector/non-structural
+controls. All three policies share the same vector retrieval input:
+
+- `VECTOR_ONLY`
+- `ALWAYS_RELATION`
+- `SIGNAL_GATED_RELATION`
+
+Portable frozen result: `SIGNAL_GATED_RELATION_JUSTIFIED` for the declared
+A013 workload. Vector-only succeeds on 10/16 valid cases; always-relation and
+signal-gated both succeed on 16/16. Both relation policies recover all 6
+relation-dependent misses with zero regressions. Signal-gated activation
+reduces relation invocations from 16 to 10, scanned edges from 16 to 11, and
+relation visited nodes from 29 to 18 while preserving all 6 direct-vector
+controls. False/missed structural activation, identity failures, provenance
+failures, budget violations, and duplicate-visit failures are all zero.
+Fixture SHA256 is
+`fcd805a5229bfad43f8eed6999be37ae61168dda1a8560f04370b3df0262baa5`.
+
+This result assumes an explicit typed `StructuralNeed` contract. A013 does not
+claim that a model can infer structural need from unconstrained natural
+language, does not justify a persistent graph database, and does not establish
+general latency, FLOP, energy, RAM, or production-safety superiority.

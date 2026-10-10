@@ -1,45 +1,40 @@
 # Current Development Task
 
-Current task: A012
-Status: DONE
-GitHub Issue: #14
+Current task: A013
+Status: ACTIVE
+GitHub Issue: #16
 
 ## Current Action
 
-A012 implementation and integration are complete. The frozen portable decision
-is `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED` for the declared relation-dependent
-workload.
+A013 implementation and clean local qualification are complete on the isolated
+feature worktree. The frozen portable result is
+`SIGNAL_GATED_RELATION_JUSTIFIED` with 10/16/16 successes for
+vector-only/always-relation/signal-gated, 10/16 signal/always relation
+invocations, and 11/16 signal/always scanned edges. All declared safety,
+identity, provenance, budget, duplicate-visit, false-activation, missed-
+activation, and regression counts are zero.
 
-Final feature head:
-`0728ddab442b774dcedb60a3fb7870444a95ffcb`.
+The runtime relation path is target-free: expected answer IDs remain benchmark
+evaluator metadata only. The primary signal is an explicit typed
+`StructuralNeed`; natural-language/LLM structural-intent inference remains out
+of scope.
 
-Feature push CI `38067495867`: GREEN.
-PR #15 CI `38067628031`: GREEN.
-Normal merge integration:
-`48dfc64bca60d62528787b57d04a01df04fac30d`.
-Integration main CI `38067737917`: GREEN.
-
-A005 remains `VECTOR_SUFFICIENT` for its qualified retrieval workload.
-Research outcomes remain A006 NOT_SUPPORTED, A007 SUPPORTED, A008 SUPPORTED,
-A009 SUPPORTED, A010 NOT_SUPPORTED. A011 remains historical frozen v0.x
-ENGINEERING_QUALIFIED; post-A011 CI checks preservation rather than
-requalifying the new cognitive source universe.
-
-The repository closure metadata commit containing the final A012 report and
-handoff must receive exact main CI before Issue #14 is closed.
+Clean local qualification: 1033 tests passed; architecture audit, repository,
+A003/A008/A009/A010, A011 frozen preservation, A012 portable, A013 portable,
+compile, and whitespace gates all passed. A005/A011/A012 historical boundaries
+remain unchanged and FlyWireLLM is untouched.
 
 ## Next Action
 
-Verify exact CI for the closure metadata commit, close Issue #14 as completed,
-then leave the repository with no ACTIVE milestone.
-
-Do not activate A013 automatically. A future milestone requires an explicitly
-scoped user request.
+Commit and push the implementation candidate, require exact feature-branch CI
+GREEN with the A013 evidence artifact, then proceed through PR exact CI, normal
+merge, integration/main CI, and closure evidence.
 
 ## Resume Rule
 
-Read the A012 final report and full-session handoff first, then verify live
-Git/GitHub/runtime. Live state overrides stale prose.
+Read the A013 design, implementation plan, and task first. Then verify live
+Git/GitHub/runtime state; live state overrides stale prose.
 
-Do not reset/clean/rebase/force-push or destroy preserved evidence. Keep
-FlyWireLLM untouched. No release/tag/version promotion is authorized.
+Do not reset/clean/rebase/force-push or modify A011-protected cognitive source
+blobs. Keep FlyWireLLM untouched. No release/tag/version promotion is
+authorized.

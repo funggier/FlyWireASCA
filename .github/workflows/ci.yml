@@ -60,5 +60,16 @@ jobs:
           path: ${{ runner.temp }}/a012-relational-${{ github.run_id }}-${{ github.run_attempt }}.json
           if-no-files-found: error
 
+      - name: Qualify A013 selective relational activation
+        run: python scripts/qualify_relational_activation_a013.py --output "$RUNNER_TEMP/a013-relational-activation-${{ github.run_id }}-${{ github.run_attempt }}.json"
+
+      - name: Upload A013 portable qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a013-relational-activation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/a013-relational-activation-${{ github.run_id }}-${{ github.run_attempt }}.json
+          if-no-files-found: error
+
       - name: Check whitespace
         run: git diff --check HEAD^ HEAD

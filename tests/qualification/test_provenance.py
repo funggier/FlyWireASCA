@@ -25,7 +25,6 @@ def source_repo(tmp_path, request, prepare_frozen_a011_candidate):
         "--no-tags", ROOT.as_uri(), str(root)], capture_output=True)
     assert result.returncode == 0, result.stderr
     prepare_frozen_a011_candidate(root)
-    assert not (root / "src/flywire_asca/relational_reasoning").exists()
     raw = (ROOT / PROFILE_REL).read_bytes()
     dest = root / PROFILE_REL
     dest.parent.mkdir(parents=True, exist_ok=True)

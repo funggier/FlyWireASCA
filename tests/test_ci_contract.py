@@ -156,3 +156,24 @@ def test_qualification_matrix_and_ci_command_topology_match():
     assert "A012" in matrix
     assert "EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED" in matrix
     assert "A valid `NOT_SUPPORTED` result" in matrix
+
+
+def test_ci_runs_a013_portable_qualification_and_uploads_evidence():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    lower = text.lower()
+    assert "python scripts/qualify_relational_activation_a013.py" in text
+    assert "Upload A013 portable qualification evidence" in text
+    assert "a013-relational-activation-${{ github.run_id }}-${{ github.run_attempt }}" in text
+    assert "actions/upload-artifact@v4" in text
+    assert "if-no-files-found: error" in text
+    assert "ollama pull" not in lower
+    assert "ollama run" not in lower
+    assert "127.0.0.1:11434" not in lower
+    assert "localhost" not in lower
+
+
+def test_qualification_matrix_records_a013_target_free_decision():
+    matrix = MATRIX.read_text(encoding="utf-8")
+    assert "A013" in matrix
+    assert "SIGNAL_GATED_RELATION_JUSTIFIED" in matrix
+    assert "target-free" in matrix.lower()
