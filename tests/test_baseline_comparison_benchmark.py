@@ -193,3 +193,68 @@ def test_qualification_rejects_fingerprint_and_aggregate_drift():
         replace(report, asca_query_count=report.asca_query_count + 1)
     )
     assert any("asca_query_count" in item for item in errors)
+
+def test_shared_input_fingerprint_covers_execution_contract(monkeypatch):
+    import flywire_asca.baseline_comparison.benchmark as benchmark
+
+    case = benchmark.build_a010_deterministic_fixture()[0]
+    baseline = benchmark.shared_input_fingerprint(case)
+
+    original = benchmark._action_definitions
+    def changed_actions():
+        actions = original()
+        first = actions[0]
+        return (replace(first, writes=(("done", "different"),)), *actions[1:])
+
+    monkeypatch.setattr(benchmark, "_action_definitions", changed_actions)
+    assert benchmark.shared_input_fingerprint(case) != baseline
+
+
+def test_benchmark_final_state_correctness_is_independent_of_procedure_success():
+    import flywire_asca.baseline_comparison.benchmark as benchmark
+
+    case = benchmark.build_a010_deterministic_fixture()[0]
+    changed = replace(
+        case,
+        expected_final_state_items=(("done", "unexpected"),),
+    )
+    report = benchmark.run_a010_benchmark((changed,))
+    result = report.case_results[0]
+    by_variant = {run.variant: run for run in result.runs}
+
+    assert by_variant[ComparisonVariant.ASCA_PRIMARY].procedure_success is True
+    assert by_variant[ComparisonVariant.DENSE_EXHAUSTIVE].procedure_success is True
+    assert by_variant[ComparisonVariant.ASCA_PRIMARY].final_state_correct is False
+    assert by_variant[ComparisonVariant.DENSE_EXHAUSTIVE].final_state_correct is False
+
+
+def test_report_qualification_rejects_primary_membership_and_variant_set_drift():
+    report = run_a010_benchmark(build_a010_deterministic_fixture())
+
+    first = report.case_results[0]
+    changed_membership = replace(first, expected_primary_case=False)
+    errors = qualify_a010_report(
+        replace(report, case_results=(changed_membership, *report.case_results[1:]))
+    )
+    assert any("expected_primary_case" in item for item in errors)
+
+    structural_index = next(
+        index
+        for index, item in enumerate(report.case_results)
+        if item.case_id == "structural-expansion-ablation"
+    )
+    structural = report.case_results[structural_index]
+    changed_variants = replace(
+        structural,
+        runs=tuple(
+            run
+            for run in structural.runs
+            if run.variant is not ComparisonVariant.ASCA_NO_STRUCTURAL_EXPANSION
+        ),
+    )
+    changed_results = list(report.case_results)
+    changed_results[structural_index] = changed_variants
+    errors = qualify_a010_report(
+        replace(report, case_results=tuple(changed_results))
+    )
+    assert any("variant" in item.lower() for item in errors)

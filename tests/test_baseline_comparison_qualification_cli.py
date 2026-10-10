@@ -20,7 +20,7 @@ def test_cli_frozen_identity_and_actual_negative_outcome():
     m = load()
     assert m.QUALIFICATION_SCOPE == "deterministic_dense_nonselective_baseline_a010"
     assert m.FIXTURE_VERSION == "a010-deterministic-v1"
-    assert m.EXPECTED_FIXTURE_FINGERPRINT == "a1792f471409db74e436f63765d6c0330a6544575edfd45585b9eef30767dd68"
+    assert m.EXPECTED_FIXTURE_FINGERPRINT == "69d20542cd1e7e5c25a0fb61b9060f622379206b519da3cec7624e00bb6e5d4c"
     assert m.VARIANTS == [
         "ASCA_PRIMARY",
         "DENSE_EXHAUSTIVE",
@@ -104,3 +104,30 @@ def test_invalid_payload_exits_nonzero(monkeypatch, capsys):
     emitted = json.loads(capsys.readouterr().out)
     assert emitted["experiment_valid"] is False
     assert emitted["errors"]
+
+def test_cli_fails_closed_if_runtime_fixture_or_classifier_drifts(monkeypatch):
+    m = load()
+
+    monkeypatch.setattr(m, "a010_fixture_fingerprint", lambda cases: "1" * 64)
+    payload = m.run_qualification()
+    errors = m.validate_qualification_payload(payload)
+    assert any("frozen fixture" in item.lower() or "fixture_fingerprint" in item for item in errors)
+
+    m = load()
+    monkeypatch.setattr(m, "classify_a010_hypothesis", lambda report: "SUPPORTED")
+    payload = m.run_qualification()
+    errors = m.validate_qualification_payload(payload)
+    assert any("frozen outcome" in item.lower() or "outcome" in item.lower() for item in errors)
+
+
+def test_cli_fails_closed_if_runtime_case_order_drifts(monkeypatch):
+    m = load()
+    original = m.build_a010_deterministic_fixture
+    monkeypatch.setattr(
+        m,
+        "build_a010_deterministic_fixture",
+        lambda: tuple(reversed(original())),
+    )
+    payload = m.run_qualification()
+    errors = m.validate_qualification_payload(payload)
+    assert any("case_ids" in item or "case order" in item.lower() for item in errors)

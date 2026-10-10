@@ -28,6 +28,7 @@ from flywire_asca.integrated_loop import (
     IntegratedRetrievalCueTier,
 )
 from flywire_asca.procedural_memory import (
+    DeterministicProcedureSimulator,
     ExpectedOutcome,
     ProcedureDefinition,
     ProcedureLibrary,
@@ -166,6 +167,12 @@ def _library() -> ProcedureLibrary:
     )
 
 
+def _expected_ref() -> str:
+    return DeterministicProcedureSimulator(
+        (), (), SimulatedWorldState((("done", "yes"),))
+    ).world_state_ref()
+
+
 def _factory(required_memory_id: str) -> ContextBoundProcedureExecutorFactory:
     return ContextBoundProcedureExecutorFactory(
         (
@@ -232,6 +239,7 @@ def test_dense_runner_executes_one_chunked_attempt_without_recovery():
         retrieval_context=context,
         procedure_library=_library(),
         procedure_executor_factory=_factory("mem-00"),
+        expected_final_world_state_ref=_expected_ref(),
     )
 
     assert result.variant is ComparisonVariant.DENSE_EXHAUSTIVE
@@ -258,6 +266,7 @@ def test_dense_runner_records_interruption_without_replay():
         retrieval_context=context,
         procedure_library=_library(),
         procedure_executor_factory=_factory("mem-never"),
+        expected_final_world_state_ref=_expected_ref(),
     )
 
     assert result.procedure_success is False
@@ -277,6 +286,7 @@ def test_dense_runner_fails_closed_on_unknown_root_and_malformed_context():
             retrieval_context=context,
             procedure_library=_library(),
             procedure_executor_factory=_factory("mem-00"),
+        expected_final_world_state_ref=_expected_ref(),
         )
     with pytest.raises(ValueError, match="retrieval_context"):
         run_dense_exhaustive(
@@ -285,4 +295,5 @@ def test_dense_runner_fails_closed_on_unknown_root_and_malformed_context():
             retrieval_context=object(),
             procedure_library=_library(),
             procedure_executor_factory=_factory("mem-00"),
+        expected_final_world_state_ref=_expected_ref(),
         )

@@ -14,6 +14,10 @@ from flywire_asca.familiarity import ExactFamiliarityIndex
 from flywire_asca.integrated_loop import LoopPolicy
 from flywire_asca.integrated_loop import benchmark as a009_benchmark
 from flywire_asca.integrated_loop import controller as a009_controller
+from flywire_asca.procedural_memory import (
+    DeterministicProcedureSimulator,
+    SimulatedWorldState,
+)
 from flywire_asca.uncertainty_expansion import build_a007_primary_profile
 
 
@@ -23,6 +27,12 @@ def _case(case_id: str):
         for item in a009_benchmark.build_a009_deterministic_fixture()
         if item.case_id == case_id
     )
+
+
+def _expected_ref() -> str:
+    return DeterministicProcedureSimulator(
+        (), (), SimulatedWorldState((("done", "yes"),))
+    ).world_state_ref()
 
 
 def _inputs(case_id: str, policy: LoopPolicy = LoopPolicy.MISMATCH_DRIVEN_RECOVERY):
@@ -36,6 +46,7 @@ def _inputs(case_id: str, policy: LoopPolicy = LoopPolicy.MISMATCH_DRIVEN_RECOVE
         procedure_executor_factory=a009_benchmark._factory(case),
         model_adapter=None,
         memory_context_provider=a009_benchmark._FixtureMemoryContext(case),
+        expected_final_world_state_ref=_expected_ref(),
         same_name_expected_ids=case.same_name_expected_ids,
     )
 
@@ -75,6 +86,7 @@ def test_normalize_a009_result_derives_raw_retrieval_and_attempt_counts():
         case.case_id,
         ComparisonVariant.ASCA_PRIMARY,
         raw,
+        expected_final_world_state_ref=kwargs["expected_final_world_state_ref"],
         same_name_expected_ids=case.same_name_expected_ids,
     )
 
@@ -164,3 +176,19 @@ def test_familiarity_disabled_uses_empty_index_without_mutating_shared_inputs():
     )
 
     assert after == before
+
+def test_no_structural_expansion_still_performs_a003_familiarity_assessment(monkeypatch):
+    from flywire_asca.familiarity import ExactFamiliarityIndex
+
+    _, kwargs = _inputs("structural-expansion-success")
+    original = ExactFamiliarityIndex.assess
+    calls = []
+
+    def spy(self, cue):
+        calls.append(cue.cue_id)
+        return original(self, cue)
+
+    monkeypatch.setattr(ExactFamiliarityIndex, "assess", spy)
+    run_no_structural_expansion_ablation(**kwargs)
+
+    assert calls == [kwargs["request"].familiarity_cue.cue_id]

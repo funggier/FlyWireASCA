@@ -54,7 +54,7 @@ REPORT = ROOT / "docs" / "development" / "reports" / "ASCA-20261010-A010-dense-n
 def test_a010_report_records_frozen_portable_identity_and_negative_outcome():
     text = read(REPORT)
     assert "a010-deterministic-v1" in text
-    assert "a1792f471409db74e436f63765d6c0330a6544575edfd45585b9eef30767dd68" in text
+    assert "69d20542cd1e7e5c25a0fb61b9060f622379206b519da3cec7624e00bb6e5d4c" in text
     assert "Primary A010 hypothesis outcome: `NOT_SUPPORTED`" in text
     assert "ASCA query count | 28" in text
     assert "Dense query count | 27" in text

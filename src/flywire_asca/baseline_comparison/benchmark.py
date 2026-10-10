@@ -30,6 +30,7 @@ from flywire_asca.integrated_loop import (
     ModelUsePolicy,
 )
 from flywire_asca.procedural_memory import (
+    DeterministicProcedureSimulator,
     ExpectedOutcome,
     ProcedureDefinition,
     ProcedureLibrary,
@@ -82,6 +83,7 @@ class BaselineComparisonCase:
     invalid_root: bool = False
     designated_parity_reduction: bool = False
     initial_state_items: tuple[tuple[str, str], ...] = (("done", "no"),)
+    expected_final_state_items: tuple[tuple[str, str], ...] = (("done", "yes"),)
 
 
 _A = (1.0, 0.0, 0.0)
@@ -386,6 +388,8 @@ def _shared_payload(case: BaselineComparisonCase) -> dict[str, object]:
         "root_procedure_id": case.root_procedure_id,
         "same_name_expected_ids": case.same_name_expected_ids,
         "initial_state_items": case.initial_state_items,
+        "expected_final_state_items": case.expected_final_state_items,
+        "execution_contract": _execution_contract_payload(),
     }
 
 
@@ -532,18 +536,84 @@ def _procedure_library() -> ProcedureLibrary:
     )
 
 
+def _action_definitions() -> tuple[SimulatedActionDefinition, ...]:
+    return (
+        SimulatedActionDefinition(
+            "act",
+            (("done", "yes"),),
+            ObservationKind.RESULT,
+            "done",
+        ),
+    )
+
+
+def _execution_contract_payload() -> dict[str, object]:
+    library = _procedure_library()
+    profile = build_a007_primary_profile()
+    return {
+        "query_texts": tuple(f"cue-{index}" for index in range(3)),
+        "procedures": tuple(
+            {
+                "procedure_id": definition.procedure.procedure_id,
+                "name": definition.procedure.name,
+                "version": definition.procedure.version,
+                "steps": tuple(
+                    {
+                        "step_id": step.step_id,
+                        "kind": step.kind.value,
+                        "action_ref": step.action_ref,
+                        "callee_procedure_id": step.callee_procedure_id,
+                        "expected_kind": step.expected_outcome.observation_kind.value,
+                        "expected_payload_ref": step.expected_outcome.expected_payload_ref,
+                        "matcher": step.expected_outcome.matcher.value,
+                    }
+                    for step in definition.steps
+                ),
+                "completion_kind": definition.completion_outcome.observation_kind.value,
+                "completion_payload_ref": definition.completion_outcome.expected_payload_ref,
+                "completion_matcher": definition.completion_outcome.matcher.value,
+            }
+            for definition in library.procedures
+        ),
+        "actions": tuple(
+            {
+                "action_ref": action.action_ref,
+                "writes": action.writes,
+                "observation_kind": action.observation_kind.value,
+                "success_payload_ref": action.success_payload_ref,
+            }
+            for action in _action_definitions()
+        ),
+        "expansion_profile": {
+            "profile_name": profile.profile_name,
+            "scopes": tuple(
+                {
+                    "round_index": scope.round_index,
+                    "enabled_cue_tier_count": scope.enabled_cue_tier_count,
+                    "top_k": scope.top_k,
+                    "max_memory_nodes": scope.budget.max_memory_nodes,
+                    "max_working_set_items": scope.budget.max_working_set_items,
+                }
+                for scope in profile.scopes
+            ),
+        },
+    }
+
+
+def _expected_world_state_ref(case: BaselineComparisonCase) -> str:
+    simulator = DeterministicProcedureSimulator(
+        (),
+        (),
+        SimulatedWorldState(case.expected_final_state_items),
+    )
+    return simulator.world_state_ref()
+
+
 def _factory(
     case: BaselineComparisonCase,
 ) -> ContextBoundProcedureExecutorFactory:
     return ContextBoundProcedureExecutorFactory(
-        (
-            SimulatedActionDefinition(
-                "act",
-                (("done", "yes"),),
-                ObservationKind.RESULT,
-                "done",
-            ),
-        ),
+        _action_definitions(),
         (),
         SimulatedWorldState(case.initial_state_items),
         (
@@ -568,6 +638,7 @@ def _inputs(case: BaselineComparisonCase) -> dict[str, object]:
         "model_adapter": None,
         "memory_context_provider": None,
         "same_name_expected_ids": case.same_name_expected_ids,
+        "expected_final_world_state_ref": _expected_world_state_ref(case),
     }
 
 
@@ -714,6 +785,7 @@ def run_a010_benchmark(
                 retrieval_context=kwargs["retrieval_context"],
                 procedure_library=kwargs["procedure_library"],
                 procedure_executor_factory=kwargs["procedure_executor_factory"],
+                expected_final_world_state_ref=kwargs["expected_final_world_state_ref"],
                 same_name_expected_ids=case.same_name_expected_ids,
             )
             dense_repeat = run_dense_exhaustive(
@@ -722,6 +794,7 @@ def run_a010_benchmark(
                 retrieval_context=kwargs["retrieval_context"],
                 procedure_library=kwargs["procedure_library"],
                 procedure_executor_factory=kwargs["procedure_executor_factory"],
+                expected_final_world_state_ref=kwargs["expected_final_world_state_ref"],
                 same_name_expected_ids=case.same_name_expected_ids,
             )
             asca_repeat_ok = asca_repeat_ok and primary == primary_repeat
@@ -869,17 +942,42 @@ def qualify_a010_report(report: BaselineComparisonReport) -> list[str]:
             errors.append(
                 f"shared input fingerprint mismatch for {item.case_id}"
             )
+        if item.expected_primary_case != expected_case.expected_primary_case:
+            errors.append(
+                f"expected_primary_case mismatch for {item.case_id}"
+            )
         if item.validation_error_observed:
             if not expected_case.invalid_root:
                 errors.append(
                     f"unexpected validation error for {item.case_id}"
                 )
+            if item.runs:
+                errors.append(
+                    f"invalid case must not contain runs for {item.case_id}"
+                )
             continue
+        if expected_case.invalid_root:
+            errors.append(
+                f"invalid-contract case did not fail closed: {item.case_id}"
+            )
+        expected_variants = [
+            ComparisonVariant.ASCA_PRIMARY,
+            ComparisonVariant.DENSE_EXHAUSTIVE,
+            ComparisonVariant.ASCA_ALWAYS_MAX_SCOPE,
+        ]
+        if expected_case.run_structural_ablation:
+            expected_variants.append(
+                ComparisonVariant.ASCA_NO_STRUCTURAL_EXPANSION
+            )
+        if expected_case.run_familiarity_ablation:
+            expected_variants.append(
+                ComparisonVariant.ASCA_FAMILIARITY_DISABLED
+            )
         variants = tuple(run.variant for run in item.runs)
-        if ComparisonVariant.ASCA_PRIMARY not in variants:
-            errors.append(f"missing ASCA_PRIMARY for {item.case_id}")
-        if ComparisonVariant.DENSE_EXHAUSTIVE not in variants:
-            errors.append(f"missing DENSE_EXHAUSTIVE for {item.case_id}")
+        if variants != tuple(expected_variants):
+            errors.append(
+                f"variant set/order mismatch for {item.case_id}"
+            )
 
     aggregate = _derive_aggregate(
         report.case_results,

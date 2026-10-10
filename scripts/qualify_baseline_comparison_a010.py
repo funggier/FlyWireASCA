@@ -19,7 +19,22 @@ from flywire_asca.baseline_comparison import (
 
 QUALIFICATION_SCOPE = "deterministic_dense_nonselective_baseline_a010"
 FIXTURE_VERSION = "a010-deterministic-v1"
-EXPECTED_FIXTURE_FINGERPRINT = "a1792f471409db74e436f63765d6c0330a6544575edfd45585b9eef30767dd68"
+EXPECTED_FIXTURE_FINGERPRINT = "69d20542cd1e7e5c25a0fb61b9060f622379206b519da3cec7624e00bb6e5d4c"
+EXPECTED_CASE_IDS = (
+    "easy-local-many-distractors",
+    "unfamiliar-semantic-many-distractors",
+    "structural-expansion-required",
+    "procedure-recovery-one-scope",
+    "procedure-recovery-two-scopes",
+    "persistent-missing-memory",
+    "selective-routing-miss-sentinel",
+    "same-name-identity",
+    "tie-heavy-distractors",
+    "structural-expansion-ablation",
+    "familiarity-disabled-equivalence",
+    "invalid-contract",
+)
+EXPECTED_PRIMARY_OUTCOME = "NOT_SUPPORTED"
 DENSE_TOP_K_POLICY = "max(1,index.document_count)"
 PRIMARY_PROCEDURE_MODE = "CHUNKED"
 PRIMARY_ASCA_POLICY = "MISMATCH_DRIVEN_RECOVERY"
@@ -134,6 +149,13 @@ def validate_qualification_payload(payload):
     errors = []
     expected = _expected_payload()
 
+    if expected["fixture_fingerprint"] != EXPECTED_FIXTURE_FINGERPRINT:
+        errors.append("runtime frozen fixture fingerprint drift")
+    if tuple(expected["case_ids"]) != EXPECTED_CASE_IDS:
+        errors.append("runtime frozen case order/identity drift")
+    if expected["primary_hypothesis_outcome"] != EXPECTED_PRIMARY_OUTCOME:
+        errors.append("runtime frozen outcome drift")
+
     for name in (
         "qualification_scope",
         "fixture_version",
@@ -158,10 +180,8 @@ def validate_qualification_payload(payload):
     outcome = payload.get("primary_hypothesis_outcome")
     if outcome not in {"SUPPORTED", "MIXED", "NOT_SUPPORTED"}:
         errors.append("primary_hypothesis_outcome has invalid vocabulary")
-    elif outcome != expected["primary_hypothesis_outcome"]:
-        errors.append(
-            "primary_hypothesis_outcome drift from frozen evidence"
-        )
+    elif outcome != EXPECTED_PRIMARY_OUTCOME:
+        errors.append("primary_hypothesis_outcome drift from frozen outcome")
 
     cases = payload.get("cases")
     if not isinstance(cases, list):

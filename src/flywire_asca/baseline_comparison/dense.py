@@ -69,10 +69,14 @@ def run_dense_exhaustive(
     retrieval_context: IntegratedRetrievalContext,
     procedure_library: ProcedureLibrary,
     procedure_executor_factory: ContextBoundProcedureExecutorFactory,
+    expected_final_world_state_ref: str,
     same_name_expected_ids: tuple[str, ...] = (),
 ) -> ComparisonRunResult:
     require_nonempty("case_id", case_id)
     require_nonempty("root_procedure_id", root_procedure_id)
+    require_nonempty(
+        "expected_final_world_state_ref", expected_final_world_state_ref
+    )
     if not isinstance(retrieval_context, IntegratedRetrievalContext):
         raise ValueError(
             "retrieval_context must be an IntegratedRetrievalContext"
@@ -138,7 +142,10 @@ def run_dense_exhaustive(
         variant=ComparisonVariant.DENSE_EXHAUSTIVE,
         case_id=case_id,
         procedure_success=success,
-        final_state_correct=success,
+        final_state_correct=(
+            success
+            and execution.final_world_state_ref == expected_final_world_state_ref
+        ),
         final_world_state_ref=execution.final_world_state_ref,
         evaluated_scope_indices=(scope_index,),
         query_count=len(results),

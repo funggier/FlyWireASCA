@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 
+from flywire_asca.contracts.validation import require_nonempty
 from flywire_asca.familiarity import ExactFamiliarityIndex
 from flywire_asca.integrated_loop import (
     CognitiveLoopRequest,
@@ -85,10 +86,14 @@ def normalize_a009_result(
     variant: ComparisonVariant,
     result: CognitiveLoopResult,
     *,
+    expected_final_world_state_ref: str,
     same_name_expected_ids: tuple[str, ...] = (),
 ) -> ComparisonRunResult:
     if not isinstance(result, CognitiveLoopResult):
         raise ValueError("result must be a CognitiveLoopResult")
+    require_nonempty(
+        "expected_final_world_state_ref", expected_final_world_state_ref
+    )
     if variant not in {
         ComparisonVariant.ASCA_PRIMARY,
         ComparisonVariant.ASCA_ALWAYS_MAX_SCOPE,
@@ -118,7 +123,10 @@ def normalize_a009_result(
         variant=variant,
         case_id=case_id,
         procedure_success=success,
-        final_state_correct=success,
+        final_state_correct=(
+            success
+            and result.final_world_state_ref == expected_final_world_state_ref
+        ),
         final_world_state_ref=result.final_world_state_ref,
         evaluated_scope_indices=tuple(
             item.scope.round_index for item in evaluations
@@ -150,6 +158,7 @@ def _run_a009_variant(
     procedure_executor_factory: ContextBoundProcedureExecutorFactory,
     model_adapter: ModelAdapter | None = None,
     memory_context_provider: MemoryContextProvider | None = None,
+    expected_final_world_state_ref: str,
     same_name_expected_ids: tuple[str, ...] = (),
 ) -> ComparisonRunResult:
     normalized_request = replace(request, policy=policy)
@@ -169,6 +178,7 @@ def _run_a009_variant(
         else request.loop_id,
         variant,
         raw,
+        expected_final_world_state_ref=expected_final_world_state_ref,
         same_name_expected_ids=same_name_expected_ids,
     )
 
@@ -183,6 +193,7 @@ def run_asca_primary(
     procedure_executor_factory: ContextBoundProcedureExecutorFactory,
     model_adapter: ModelAdapter | None = None,
     memory_context_provider: MemoryContextProvider | None = None,
+    expected_final_world_state_ref: str,
     same_name_expected_ids: tuple[str, ...] = (),
 ) -> ComparisonRunResult:
     return _run_a009_variant(
@@ -196,6 +207,7 @@ def run_asca_primary(
         procedure_executor_factory=procedure_executor_factory,
         model_adapter=model_adapter,
         memory_context_provider=memory_context_provider,
+        expected_final_world_state_ref=expected_final_world_state_ref,
         same_name_expected_ids=same_name_expected_ids,
     )
 
@@ -210,6 +222,7 @@ def run_asca_always_max_scope(
     procedure_executor_factory: ContextBoundProcedureExecutorFactory,
     model_adapter: ModelAdapter | None = None,
     memory_context_provider: MemoryContextProvider | None = None,
+    expected_final_world_state_ref: str,
     same_name_expected_ids: tuple[str, ...] = (),
 ) -> ComparisonRunResult:
     return _run_a009_variant(
@@ -223,6 +236,7 @@ def run_asca_always_max_scope(
         procedure_executor_factory=procedure_executor_factory,
         model_adapter=model_adapter,
         memory_context_provider=memory_context_provider,
+        expected_final_world_state_ref=expected_final_world_state_ref,
         same_name_expected_ids=same_name_expected_ids,
     )
 
@@ -237,6 +251,7 @@ def run_familiarity_disabled_ablation(
     procedure_executor_factory: ContextBoundProcedureExecutorFactory,
     model_adapter: ModelAdapter | None = None,
     memory_context_provider: MemoryContextProvider | None = None,
+    expected_final_world_state_ref: str,
     same_name_expected_ids: tuple[str, ...] = (),
 ) -> ComparisonRunResult:
     del familiarity_index
@@ -251,6 +266,7 @@ def run_familiarity_disabled_ablation(
         procedure_executor_factory=procedure_executor_factory,
         model_adapter=model_adapter,
         memory_context_provider=memory_context_provider,
+        expected_final_world_state_ref=expected_final_world_state_ref,
         same_name_expected_ids=same_name_expected_ids,
     )
 
@@ -265,15 +281,18 @@ def run_no_structural_expansion_ablation(
     procedure_executor_factory: ContextBoundProcedureExecutorFactory,
     model_adapter: ModelAdapter | None = None,
     memory_context_provider: MemoryContextProvider | None = None,
+    expected_final_world_state_ref: str,
     same_name_expected_ids: tuple[str, ...] = (),
 ) -> ComparisonRunResult:
-    del familiarity_index, model_adapter, memory_context_provider
+    del model_adapter, memory_context_provider
     if not isinstance(request, CognitiveLoopRequest):
         raise ValueError("request must be a CognitiveLoopRequest")
     if not isinstance(retrieval_context, IntegratedRetrievalContext):
         raise ValueError(
             "retrieval_context must be an IntegratedRetrievalContext"
         )
+    if not isinstance(familiarity_index, ExactFamiliarityIndex):
+        raise ValueError("familiarity_index must be an ExactFamiliarityIndex")
     if not isinstance(expansion_profile, ExpansionProfile):
         raise ValueError("expansion_profile must be an ExpansionProfile")
     if len(expansion_profile.scopes) > 3:
@@ -288,6 +307,10 @@ def run_no_structural_expansion_ablation(
             "procedure_executor_factory must be a ContextBoundProcedureExecutorFactory"
         )
     procedure_library.get(request.root_procedure_id)
+    require_nonempty(
+        "expected_final_world_state_ref", expected_final_world_state_ref
+    )
+    familiarity_index.assess(request.familiarity_cue)
 
     initial = run_initial_integrated_expansion(
         retrieval_context,
@@ -363,7 +386,11 @@ def run_no_structural_expansion_ablation(
             else request.loop_id
         ),
         procedure_success=success,
-        final_state_correct=success,
+        final_state_correct=(
+            success
+            and final_execution.final_world_state_ref
+            == expected_final_world_state_ref
+        ),
         final_world_state_ref=final_execution.final_world_state_ref,
         evaluated_scope_indices=tuple(
             item.scope.round_index for item in evaluations

@@ -32,7 +32,7 @@ retuned after observing this result.
 - qualification scope: `deterministic_dense_nonselective_baseline_a010`
 - fixture version: `a010-deterministic-v1`
 - fixture fingerprint:
-  `a1792f471409db74e436f63765d6c0330a6544575edfd45585b9eef30767dd68`
+  `69d20542cd1e7e5c25a0fb61b9060f622379206b519da3cec7624e00bb6e5d4c`
 - primary ASCA policy: `MISMATCH_DRIVEN_RECOVERY`
 - A006 primary selector: `SINGLE_BEST`
 - A007 initial policy: `SIGNAL_DRIVEN`

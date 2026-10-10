@@ -78,7 +78,7 @@ Exact feature-branch CI: GREEN
 Primary outcome: `NOT_SUPPORTED`
 
 Frozen fixture fingerprint:
-`a1792f471409db74e436f63765d6c0330a6544575edfd45585b9eef30767dd68`
+`69d20542cd1e7e5c25a0fb61b9060f622379206b519da3cec7624e00bb6e5d4c`
 
 Qualified implementation candidate:
 `234bc090dc068447c1830fa79337745b7796f25f`

@@ -153,6 +153,16 @@ class ComparisonCaseResult:
     def __post_init__(self) -> None:
         require_nonempty("case_id", self.case_id)
         require_nonempty("shared_input_fingerprint", self.shared_input_fingerprint)
+        if (
+            len(self.shared_input_fingerprint) != 64
+            or any(
+                character not in "0123456789abcdef"
+                for character in self.shared_input_fingerprint
+            )
+        ):
+            raise ValueError(
+                "shared_input_fingerprint must be a lowercase SHA-256 hex digest"
+            )
         _require_bool("validation_error_observed", self.validation_error_observed)
         _require_bool("expected_primary_case", self.expected_primary_case)
         variants: list[ComparisonVariant] = []

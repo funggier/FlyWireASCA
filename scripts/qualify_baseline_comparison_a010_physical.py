@@ -37,6 +37,7 @@ from flywire_asca.integrated_loop import (
     ModelUsePolicy,
 )
 from flywire_asca.procedural_memory import (
+    DeterministicProcedureSimulator,
     ExpectedOutcome,
     ProcedureDefinition,
     ProcedureLibrary,
@@ -178,6 +179,14 @@ def _factory():
     )
 
 
+def _expected_final_world_state_ref():
+    return DeterministicProcedureSimulator(
+        (),
+        (),
+        SimulatedWorldState((("done", "yes"),)),
+    ).world_state_ref()
+
+
 def _request():
     return CognitiveLoopRequest(
         "a009:a010-physical:MISMATCH_DRIVEN_RECOVERY",
@@ -264,6 +273,7 @@ def run_physical_qualification(
         procedure_executor_factory=factory,
         model_adapter=None,
         memory_context_provider=None,
+        expected_final_world_state_ref=_expected_final_world_state_ref(),
         same_name_expected_ids=(),
     )
 
@@ -278,6 +288,7 @@ def run_physical_qualification(
         retrieval_context=context,
         procedure_library=library,
         procedure_executor_factory=factory,
+        expected_final_world_state_ref=_expected_final_world_state_ref(),
     )
     dense_duration = time.perf_counter_ns() - start
 

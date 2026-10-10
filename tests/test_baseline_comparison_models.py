@@ -132,3 +132,15 @@ def test_report_rejects_impossible_success_and_identity_counts():
         replace(report, shared_success_count=2)
     with pytest.raises(ValueError, match="identity_failure_count"):
         replace(report, identity_failure_count=2)
+
+def test_comparison_case_requires_sha256_shared_input_fingerprint():
+    asca = _run()
+    with pytest.raises(ValueError, match="shared_input_fingerprint"):
+        ComparisonCaseResult(
+            case_id="case-a",
+            shared_input_fingerprint="not-a-sha256",
+            validation_error_observed=False,
+            validation_error=None,
+            runs=(asca,),
+            expected_primary_case=True,
+        )
