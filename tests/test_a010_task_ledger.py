@@ -10,12 +10,6 @@ def read(path: Path) -> str:
 
 
 
-def test_roadmap_marks_a010_done_and_a011_planned():
-    text = read(TASKS / "ROADMAP.md")
-    assert "| A009 | Integrated Cognitive Loop | DONE |" in text
-    assert "| A010 | Dense/Non-selective Baseline Comparison | DONE |" in text
-    assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
-
 
 def test_a010_task_ledger_records_approved_design_plan_and_boundaries():
     text = read(TASKS / "A010-dense-nonselective-baseline-comparison.md")
@@ -101,7 +95,6 @@ def test_a010_has_exactly_one_primary_outcome_declaration():
 
 def test_a010_qualification_evidence_remains_after_repository_closure():
     task = read(TASKS / "A010-dense-nonselective-baseline-comparison.md")
-    roadmap = read(TASKS / "ROADMAP.md")
     assert "Status: DONE" in task
     assert "GitHub Issue: #10 (closed as completed)" in task
     assert "Portable qualification: GREEN" in task
@@ -110,8 +103,6 @@ def test_a010_qualification_evidence_remains_after_repository_closure():
     assert "234bc090dc068447c1830fa79337745b7796f25f" in task
     assert "38014300995" in task
     assert "Primary outcome: `NOT_SUPPORTED`" in task
-    assert "| A010 | Dense/Non-selective Baseline Comparison | DONE |" in roadmap
-    assert "| A011 | ASCA v0.x Qualification | PLANNED |" in roadmap
 
 
 def test_readme_records_a010_qualified_candidate_without_overclaim():
@@ -160,16 +151,12 @@ def test_a010_records_reviewed_main_integration_before_issue_close():
 
 def test_a010_repository_closure_state_is_done_and_a011_planned():
     task = read(TASKS / "A010-dense-nonselective-baseline-comparison.md")
-    current = read(TASKS / "CURRENT.md")
-    roadmap = read(TASKS / "ROADMAP.md")
     report = read(REPORT)
     readme = read(ROOT / "README.md")
     assert "Status: DONE" in task
     assert "GitHub Issue: #10 (closed as completed)" in task
     assert "A010 repository state: DONE" in report
     assert "GitHub Issue #10 closure: completed" in report
-    assert "| A010 | Dense/Non-selective Baseline Comparison | DONE |" in roadmap
-    assert "| A011 | ASCA v0.x Qualification | PLANNED |" in roadmap
     assert "A010" in readme and "NOT_SUPPORTED" in readme
     assert "A011" in readme and "PLANNED" in readme
     assert "remains open" not in task.lower()

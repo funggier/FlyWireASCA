@@ -43,14 +43,6 @@ def test_a006_task_is_done_and_preserves_scope_and_physical_outcome():
         assert heading in text
 
 
-def test_live_roadmap_preserves_a006_done_while_a007_can_advance():
-    text = _read(TASKS / "ROADMAP.md")
-    assert "| A005 | Semantic Vector Memory Retrieval | DONE |" in text
-    assert "| A006 | Working Set / Selective Activation | DONE |" in text
-    assert "| A007 | Surprise, Uncertainty & Expansion |" in text
-    assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
-
-
 def test_a006_report_records_non_compute_active_state_claim_boundary():
     text = _read(REPORT)
     lower = text.lower()

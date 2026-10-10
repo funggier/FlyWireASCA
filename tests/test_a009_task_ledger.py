@@ -14,14 +14,6 @@ def read(path: Path) -> str:
 
 
 
-def test_roadmap_marks_a009_done_a010_a011_planned():
-    text = read(TASKS / "ROADMAP.md")
-    assert "| A008 | Procedural Memory / Skill Chunking | DONE |" in text
-    assert "| A009 | Integrated Cognitive Loop | DONE |" in text
-    assert "| A010 | Dense/Non-selective Baseline Comparison | DONE |" in text
-    assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
-
-
 def test_a009_task_ledger_is_done_and_preserves_architecture_boundaries():
     text = read(TASKS / "A009-integrated-cognitive-loop.md")
     assert "Status: DONE" in text

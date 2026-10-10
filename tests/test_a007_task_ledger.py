@@ -46,14 +46,6 @@ def test_a007_task_is_done_and_preserves_scope_boundaries():
         assert heading in text
 
 
-def test_live_roadmap_preserves_a007_done_while_a008_can_advance():
-    text = _read(TASKS / "ROADMAP.md")
-    assert "| A006 | Working Set / Selective Activation | DONE |" in text
-    assert "| A007 | Surprise, Uncertainty & Expansion | DONE |" in text
-    assert "| A008 | Procedural Memory / Skill Chunking |" in text
-    assert "| A011 | ASCA v0.x Qualification | PLANNED |" in text
-
-
 def test_a007_report_records_supported_result_without_prediction_surprise_overclaim():
     text = _read(REPORT)
     lower = text.lower()

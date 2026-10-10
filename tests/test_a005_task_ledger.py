@@ -37,14 +37,6 @@ def test_a005_task_is_done_and_records_vector_decision_gate():
         assert heading in text
 
 
-def test_live_roadmap_preserves_a005_done_while_a006_can_advance():
-    text = _read(TASKS / "ROADMAP.md")
-    assert "| A005 | Semantic Vector Memory Retrieval | DONE |" in text
-    assert "| A006 | Working Set / Selective Activation |" in text
-    assert "| A007 | Surprise, Uncertainty & Expansion |" in text
-    assert "Graph" not in text
-
-
 def test_a005_closure_report_records_exact_candidate_physical_and_ci_evidence():
     text = _read(REPORT)
     assert "78099fe3e36e8e1292085425f1553a05b95a820e" in text

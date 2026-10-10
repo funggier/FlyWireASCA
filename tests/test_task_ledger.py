@@ -151,3 +151,28 @@ def test_a007_closure_report_records_structural_expansion_result():
     assert "d76084178a3fca84208794efca7a46330785eb6e" in text
     assert "37940884611" in text
     assert "Final A007 hypothesis outcome: `SUPPORTED`" in text
+
+def test_historical_a004_a010_ledger_tests_do_not_own_mutable_current_or_roadmap():
+    for number in range(4, 11):
+        path = ROOT / "tests" / f"test_a{number:03d}_task_ledger.py"
+        text = path.read_text(encoding="utf-8")
+        assert "CURRENT.md" not in text, path.name
+        assert "ROADMAP.md" not in text, path.name
+
+
+def test_pre_a011_current_state_is_centralized_without_mutating_research_roadmap():
+    current = _read("CURRENT.md")
+    roadmap = _read("ROADMAP.md")
+    pre = _read("PRE-A011-architecture-process-stabilization.md")
+    assert "Current task: PRE-A011" in current
+    assert "Status: ACTIVE" in current
+    assert "GitHub Issue: #11" in current
+    assert "Status: ACTIVE" in pre
+    assert "GitHub Issue: #11" in pre
+    assert "PRE-A011" not in roadmap
+    for number in range(1, 11):
+        task_id = f"A{number:03d}"
+        assert f"| {task_id} |" in roadmap
+        row = next(line for line in roadmap.splitlines() if f"| {task_id} |" in line)
+        assert row.rstrip().endswith("| DONE |")
+    assert "| A011 | ASCA v0.x Qualification | PLANNED |" in roadmap
