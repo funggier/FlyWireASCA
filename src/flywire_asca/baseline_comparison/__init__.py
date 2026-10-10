@@ -11,3 +11,14 @@ __all__ = [
     "ComparisonRunResult",
     "ComparisonVariant",
 ]
+from .dense import (
+    DenseRetrievalEvaluation,
+    evaluate_dense_exhaustive,
+    run_dense_exhaustive,
+)
+
+__all__ += [
+    "DenseRetrievalEvaluation",
+    "evaluate_dense_exhaustive",
+    "run_dense_exhaustive",
+]
