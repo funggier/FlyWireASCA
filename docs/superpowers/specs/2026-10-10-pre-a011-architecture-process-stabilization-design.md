@@ -6,7 +6,7 @@ Gate: PRE-A011 — Architecture & Process Consistency Stabilization
 Research milestone status: A011 remains PLANNED
 A011 GitHub issue at design time: not created
 PRE-A011 GitHub issue at design time: not created
-Design status: APPROVED IN CHAT; WRITTEN SPEC PENDING USER REVIEW
+Design status: APPROVED
 
 ## 1. Purpose
 
@@ -436,8 +436,11 @@ lifecycle state.
 It should validate:
 
 - the current pointer exists;
-- current task ID exists exactly once in ROADMAP;
-- current status matches ROADMAP;
+- an A-numbered current task ID exists exactly once in ROADMAP and its status
+  matches ROADMAP;
+- a PRE-* maintenance gate may be CURRENT without a ROADMAP research row only
+  when its matching maintenance task document exists and records the same
+  status;
 - A001-A010 are DONE;
 - A011 is PLANNED before activation;
 - A011 has no GitHub issue recorded before activation;
@@ -465,14 +468,20 @@ Required checks:
 - A011 may be PLANNED without a task document until activation if that is the
   documented workflow.
 
-### 10.2 CURRENT/ROADMAP coherence
+### 10.2 CURRENT/ROADMAP/task coherence
 
-- CURRENT task ID exists in ROADMAP;
-- CURRENT status equals ROADMAP status;
-- before A011 activation, CURRENT may legitimately point at A011/PLANNED;
+- when CURRENT points to an A-numbered research task, that task ID exists in
+  ROADMAP and CURRENT status equals ROADMAP status;
+- when CURRENT points to a PRE-* maintenance gate, ROADMAP remains the research
+  roadmap and need not contain a PRE row, but a matching maintenance task
+  document must exist and carry the same status;
+- before PRE-A011 activation, CURRENT may legitimately point at A011/PLANNED;
+- during PRE-A011 execution, CURRENT may legitimately point at PRE-A011/ACTIVE
+  while A011 remains PLANNED in ROADMAP;
+- after PRE-A011 closure, CURRENT returns to A011/PLANNED;
 - a PLANNED current task must not record a guessed numeric GitHub issue;
-- an ACTIVE research task must have a numeric GitHub issue in its task file once
-  activated under the project workflow.
+- an ACTIVE research or maintenance task must have a numeric GitHub issue in its
+  own task file once activated under the project workflow.
 
 ### 10.3 Completed task hygiene
 
