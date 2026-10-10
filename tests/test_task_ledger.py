@@ -13,19 +13,21 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_completed_a011_without_automatic_next_milestone():
+def test_current_points_to_planned_a012_after_explicit_user_authorization():
     current = _read("CURRENT.md")
-    task = _read("A011-asca-v0x-qualification.md")
+    a011 = _read("A011-asca-v0x-qualification.md")
+    a012 = _read("A012-relational-reasoning-structure-decision.md")
     roadmap = _read("ROADMAP.md")
-    assert "Current task: A011" in current
+    assert "Current task: A012" in current
     assert current.count("Current task:") == 1
-    assert "Status: DONE" in current
-    assert "Status: DONE" in task
-    assert "GitHub Issue: #12" in current
-    assert "GitHub Issue: #12" in task
+    assert "Status: PLANNED" in current
+    assert "GitHub Issue: not created" in current
+    assert "Status: DONE" in a011
+    assert "GitHub Issue: #12" in a011
+    assert "Status: PLANNED" in a012
+    assert "GitHub Issue: not created" in a012
     assert "| A011 | ASCA v0.x Qualification | DONE |" in roadmap
-    assert "| A012 |" not in roadmap
-    assert "Current task: A012" not in current
+    assert "| A012 | Relational Reasoning / Structure Decision Gate | PLANNED |" in roadmap
 
 
 def test_a003_contains_recovery_and_evidence_sections():
@@ -70,9 +72,9 @@ def test_a001_contains_recovery_and_evidence_sections():
         assert heading in text
 
 
-def test_roadmap_lists_a001_through_a011_exactly_once():
+def test_roadmap_lists_a001_through_a012_exactly_once():
     text = _read("ROADMAP.md")
-    for number in range(1, 12):
+    for number in range(1, 13):
         task_id = f"A{number:03d}"
         assert text.count(task_id) == 1, task_id
 
@@ -168,19 +170,22 @@ def test_historical_milestone_ledger_tests_do_not_own_mutable_current_or_roadmap
         assert "ROADMAP.md" not in text, path.name
 
 
-def test_pre_a011_stays_completed_during_a011_lifecycle():
+def test_pre_a011_and_a011_stay_completed_after_a012_is_planned():
     current = _read("CURRENT.md")
     roadmap = _read("ROADMAP.md")
     pre = _read("PRE-A011-architecture-process-stabilization.md")
-    assert "Current task: A011" in current
-    assert "Status: DONE" in current
-    assert "GitHub Issue: #12" in current
+    a011 = _read("A011-asca-v0x-qualification.md")
+    assert "Current task: A012" in current
+    assert "Status: PLANNED" in current
+    assert "GitHub Issue: not created" in current
     assert "Status: DONE" in pre
     assert "GitHub Issue: #11 (closed as completed)" in pre
+    assert "Status: DONE" in a011
+    assert "GitHub Issue: #12" in a011
     assert "PRE-A011" not in roadmap
-    for number in range(1, 11):
+    for number in range(1, 12):
         task_id = f"A{number:03d}"
         assert f"| {task_id} |" in roadmap
         row = next(line for line in roadmap.splitlines() if f"| {task_id} |" in line)
         assert row.rstrip().endswith("| DONE |")
-    assert "| A011 | ASCA v0.x Qualification | DONE |" in roadmap
+    assert "| A012 | Relational Reasoning / Structure Decision Gate | PLANNED |" in roadmap
