@@ -1,6 +1,6 @@
 # A012 — Relational Reasoning / Structure Decision Gate
 
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #14
 Branch: research/a012-relational-structure-decision
 Activation base: 23b96f4502b81cddb9563b55c26fdd0adc731265
@@ -71,7 +71,7 @@ fail.
 - [x] A011 frozen profile/67 protected-source identities remain guarded by a
   preservation check; the post-A011 HEAD is not relabelled A011-qualified.
 - [x] Full tests, architecture audit, repository qualifier and whitespace check pass.
-- [ ] Exact feature/main CI and final evidence are recorded before closure.
+- [x] Exact feature/main CI and final evidence are recorded before closure.
 - [x] FlyWireLLM remains untouched.
 
 ## Evidence
@@ -102,6 +102,16 @@ Development evidence before the exact candidate commit:
   compatibility.
 - `git diff --check`: PASS.
 - FlyWireLLM: untouched.
+- Final feature head: `0728ddab442b774dcedb60a3fb7870444a95ffcb`.
+- Exact feature push CI `38067495867`: GREEN.
+- PR #15 exact CI `38067628031`: GREEN.
+- Normal merge integration:
+  `48dfc64bca60d62528787b57d04a01df04fac30d`.
+- Exact integration/main CI `38067737917`: GREEN.
+- Portable CI artifact SHA256 on feature/main:
+  `760cad31a867c6f52613d1e3c5aa7a879528ac386dcbb570cb5cd9c587c86340`.
+- Exact-clean final-head physical evidence SHA256:
+  `35cbe908737f259f917d20bc67c779dbb7107df1393488cedd08899bbe441455`.
 
 Historical authority:
 
@@ -111,12 +121,16 @@ Historical authority:
 
 ## Current Action
 
-Full local development qualification and whole-change review are GREEN. Freeze
-an exact implementation candidate commit, push it, rerun physical evidence on
-that exact clean SHA, and require exact feature-branch CI GREEN.
+A012 implementation and integration are complete. Exact feature push CI
+`38067495867`, PR #15 CI `38067628031`, and integration/main CI `38067737917`
+are GREEN. Normal merge integration is
+`48dfc64bca60d62528787b57d04a01df04fac30d`.
+
+Final evidence report:
+`docs/development/reports/ASCA-20261010-A012-relational-reasoning-structure-decision.md`.
 
 ## Next Action
 
-Commit/push the implementation candidate, verify the checkout is clean, rerun
-A012 physical evidence on that exact SHA, then require exact feature-branch CI
-GREEN before integration.
+Require exact main CI GREEN for the closure metadata commit containing this
+task/report/handoff, then close GitHub Issue #14 as completed. Do not activate
+A013 automatically.

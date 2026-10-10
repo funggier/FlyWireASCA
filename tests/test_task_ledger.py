@@ -13,21 +13,21 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_active_a012_after_real_issue_creation():
+def test_current_points_to_completed_a012_after_integration():
     current = _read("CURRENT.md")
     a011 = _read("A011-asca-v0x-qualification.md")
     a012 = _read("A012-relational-reasoning-structure-decision.md")
     roadmap = _read("ROADMAP.md")
     assert "Current task: A012" in current
     assert current.count("Current task:") == 1
-    assert "Status: ACTIVE" in current
+    assert "Status: DONE" in current
     assert "GitHub Issue: #14" in current
     assert "Status: DONE" in a011
     assert "GitHub Issue: #12" in a011
-    assert "Status: ACTIVE" in a012
+    assert "Status: DONE" in a012
     assert "GitHub Issue: #14" in a012
     assert "| A011 | ASCA v0.x Qualification | DONE |" in roadmap
-    assert "| A012 | Relational Reasoning / Structure Decision Gate | ACTIVE |" in roadmap
+    assert "| A012 | Relational Reasoning / Structure Decision Gate | DONE |" in roadmap
 
 
 def test_a003_contains_recovery_and_evidence_sections():
@@ -170,13 +170,13 @@ def test_historical_milestone_ledger_tests_do_not_own_mutable_current_or_roadmap
         assert "ROADMAP.md" not in text, path.name
 
 
-def test_pre_a011_and_a011_stay_completed_after_a012_is_active():
+def test_pre_a011_a011_and_a012_stay_completed_after_a012_integration():
     current = _read("CURRENT.md")
     roadmap = _read("ROADMAP.md")
     pre = _read("PRE-A011-architecture-process-stabilization.md")
     a011 = _read("A011-asca-v0x-qualification.md")
     assert "Current task: A012" in current
-    assert "Status: ACTIVE" in current
+    assert "Status: DONE" in current
     assert "GitHub Issue: #14" in current
     assert "Status: DONE" in pre
     assert "GitHub Issue: #11 (closed as completed)" in pre
@@ -188,4 +188,4 @@ def test_pre_a011_and_a011_stay_completed_after_a012_is_active():
         assert f"| {task_id} |" in roadmap
         row = next(line for line in roadmap.splitlines() if f"| {task_id} |" in line)
         assert row.rstrip().endswith("| DONE |")
-    assert "| A012 | Relational Reasoning / Structure Decision Gate | ACTIVE |" in roadmap
+    assert "| A012 | Relational Reasoning / Structure Decision Gate | DONE |" in roadmap

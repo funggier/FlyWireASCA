@@ -13,4 +13,4 @@
 | A009 | Integrated Cognitive Loop | DONE |
 | A010 | Dense/Non-selective Baseline Comparison | DONE |
 | A011 | ASCA v0.x Qualification | DONE |
-| A012 | Relational Reasoning / Structure Decision Gate | ACTIVE |
+| A012 | Relational Reasoning / Structure Decision Gate | DONE |

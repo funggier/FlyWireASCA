@@ -59,11 +59,10 @@ A010 - Dense/Non-selective Baseline Comparison is **DONE** with portable outcome
 1984/1440, and cumulative selected counts are 66/480. This result answers a
 different comparison question and does not rewrite A009.
 
-A012 - Relational Reasoning / Structure Decision Gate is **ACTIVE** on GitHub
-Issue #14 after explicit user authorization. It will compare the real A005 Vector + Metadata
-retrieval primitive with bounded explicit typed relation traversal on causal,
-temporal, ownership, part-of, used-for, path and identity-sensitive controlled
-workloads.
+A012 - Relational Reasoning / Structure Decision Gate is **DONE**. The frozen
+portable experiment compares the real A005 Vector + Metadata retrieval primitive
+with bounded explicit typed relation traversal on causal, temporal, ownership,
+part-of, used-for, path and identity-sensitive controlled workloads.
 
 A012's frozen portable evidence now concludes
 `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED` for the declared relation-dependent
