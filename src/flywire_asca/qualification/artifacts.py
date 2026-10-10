@@ -123,8 +123,8 @@ class ArtifactStore:
         return tuple(self._records[key] for key in sorted(self._records))
 
 
-def artifact_issues(pack, root):
-    issues = list(manifest_issues(pack))
+def artifact_issues(pack, root, *, _manifest_check=None):
+    issues = list((_manifest_check or manifest_issues)(pack))
     root = Path(root).absolute()
     def issue(code, message, refs=()):
         issues.append(Reason(code, "P09_PACK_VALIDATION", message, refs))

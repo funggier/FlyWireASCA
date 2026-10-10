@@ -224,3 +224,68 @@ def physical_payload_fixture():
 def frozen_profile_fixture():
     from flywire_asca.qualification.profile import DEFAULT_PROFILE_PATH, load_frozen_profile
     return load_frozen_profile((ROOT / DEFAULT_PROFILE_PATH).read_bytes())
+
+# Shared clean local clone and injected child runner for Tasks 6-7.
+import json
+import subprocess
+from collections import Counter
+
+
+class SystemFakeRunner:
+    def __init__(self):
+        self.commands = []
+        self.seen = Counter()
+        self.mutations = {}
+        self.hook = None
+        self.responses = {}
+
+    def run(self, command):
+        from flywire_asca.qualification.process import ProcessEvidence
+        self.commands.append(command)
+        if command.gate_id in self.responses:
+            response = self.responses[command.gate_id]
+            return response(command) if callable(response) else replace(response,command=command)
+        gate = command.gate_id
+        self.seen[gate] += 1
+        if gate == "P01_TESTS":
+            stdout = b"884 passed in 0.1s\n"
+        elif gate == "P02_ARCHITECTURE":
+            stdout = b"architecture_contract_audit=PASS\n"
+        elif gate == "P03_REPOSITORY":
+            stdout = b"repository_qualification=PASS\n"
+        else:
+            if gate == "P04_A003":
+                module = legacy_module("run_familiarity_benchmark_a003.py")
+                traces,cases = module.build_a003_qualification_fixture()
+                payload = module.benchmark_report_payload(module.run_familiarity_benchmark(traces,cases))
+            elif gate.startswith("P"):
+                payload = _portable_payload({"P05_A008":"A008","P06_A009":"A009","P07_A010":"A010"}[gate])
+            else:
+                payload = _physical_payload(gate)
+            if (gate,self.seen[gate]) in self.mutations:
+                self.mutations[(gate,self.seen[gate])](payload)
+            stdout = json.dumps(payload,ensure_ascii=False,sort_keys=True,separators=(",",":")).encode()
+            if command.output_path is not None:
+                command.output_path.parent.mkdir(parents=True,exist_ok=True)
+                command.output_path.write_bytes(stdout)
+        if self.hook:
+            self.hook(command)
+        now = datetime.now(timezone.utc).isoformat()
+        return ProcessEvidence(command,now,now,0,stdout,b"",None)
+
+
+@pytest.fixture
+def qualification_context(tmp_path):
+    from flywire_asca.qualification.artifacts import ArtifactStore
+    from flywire_asca.qualification.portable import RunContext
+    from flywire_asca.qualification.profile import DEFAULT_PROFILE_PATH
+    root = tmp_path/"candidate"
+    result = subprocess.run(["git","-c","core.autocrlf=false","clone","--depth=1",
+        "--no-tags",ROOT.as_uri(),str(root)],capture_output=True)
+    assert result.returncode == 0, result.stderr
+    commit = subprocess.run(["git","rev-parse","HEAD"],cwd=root,check=True,capture_output=True).stdout.decode().strip()
+    runner = SystemFakeRunner()
+    bridge = legacy_module("_a011_legacy_evidence.py")
+    context = RunContext(root,commit,root/DEFAULT_PROFILE_PATH,
+                         ArtifactStore.create(root,tmp_path/"pack"),runner,bridge.load_legacy_validators(root))
+    return context

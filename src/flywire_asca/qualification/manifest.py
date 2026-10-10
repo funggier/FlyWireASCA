@@ -13,9 +13,9 @@ from typing import get_args, get_origin, get_type_hints, Union
 from .records import (
     BLOCKER_CODES, CLAIMS_BOUNDARY, PHYSICAL_GATE_IDS, PORTABLE_GATE_IDS,
     REASON_CODES, RESEARCH_OUTCOMES, EvidenceRole, FrozenCheck, Freshness,
-    GateStatus, PhysicalEnvironment, QualificationError, QualificationPack, Reason, Scope,
+    EngineeringVerdict, GateStatus, PhysicalEnvironment, QualificationError, QualificationPack, Reason, Scope,
 )
-from .classifier import classify_full, classify_portable, gate_issues, utc_time
+from .classifier import _decision, classify_full, classify_portable, gate_issues, utc_time
 
 
 def strict_json_object(raw):
@@ -117,7 +117,7 @@ def decode_pack(raw):
     return pack
 
 
-def manifest_issues(pack):
+def _manifest_issues(pack, completing_gate=None):
     issues = []
     gate_id = PORTABLE_GATE_IDS[0]
 
@@ -126,6 +126,8 @@ def manifest_issues(pack):
 
     full = pack.scope == Scope.FULL_SYSTEM
     required = PORTABLE_GATE_IDS + (PHYSICAL_GATE_IDS if full else ())
+    if completing_gate is not None:
+        required = tuple(g for g in required if g != completing_gate)
     gates = {g.gate_id: g for g in pack.gates}
     if pack.schema_version != 1 or pack.profile.schema_version != 1:
         issue("Unsupported schema version")
@@ -134,10 +136,16 @@ def manifest_issues(pack):
     issues.extend(gate_issues(pack.gates, required))
     if pack.is_final != full or (not full and pack.engineering_verdict is not None):
         issue("Scope/finality/verdict contradiction")
-    if pack.portable_status != classify_portable(pack.gates, pack.errors, pack.blockers):
+    portable_required = tuple(g for g in PORTABLE_GATE_IDS if g != completing_gate)
+    if pack.portable_status != _decision(pack.gates, pack.errors, pack.blockers, portable_required):
         issue("Portable status contradicts evidence")
-    if full and pack.engineering_verdict != classify_full(pack.gates, pack.errors, pack.blockers):
-        issue("Engineering verdict contradicts evidence")
+    if full:
+        decision = _decision(pack.gates, pack.errors, pack.blockers, required)
+        verdict = {GateStatus.PASS: EngineeringVerdict.ENGINEERING_QUALIFIED,
+                   GateStatus.FAIL: EngineeringVerdict.ENGINEERING_NOT_QUALIFIED,
+                   GateStatus.BLOCKED: EngineeringVerdict.QUALIFICATION_BLOCKED}[decision]
+        if pack.engineering_verdict != verdict:
+            issue("Engineering verdict contradicts evidence")
     if pack.claims_boundary != CLAIMS_BOUNDARY:
         issue("Missing declared claims boundary")
 
@@ -236,7 +244,7 @@ def manifest_issues(pack):
         if (pair in seen or replay.milestone not in ("A008", "A009", "A010") or
             replay.run_index not in (1, 2) or replay.source_commit != pack.source.commit or
             replay.profile_sha256 != pack.profile.sha256 or target is None or
-            target.status != GateStatus.PASS or replay.evidence_ref not in target.artifacts):
+            target.status not in (GateStatus.PASS, GateStatus.FAIL) or replay.evidence_ref not in target.artifacts):
             issue("Invalid replay observation")
         seen.add(pair)
     if gates.get("P08_FROZEN_AUDIT") and gates["P08_FROZEN_AUDIT"].status == GateStatus.PASS:
@@ -269,3 +277,73 @@ def artifact_issues(pack, root):
     """Artifact-aware validation is opt-in; decoding remains filesystem-independent."""
     from .artifacts import artifact_issues as check_artifacts
     return check_artifacts(pack, root)
+
+
+
+def manifest_issues(pack):
+    return _manifest_issues(pack)
+
+
+def validate_completed_evidence(pack, final_gate_id, artifact_root):
+    """Only fixed P09/H07 completed-prefix phases; no fabricated final gate."""
+    phases = {"P09_PACK_VALIDATION": Scope.PORTABLE_ONLY, "H07_FULL_VALIDATION": Scope.FULL_SYSTEM}
+    if phases.get(final_gate_id) != pack.scope:
+        raise QualificationError("EVIDENCE_INVALID", "Invalid completed-evidence validation phase")
+    from .artifacts import artifact_issues as check_artifacts
+    from .profile import load_frozen_profile
+    from .evidence import normalize_child, semantic_payload_sha256
+    from .process import CommandSpec, ProcessEvidence
+    from pathlib import Path
+    root = Path(artifact_root)
+    issues = list(check_artifacts(pack, root,
+        _manifest_check=lambda p: _manifest_issues(p, final_gate_id)))
+    def issue(message, refs=()):
+        issues.append(Reason("EVIDENCE_INVALID", final_gate_id, message, refs))
+    try:
+        copied = next(a for a in pack.artifact_index if a.kind == "profile")
+        profile = load_frozen_profile((root/copied.path).read_bytes())
+    except (StopIteration, OSError, QualificationError):
+        # A diagnostic profile failure cannot have accepted fresh replays.
+        if pack.replay_identity.observations:
+            issue("Untrusted profile cannot validate fresh replay evidence")
+        return tuple(issues)
+    for gate in pack.gates:
+        if gate.status != GateStatus.PASS or gate.gate_id in (
+            "P00_PROFILE_SOURCE", "P08_FROZEN_AUDIT", "P09_PACK_VALIDATION",
+            "H00_PREREQUISITES", "H07_FULL_VALIDATION"):
+            continue
+        prefix = "raw/" + gate.gate_id
+        try:
+            metadata = strict_json_object((root/(prefix+"/process.json")).read_bytes())
+            if metadata["source_commit"] != pack.source.commit or metadata["profile_sha256"] != pack.profile.sha256:
+                raise QualificationError("EVIDENCE_INVALID", "Child candidate/profile context differs")
+            command = CommandSpec(gate.gate_id, tuple(metadata["argv"]), Path(metadata["cwd"]),
+                Path(metadata["output_path"]) if metadata["output_path"] is not None else None,
+                metadata["timeout_seconds"])
+            if command.argv != gate.command or metadata["exit_code"] != gate.exit_code:
+                raise QualificationError("EVIDENCE_INVALID", "Raw command/exit disagrees with gate")
+            evidence = ProcessEvidence(command, metadata["started_at"], metadata["finished_at"],
+                metadata["exit_code"], (root/(prefix+"/stdout.log")).read_bytes(),
+                (root/(prefix+"/stderr.log")).read_bytes(), metadata["execution_error"])
+            output = (root/(prefix+"/output.json")).read_bytes() if command.output_path is not None else None
+            # Original acceptance already ran the script-owned legacy validator.
+            # This independent raw audit rechecks schema, identity and full frozen
+            # deterministic payload digests without importing cognition.
+            result = normalize_child(gate.gate_id, evidence, output, profile, lambda p: ())
+            if result.status != GateStatus.PASS:
+                issue("Raw child evidence contradicts PASS: " + "; ".join(r.message for r in result.errors),
+                      (prefix+"/stdout.log",))
+        except (OSError, KeyError, TypeError, ValueError) as exc:
+            issue("Cannot validate raw completed child: " + str(exc), (prefix+"/process.json",))
+    for replay in pack.replay_identity.observations:
+        try:
+            payload = strict_json_object((root/replay.evidence_ref).read_bytes())
+            digest = semantic_payload_sha256(payload, replay.milestone, profile)
+            rule = profile.values["portable_payloads"][replay.milestone]
+            if (digest != replay.payload_sha256 or digest != rule["semantic_sha256"] or
+                payload.get("fixture_version") != replay.fixture_version or
+                payload.get("fixture_fingerprint") != replay.fixture_fingerprint):
+                issue("Raw replay identity/semantics differs", (replay.evidence_ref,))
+        except (OSError, KeyError, TypeError, ValueError) as exc:
+            issue("Cannot validate raw replay: " + str(exc), (replay.evidence_ref,))
+    return tuple(issues)
