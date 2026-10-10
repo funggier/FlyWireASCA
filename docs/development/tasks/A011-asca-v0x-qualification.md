@@ -224,11 +224,11 @@ Do not create an A012 or release as part of closure.
 - [x] Written spec explicitly approved.
 - [x] Implementation plan reviewed/approved and execution method selected.
 - [x] A011 issue/worktree/activation follow G06.
-- [ ] Portable pack passes from a clean checkout without Ollama.
-- [ ] Fresh local physical qualification reproduces pinned identities.
-- [ ] Frozen fingerprints, threshold, A010 counts/sentinel, and outcomes preserved.
-- [ ] Mutation/malformed/incomplete/provenance tests fail closed.
-- [ ] Complete full-system pack yields ENGINEERING_QUALIFIED.
+- [x] Portable pack passes from a clean checkout without Ollama.
+- [x] Fresh local physical qualification reproduces pinned identities.
+- [x] Frozen fingerprints, threshold, A010 counts/sentinel, and outcomes preserved.
+- [x] Mutation/malformed/incomplete/provenance tests fail closed.
+- [x] Complete full-system pack yields ENGINEERING_QUALIFIED.
 - [ ] Whole-change review completed and Critical/Important findings resolved.
 - [ ] Exact reviewed branch CI and exact integration/main CI GREEN.
 - [ ] Final report/issue/task/CURRENT/ROADMAP coherent; final main clean/synced.
@@ -276,8 +276,8 @@ Written-spec publication:
 - publication main clean/synced at the spec commit.
 
 These are baseline/planning observations, not A011 implementation or fresh
-A011 full-system qualification evidence. No new physical qualifier replay is
-claimed in this documentation session.
+A011 full-system qualification evidence. No new physical qualifier replay was
+claimed at those historical publication stages.
 
 Implementation-plan publication:
 - plan commit: `9d17350a6e4f4305b797e7d2766bb619416a510b`;
@@ -305,15 +305,15 @@ test_pre_a011_stays_completed_during_a011_lifecycle failed on ACTIVE assertion;
 | Execution Task | State |
 | --- | --- |
 | 1 Activation | DONE — mutable ledger RED/GREEN verified |
-| 2 Records/schema/classifier | NEXT |
-| 3 Frozen profile/provenance | PLANNED |
-| 4 Process/evidence adapters | PLANNED |
-| 5 Artifacts/publication | PLANNED |
-| 6 Portable pack | PLANNED |
-| 7 Physical pack | PLANNED |
-| 8 Portable CI | PLANNED |
-| 9 Fresh qualification | PLANNED |
-| 10 Review/integration | PLANNED |
+| 2 Records/schema/classifier | DONE |
+| 3 Frozen profile/provenance | DONE |
+| 4 Process/evidence adapters | DONE |
+| 5 Artifacts/publication | DONE |
+| 6 Portable pack | DONE |
+| 7 Physical pack | DONE |
+| 8 Portable CI | DONE |
+| 9 Fresh qualification | DONE |
+| 10 Review/integration | NEXT — independent whole-change review |
 | 11 Closure/handoff | PLANNED |
 
 Ruling: Skill helper/reference resources were not available via advertised
@@ -327,10 +327,76 @@ Task 1: Ruling: full suite exposed two PRE-A011 historical tests still owning mu
 
 ## Current Action
 
-A011 ACTIVE. Task1 activation and historical lifecycle ownership repaired under
-RED/GREEN; full suite/audits verified. Execute Task2 under TDD.
+A011 ACTIVE. Tasks1-9 are GREEN, including exact candidate CI and fresh
+18-gate full-system qualification. Proceed to Task10 independent whole-change
+review, applicable RED/GREEN infrastructure repair, and reviewed integration.
 
 ## Next Action
 
-Continue approved plan Tasks2-11 without repeating approval gates.
+Continue approved Tasks10-11 without repeating completed approval gates.
 Preserve pinned research results/source and full physical/exact-CI evidence.
+
+## Fresh candidate qualification — 2026-10-10
+
+Qualified behavior SHA: `f36080155957e30a0a9ab6be2270a67330a151e0`.
+Exact push/branch CI [38048466684](https://github.com/funggier/FlyWireASCA/actions/runs/38048466684): SUCCESS.
+Portable CI artifact: `11667799249` / `a011-portable-38048466684-1`; downloaded and schema/index/raw hashes/source/finality audited.
+
+Fresh full replay: `FULL_SYSTEM`, `is_final=true`, `ENGINEERING_QUALIFIED`, exit0.
+Source before/after clean on the same SHA; 18 mandatory gates once/PASS,
+94 frozen checks PASS, 86 indexed artifacts validated; errors/blockers empty.
+Physical process ran 2026-10-10T11:31:44.850Z–11:33:45.680Z (duration descriptive).
+
+Pack root:
+`T:\Space\Projects\ProjectsAI\FlyWireASCA-qualification-evidence\a011-f360801-candidate-61cbe52ea47d4665ab72eaa67739df0b`
+
+| File | SHA256 |
+| --- | --- |
+| artifact-index.json | `6222146925aca446ade4380fc996580e869d31c47b9e4c394b49125b545a39c2` |
+| qualification.json | `5b62d61c64bd5168601abcb9d49b0aee7fc21b2d1b9549fbbe5625601f4625d2` |
+| qualification.md | `c043734a1b68efa9af0e1ef49cdb30356fc4fe4be070b902e65d03939a89f06f` |
+
+Profile SHA256: `add06f285bf6decc7d492b987d3769dc64db4cb3d0177c8c6586d50ee5f6d46d`.
+Protected Git-tree SHA256: `8df49f05fe54de43667ab2f8ef5de2caae9376ffedf2cb8f8d26f0e4abcca6b6` (all 67 original paths unchanged).
+Host `CDQ-P`, `Windows-10-10.0.19045-SP0`, Python `3.14.6`,
+Ollama `0.32.15`, endpoint `http://127.0.0.1:11434`.
+Pinned terminal/embedding digests match before/after; actual embedding/vector-health dimension1024;
+A005 actual threshold `0.5037018224299838` / physical_frozen_threshold_v1.
+
+| Gate | State |
+| --- | --- |
+| P00_PROFILE_SOURCE | PASS |
+| P01_TESTS | PASS |
+| P02_ARCHITECTURE | PASS |
+| P03_REPOSITORY | PASS |
+| P04_A003 | PASS |
+| P05_A008 | PASS |
+| P06_A009 | PASS |
+| P07_A010 | PASS |
+| P08_FROZEN_AUDIT | PASS |
+| P09_PACK_VALIDATION | PASS |
+| H00_PREREQUISITES | PASS |
+| H01_A004 | PASS |
+| H02_A005 | PASS |
+| H03_A006 | PASS |
+| H04_A007 | PASS |
+| H05_A009 | PASS |
+| H06_A010 | PASS |
+| H07_FULL_VALIDATION | PASS |
+
+| Research milestone | Frozen outcome | Fresh evidence role |
+| --- | --- | --- |
+| A006 | NOT_SUPPORTED | PHYSICAL_PRIMARY |
+| A007 | SUPPORTED | PHYSICAL_PRIMARY |
+| A008 | SUPPORTED | PORTABLE_PRIMARY |
+| A009 | SUPPORTED | PORTABLE_PRIMARY + PHYSICAL_SECONDARY |
+| A010 | NOT_SUPPORTED | PORTABLE_PRIMARY + PHYSICAL_SECONDARY |
+
+A010: 12 total cases, 9 primary; ASCA/dense successes7/8, shared7, dense-only1,
+ASCA-only0, queries28/27, scored vectors1984/1440, cumulative selections66/480,
+peak selections12/256, procedure attempts14/9. Dense-only sentinel
+`selective-routing-miss-sentinel`: ASCA_PRIMARY=false / DENSE_EXHAUSTIVE=true.
+All original ablations/cases/repeat payloads retained and full frozen semantic digests match.
+
+This is candidate evidence. Whole-change review and integration/main qualification remain required.
+The commit containing this ledger is documentation metadata, distinct from qualified behavior SHA.

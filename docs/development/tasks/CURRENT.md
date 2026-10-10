@@ -12,8 +12,8 @@ Activation base: `e8f75a862e0cb0d28b7e4efe25a77fa088ad646f`; exact base CI: `380
 Execution method: Native, approved 2026-10-10 16:52:26 +07:00 with
 “ทำ Native ได้เลยครับ ถ้าจำเป็นก็ Subagent-driven ได้”.
 
-G03/G04/G05/G06 are complete. Task 1 activation is GREEN;
-Task 2 records/schema/classifier is next. PRE-A011 stays DONE/#11 completed;
+G03/G04/G05/G06 are complete. Execution Tasks1-9 are GREEN;
+Task10 independent whole-change review/integration is next. PRE-A011 stays DONE/#11 completed;
 A001-A010 stay DONE.
 
 - [A011 task and execution evidence](A011-asca-v0x-qualification.md)
@@ -26,7 +26,7 @@ A009 SUPPORTED, A010 NOT_SUPPORTED. Version stays `0.1.0.dev0`.
 
 ## Next Action
 
-Execute approved Tasks 2-11 continuously with TDD and persistent task evidence.
+Continue approved Tasks10-11 with whole-change review and persistent evidence.
 Fresh full portable/physical qualification, whole-change review and exact
 branch/integration/main CI are required before closure.
 
@@ -36,3 +36,10 @@ Live Git/GitHub/runtime override historical stage labels. Resume from the
 first incomplete execution Task; do not redo completed PRE-A011/design/spec/plan.
 Do not reset/clean/rebase/force-push or destroy WIP/history.
 Keep FlyWireLLM untouched; no cognitive retuning, release/tag/version promotion.
+
+## Candidate evidence
+
+Behavior SHA: f36080155957e30a0a9ab6be2270a67330a151e0.
+Exact branch CI38048466684 SUCCESS; fresh FULL_SYSTEM pack ENGINEERING_QUALIFIED,
+18 gates PASS. Candidate evidence/details are in the A011 task. This CURRENT
+update is metadata; integration/main has not yet been qualified.
