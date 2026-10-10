@@ -25,6 +25,7 @@ EXPECTED_BASELINE_MODES = (
 
 ALLOWED_PACKAGE_DEPENDENCIES: dict[str, frozenset[str]] = {
     "contracts": frozenset(),
+    "qualification": frozenset({"contracts"}),
     "model": frozenset({"contracts"}),
     "embedding": frozenset({"contracts"}),
     "familiarity": frozenset({"contracts"}),
