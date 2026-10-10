@@ -12,4 +12,4 @@
 | A008 | Procedural Memory / Skill Chunking | DONE |
 | A009 | Integrated Cognitive Loop | DONE |
 | A010 | Dense/Non-selective Baseline Comparison | DONE |
-| A011 | ASCA v0.x Qualification | ACTIVE |
+| A011 | ASCA v0.x Qualification | DONE |

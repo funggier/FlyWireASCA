@@ -137,3 +137,16 @@ model pull/restart, or new physical process deadline. It changes no cognitive
 semantics and makes no external certification, FLOPs, energy, or general speed
 claim. Exact candidate/main CI and fresh physical evidence are recorded in the
 A011 task and final report; this topology document alone is not completion proof.
+
+## 9. A011 reviewed integration evidence
+
+Engineering qualification on exact integration/main `f83bf1febbb6ac0bdcba3d8bf05dc8d437edc5ac`: FULL_SYSTEM, is_final=true, ENGINEERING_QUALIFIED;18 gates/94 frozen checks
+PASS,86 indexed artifacts independently audited, errors/blockers empty.
+Exact push/main [CI38058896880](https://github.com/funggier/FlyWireASCA/actions/runs/38058896880) SUCCESS.
+Fresh repaired-feature e96d71b and main physical packs are separate; portable
+CI packs remain nonfinal/null verdict.
+
+[Evidence report](reports/ASCA-20261010-A011-v0x-qualification.md) records
+exact sources, review/TDD repairs, frozen identities/counts/outcomes, pack
+locations/hashes and actual host/runtime. Later closure/handoff metadata
+receives its own exact CI and does not replace the qualified physical SHA.

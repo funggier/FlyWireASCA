@@ -1,6 +1,6 @@
 # A011 — ASCA v0.x Qualification
 
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #12
 Branch: qualification/a011-asca-v0x
 Activation base: e8f75a862e0cb0d28b7e4efe25a77fa088ad646f
@@ -229,10 +229,18 @@ Do not create an A012 or release as part of closure.
 - [x] Frozen fingerprints, threshold, A010 counts/sentinel, and outcomes preserved.
 - [x] Mutation/malformed/incomplete/provenance tests fail closed.
 - [x] Complete full-system pack yields ENGINEERING_QUALIFIED.
-- [ ] Whole-change review completed and Critical/Important findings resolved.
-- [ ] Exact reviewed branch CI and exact integration/main CI GREEN.
+- [x] Whole-change review completed and Critical/Important findings resolved.
+- [x] Exact reviewed branch CI and exact integration/main CI GREEN.
+- [x] FlyWireLLM untouched; package remains 0.1.0.dev0; no tag/release promotion.
+
+## Closure publication gate
+
 - [ ] Final report/issue/task/CURRENT/ROADMAP coherent; final main clean/synced.
-- [ ] FlyWireLLM untouched; package remains 0.1.0.dev0; no tag/release promotion.
+
+This unchanged requirement remains mandatory. Engineering acceptance is complete;
+publication closes only after metadata CI, live Issue12 completion and final
+handoff verification. Intermediate DONE describes the Step3 engineering state
+required by the approved plan, not a fabricated GitHub CLOSED response.
 
 ## Preserved evidence
 
@@ -258,7 +266,7 @@ A010 portable primary comparison counts.
 
 ## Evidence
 
-Live baseline:
+Historical design baseline:
 - SHA `c1498e8e30a23fb67965239d13f0531d5326079e`;
 - exact main CI [38038307095](https://github.com/funggier/FlyWireASCA/actions/runs/38038307095): success;
 - clean main, exact origin/main match, ahead/behind 0/0;
@@ -313,8 +321,8 @@ test_pre_a011_stays_completed_during_a011_lifecycle failed on ACTIVE assertion;
 | 7 Physical pack | DONE |
 | 8 Portable CI | DONE |
 | 9 Fresh qualification | DONE |
-| 10 Review/integration | ACTIVE — independent review complete, repairs GREEN; new qualification/integration pending |
-| 11 Closure/handoff | PLANNED |
+| 10 Review/integration | DONE — independent review, TDD repairs, exact branch/main CI and fresh main pack |
+| 11 Closure/handoff | CLOSING — report/lifecycle ready; exact metadata CI, live issue completion and final handoff pending |
 
 Ruling: Skill helper/reference resources were not available via advertised
 paths; an equivalent ignored local Python task driver retains briefs/BASE/
@@ -327,17 +335,19 @@ Task 1: Ruling: full suite exposed two PRE-A011 historical tests still owning mu
 
 ## Current Action
 
-A011 ACTIVE. Tasks1-9 are GREEN. Task10 independent review found two Important
-qualification infrastructure defects; both are repaired with observed
-RED/GREEN and full suite952 PASS. Qualify the repaired feature SHA with fresh
-evidence/exact CI, then integrate and qualify the exact main SHA.
+Engineering implementation and reviewed integration are DONE. Task10 passed
+fresh qualification on repaired feature e96d71b and exact integration/main
+f83bf1f. All18 gates/94 frozen checks PASS;86 artifacts validated in each pack.
+Task11 report/lifecycle closure is being published under exact metadata CI.
+Issue12 is still open until its live completion operation passes that gate.
 
 ## Next Action
 
-Continue approved Tasks10-11 without repeating completed approval gates.
-Preserve pinned research results/source and full physical/exact-CI evidence.
+Finish Task11: require the exact closure metadata main CI, close actual
+Issue12 as completed and verify live, then publish the full handoff and require
+its exact CI/clean sync. No new milestone or release is authorized.
 
-## Fresh candidate qualification — 2026-10-10
+## Historical candidate qualification — 2026-10-10
 
 Qualified behavior SHA: `f36080155957e30a0a9ab6be2270a67330a151e0`.
 Exact push/branch CI [38048466684](https://github.com/funggier/FlyWireASCA/actions/runs/38048466684): SUCCESS.
@@ -399,7 +409,7 @@ peak selections12/256, procedure attempts14/9. Dense-only sentinel
 `selective-routing-miss-sentinel`: ASCA_PRIMARY=false / DENSE_EXHAUSTIVE=true.
 All original ablations/cases/repeat payloads retained and full frozen semantic digests match.
 
-This is candidate evidence. Whole-change review and integration/main qualification remain required.
+This is historical pre-review candidate evidence. Subsequent reviewed repair and integration qualification are recorded below; this pack is not reused for those SHAs.
 The commit containing this ledger is documentation metadata, distinct from qualified behavior SHA.
 
 ## Whole-change review and infrastructure repairs
@@ -426,4 +436,31 @@ All review/reproducer/logs retained in this plan's ignored execution workspace.
 
 The prior real f360801 pack has consistent actual details and remains historical
 evidence for that SHA. It does not qualify these repairs or integration/main.
-Fresh repaired-feature and exact integration qualification are required.
+Fresh repaired-feature and exact integration qualification subsequently passed, as recorded below.
+
+## Reviewed integration qualification and closure
+
+Repaired feature SHA: `e96d71b033212668bc3ce98873903618c9c44bcf`; exact branch CI38058426606 SUCCESS.
+Independent review range ends at ba7b150; repairs verified by one author TDD pass.
+PR13 CI38058683663 SUCCESS; normal merge preserves10 feature commits.
+Qualified integration/main SHA: `f83bf1febbb6ac0bdcba3d8bf05dc8d437edc5ac`; exact push/main CI38058896880 SUCCESS.
+Main and origin/main exactly equal0/0 and clean before/after replay.
+Fresh feature and main packs are separate; all18/94 checks PASS,86 artifacts each,
+FULL_SYSTEM/is_final=true/ENGINEERING_QUALIFIED/exit0. No errors/blockers.
+
+[Final evidence report](../reports/ASCA-20261010-A011-v0x-qualification.md)
+
+Integration full pack: `T:\Space\Projects\ProjectsAI\FlyWireASCA-qualification-evidence\a011-f83bf1f-main-1791641770439`
+
+Manifest SHA256: `73491f44d1feb0d1d19b4adb4a20ed5d8684e4cc651d771e11c70afed4a8d6cc`
+
+Repaired feature full pack: `T:\Space\Projects\ProjectsAI\FlyWireASCA-qualification-evidence\a011-e96d71b-reviewed-1791641331086`
+
+Manifest SHA256: `4c831003728604e9efca81ad0d7d5d2e74eec2b4bd7b52e6f5af9ed5c3cf155d`
+
+The report records all18 gates,94 frozen checks,86 raw artifacts, host/runtime/
+models, profile/protected hashes, separate five research roles, full pack and
+downloaded CI artifact hashes. Later closure/handoff metadata commits receive
+their own exact CI and do not relabel the qualified integration SHA.
+
+GitHub completion verified: pending exact closure metadata CI / live operation.

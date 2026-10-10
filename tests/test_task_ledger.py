@@ -13,17 +13,19 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_active_a011_with_actual_issue():
+def test_current_points_to_completed_a011_without_automatic_next_milestone():
     current = _read("CURRENT.md")
     task = _read("A011-asca-v0x-qualification.md")
     roadmap = _read("ROADMAP.md")
     assert "Current task: A011" in current
     assert current.count("Current task:") == 1
-    assert "Status: ACTIVE" in current
-    assert "Status: ACTIVE" in task
+    assert "Status: DONE" in current
+    assert "Status: DONE" in task
     assert "GitHub Issue: #12" in current
     assert "GitHub Issue: #12" in task
-    assert "| A011 | ASCA v0.x Qualification | ACTIVE |" in roadmap
+    assert "| A011 | ASCA v0.x Qualification | DONE |" in roadmap
+    assert "| A012 |" not in roadmap
+    assert "Current task: A012" not in current
 
 
 def test_a003_contains_recovery_and_evidence_sections():
@@ -171,7 +173,7 @@ def test_pre_a011_stays_completed_during_a011_lifecycle():
     roadmap = _read("ROADMAP.md")
     pre = _read("PRE-A011-architecture-process-stabilization.md")
     assert "Current task: A011" in current
-    assert "Status: ACTIVE" in current
+    assert "Status: DONE" in current
     assert "GitHub Issue: #12" in current
     assert "Status: DONE" in pre
     assert "GitHub Issue: #11 (closed as completed)" in pre
@@ -181,4 +183,4 @@ def test_pre_a011_stays_completed_during_a011_lifecycle():
         assert f"| {task_id} |" in roadmap
         row = next(line for line in roadmap.splitlines() if f"| {task_id} |" in line)
         assert row.rstrip().endswith("| DONE |")
-    assert "| A011 | ASCA v0.x Qualification | ACTIVE |" in roadmap
+    assert "| A011 | ASCA v0.x Qualification | DONE |" in roadmap
