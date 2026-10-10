@@ -65,13 +65,13 @@ FlyWireLLM remains untouched.
 - [x] Implementation plan approved.
 - [x] PRE-A011 Issue #11 created.
 - [x] Isolated maintenance worktree created.
-- [ ] Canonical architecture/qualification documentation published.
-- [ ] Historical lifecycle tests decoupled from mutable CURRENT/ROADMAP state.
-- [ ] Repository lifecycle qualifier hardened.
-- [ ] Package dependency direction/no-cycle audit enforced.
-- [ ] CI/qualification matrix aligned.
-- [ ] Justified maintainability cleanup completed.
-- [ ] Full portable and physical verification GREEN.
+- [x] Canonical architecture/qualification documentation published.
+- [x] Historical lifecycle tests decoupled from mutable CURRENT/ROADMAP state.
+- [x] Repository lifecycle qualifier hardened.
+- [x] Package dependency direction/no-cycle audit enforced.
+- [x] CI/qualification matrix aligned.
+- [x] Justified maintainability cleanup completed.
+- [x] Full portable and physical verification GREEN.
 - [ ] Whole-change review GREEN.
 - [ ] Reviewed main integration and exact main CI GREEN.
 - [ ] Issue #11 closed completed.
@@ -106,11 +106,41 @@ FlyWireLLM remains untouched.
   A010 retrieval-work weakness would be a new research hypothesis, not
   maintenance cleanup.
 
+## Qualification Evidence
+
+Pre-review qualified behavior SHA:
+
+`1c1f79a2213e248a0e1ea383943eee7281f1231a`
+
+Fresh portable gate:
+- qualified behavior suite: `552 passed`;
+- closure-candidate local suite after report/tests: `555 passed`;
+- architecture contract audit: PASS;
+- repository qualification: PASS;
+- A003/A008/A009/A010 portable qualification: PASS;
+- A009 fingerprint:
+  `2f92b5092de346f62879ac2cbb9f96d6de5d6f919e12d0693345c8228b01ab2a`;
+- A010 fingerprint:
+  `69d20542cd1e7e5c25a0fb61b9060f622379206b519da3cec7624e00bb6e5d4c`.
+
+Fresh local physical matrix:
+- A004: GREEN;
+- A005: GREEN;
+- A006: GREEN with `NOT_SUPPORTED`;
+- A007: GREEN with `SUPPORTED`;
+- A009: GREEN with portable outcome `SUPPORTED`;
+- A010: GREEN with portable outcome `NOT_SUPPORTED`.
+
+Qualification report:
+
+`docs/development/reports/ASCA-20261010-PRE-A011-architecture-process-stabilization.md`
+
 ## Current Action
 
-Task 1 — activate PRE-A011 maintenance gate.
+Task 8 — closure candidate is qualification-ready; whole-change review pending.
 
 ## Next Action
 
-Publish canonical architecture and qualification truth, then continue through the
-approved implementation plan.
+Commit/push the closure candidate, require exact feature-branch CI, perform the
+whole-change review, resolve every Critical/Important finding, then integrate
+reviewed behavior to main.

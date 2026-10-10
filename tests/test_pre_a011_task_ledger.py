@@ -37,3 +37,66 @@ def test_pre_a011_task_records_approved_spec_plan_and_boundaries():
     assert "A010" in task and "NOT_SUPPORTED" in task
     assert "A011" in task and "PLANNED" in task
     assert "FlyWireLLM" in task and "untouched" in task.lower()
+
+REPORT = ROOT / "docs" / "development" / "reports" / "ASCA-20261010-PRE-A011-architecture-process-stabilization.md"
+
+
+def test_pre_a011_closure_candidate_records_portable_physical_and_frozen_identity():
+    report = read(REPORT)
+    assert "PRE-A011 closure candidate" in report
+    assert "552 passed" in report
+    assert "architecture_contract_audit=PASS" in report
+    assert "repository_qualification=PASS" in report
+    assert "2f92b5092de346f62879ac2cbb9f96d6de5d6f919e12d0693345c8228b01ab2a" in report
+    assert "69d20542cd1e7e5c25a0fb61b9060f622379206b519da3cec7624e00bb6e5d4c" in report
+    assert "A006: `NOT_SUPPORTED`" in report
+    assert "A007: `SUPPORTED`" in report
+    assert "A008: `SUPPORTED`" in report
+    assert "A009: `SUPPORTED`" in report
+    assert "A010: `NOT_SUPPORTED`" in report
+    assert "qwen3.5:4b" in report
+    assert "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd" in report
+    assert "qwen3-embedding:0.6b" in report
+    assert "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d" in report
+    assert "0.5037018224299838" in report
+    assert "A004 physical qualification: GREEN" in report
+    assert "A005 physical qualification: GREEN" in report
+    assert "A006 physical qualification: GREEN" in report
+    assert "A007 physical qualification: GREEN" in report
+    assert "A009 physical qualification: GREEN" in report
+    assert "A010 physical qualification: GREEN" in report
+    assert "A011 GitHub issue: not created" in report
+
+
+def test_pre_a011_closure_candidate_classifies_bounded_source_cleanup():
+    report = read(REPORT)
+    for path in (
+        "src/flywire_asca/contracts/validation.py",
+        "src/flywire_asca/model/ollama.py",
+        "src/flywire_asca/embedding/ollama.py",
+    ):
+        assert path in report
+    assert "44 passed" in report
+    assert "shared http transport: not refactored" in report.lower()
+    assert "benchmark modules: not split" in report.lower()
+    assert "retrieval scheduling: not changed" in report.lower()
+    assert "behavior-preserving" in report.lower()
+
+
+def test_pre_a011_task_marks_implementation_and_qualification_green_but_review_pending():
+    task = read(TASKS / "PRE-A011-architecture-process-stabilization.md")
+    current = read(TASKS / "CURRENT.md")
+    for line in (
+        "- [x] Canonical architecture/qualification documentation published.",
+        "- [x] Historical lifecycle tests decoupled from mutable CURRENT/ROADMAP state.",
+        "- [x] Repository lifecycle qualifier hardened.",
+        "- [x] Package dependency direction/no-cycle audit enforced.",
+        "- [x] CI/qualification matrix aligned.",
+        "- [x] Justified maintainability cleanup completed.",
+        "- [x] Full portable and physical verification GREEN.",
+    ):
+        assert line in task
+    assert "- [ ] Whole-change review GREEN." in task
+    assert "- [ ] Reviewed main integration and exact main CI GREEN." in task
+    assert "Current task: PRE-A011" in current
+    assert "Status: ACTIVE" in current
