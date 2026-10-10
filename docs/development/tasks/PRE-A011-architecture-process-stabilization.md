@@ -89,6 +89,23 @@ FlyWireLLM remains untouched.
 - Any source cleanup has characterization plus physical evidence.
 - FlyWireLLM remains untouched.
 
+## Maintainability Decisions
+
+- Shared private JSON shape validation: **refactored** into
+  `flywire_asca.contracts.validation` with caller-selected protocol exception
+  types. Model/embedding HTTP transports, request payloads, timeouts, identity
+  checks, and public adapter APIs remain separate and unchanged.
+- Shared Ollama HTTP transport: **not refactored**. Model and embedding adapters
+  intentionally retain distinct protocol/timeout/unavailable exception domains;
+  forcing a common transport would add abstraction complexity beyond the
+  duplication removed here.
+- A009/A010 benchmark modules: **not split**. File size alone is not a sufficient
+  cohesion boundary, and pre-A011 splitting would add regression surface without
+  improving evidence validity.
+- A009/A010 retrieval scheduling/cache behavior: **not changed**. Optimizing the
+  A010 retrieval-work weakness would be a new research hypothesis, not
+  maintenance cleanup.
+
 ## Current Action
 
 Task 1 — activate PRE-A011 maintenance gate.

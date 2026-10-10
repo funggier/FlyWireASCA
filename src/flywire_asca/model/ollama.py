@@ -3,11 +3,19 @@ from __future__ import annotations
 import json
 import math
 import socket
+from functools import partial
 from typing import Protocol
 import urllib.error
 from urllib.request import Request, urlopen
 
-from flywire_asca.contracts.validation import require_nonempty
+from flywire_asca.contracts.validation import (
+    optional_nonnegative_int as _shared_optional_nonnegative_int,
+    optional_string as _shared_optional_string,
+    require_list as _shared_require_list,
+    require_mapping as _shared_require_mapping,
+    require_nonempty,
+    require_string as _shared_require_string,
+)
 
 from .contracts import (
     ModelDescriptor,
@@ -88,36 +96,14 @@ class UrllibJsonTransport:
         return decoded
 
 
-def _require_mapping(name: str, value: object) -> dict[str, object]:
-    if not isinstance(value, dict):
-        raise ModelProtocolError(f"{name} must be an object")
-    return value
-
-
-def _require_list(name: str, value: object) -> list[object]:
-    if not isinstance(value, list):
-        raise ModelProtocolError(f"{name} must be an array")
-    return value
-
-
-def _require_string(name: str, value: object) -> str:
-    if not isinstance(value, str) or not value.strip():
-        raise ModelProtocolError(f"{name} must be a nonblank string")
-    return value
-
-
-def _optional_string(name: str, value: object) -> str | None:
-    if value is None:
-        return None
-    return _require_string(name, value)
-
-
-def _optional_nonnegative_int(name: str, value: object) -> int | None:
-    if value is None:
-        return None
-    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
-        raise ModelProtocolError(f"{name} must be a nonnegative integer")
-    return value
+_require_mapping = partial(_shared_require_mapping, error_type=ModelProtocolError)
+_require_list = partial(_shared_require_list, error_type=ModelProtocolError)
+_require_string = partial(_shared_require_string, error_type=ModelProtocolError)
+_optional_string = partial(_shared_optional_string, error_type=ModelProtocolError)
+_optional_nonnegative_int = partial(
+    _shared_optional_nonnegative_int,
+    error_type=ModelProtocolError,
+)
 
 
 class OllamaModelAdapter:

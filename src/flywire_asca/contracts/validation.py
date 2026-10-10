@@ -31,3 +31,60 @@ def require_unique_nonempty(name: str, values: Iterable[str]) -> tuple[str, ...]
     if len(set(normalized)) != len(normalized):
         raise ValueError(f"{name} must contain unique values")
     return normalized
+
+
+def require_mapping(
+    name: str,
+    value: object,
+    *,
+    error_type: type[Exception] = ValueError,
+) -> dict[str, object]:
+    if not isinstance(value, dict):
+        raise error_type(f"{name} must be an object")
+    return value
+
+
+def require_list(
+    name: str,
+    value: object,
+    *,
+    error_type: type[Exception] = ValueError,
+) -> list[object]:
+    if not isinstance(value, list):
+        raise error_type(f"{name} must be an array")
+    return value
+
+
+def require_string(
+    name: str,
+    value: object,
+    *,
+    error_type: type[Exception] = ValueError,
+) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise error_type(f"{name} must be a nonblank string")
+    return value
+
+
+def optional_string(
+    name: str,
+    value: object,
+    *,
+    error_type: type[Exception] = ValueError,
+) -> str | None:
+    if value is None:
+        return None
+    return require_string(name, value, error_type=error_type)
+
+
+def optional_nonnegative_int(
+    name: str,
+    value: object,
+    *,
+    error_type: type[Exception] = ValueError,
+) -> int | None:
+    if value is None:
+        return None
+    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+        raise error_type(f"{name} must be a nonnegative integer")
+    return value
