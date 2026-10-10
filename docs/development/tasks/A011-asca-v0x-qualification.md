@@ -40,11 +40,20 @@ Written spec:
 The user explicitly approved proceeding with the conversational design by
 saying “อนุมัติให้ทำไปเลยครับ” in this session.
 
-This file is an **advance task inventory**. Work items below describe scope,
-dependencies, deliverables, and evidence. They are not a reviewed implementation
-plan and do not authorize execution. No writing-plans invocation or
-implementation plan exists yet. Concrete file edits, RED/GREEN commands,
-commits, and execution scheduling are decided only after written-spec approval.
+Written-spec approval was received with “โอเคครับ ทำต่อได้เลย” on
+2026-10-10 at 16:11:41 +07:00, after the published written spec was presented.
+This unlocks writing-plans; it does not approve the future implementation plan.
+
+Implementation plan:
+[2026-10-10-a011-asca-v0x-qualification.md](../../superpowers/plans/2026-10-10-a011-asca-v0x-qualification.md)
+
+The writing-plans skill has been invoked. The plan defines concrete files,
+interfaces, named RED/GREEN tests, commands, commit boundaries, physical
+evidence, review, integration, and closure in 11 execution Tasks. This file
+remains the canonical Q01-Q11 inventory; the written plan refines dependency
+order by implementing artifact publication before the runners that consume it.
+The plan is written and author self-reviewed; commit/push/exact CI publication
+is in progress. User plan approval and execution-method selection remain pending.
 
 ## Approval gates
 
@@ -53,9 +62,9 @@ commits, and execution scheduling are decided only after written-spec approval.
 | G00 | Read handoff and verify live Git/GitHub/runtime baseline | PASS at `c1498e8e30a23fb67965239d13f0531d5326079e` |
 | G01 | Explicit approval of complete conversational design; permits written spec | PASS — user approval in this session |
 | G02 | Written spec, inline self-review, commit/push, exact spec-commit CI | PASS — spec published at `6eb5fb1399bc21a05599b92d9aa8b312df70c9e1`; exact CI `38039670308` success |
-| G03 | User explicitly reviews/approves the written spec | WAITING USER REVIEW |
-| G04 | Invoke writing-plans, create/self-review/publish implementation plan, exact CI | NOT STARTED — requires G03 |
-| G05 | User reviews/approves plan and selects execution method | NOT STARTED — requires G04 |
+| G03 | User explicitly reviews/approves the written spec | PASS — user “โอเคครับ ทำต่อได้เลย”, 2026-10-10 16:11:41 +07:00 |
+| G04 | Invoke writing-plans, create/self-review/publish implementation plan, exact CI | IN PROGRESS — plan written/self-review PASS; exact publication CI pending |
+| G05 | User reviews/approves plan and selects execution method | WAITING — requires completed G04; method not selected |
 | G06 | Create A011 issue, isolated worktree, and coherent ACTIVE task/ledger | NOT STARTED — requires G05 |
 
 A reply approves the stage actually presented. G01 does not approve a
@@ -72,10 +81,10 @@ or GitHub issues.
 | Q01 | Qualification records and final classifier | G06 | Strict scope/finality/gate contracts; precedence and incomplete-evidence RED -> GREEN tests |
 | Q02 | Frozen qualification profile and independent anchor | Q01 | Reviewed immutable identity profile; every expected-value mutation rejected |
 | Q03 | Existing qualifier evidence adapters and provenance | Q01, Q02 | Reuse existing CLI outputs/validators; command/exit/raw hashes/source context coherent |
-| Q04 | Portable orchestrator and deterministic replay audit | Q03 | All mandatory portable gates covered; repeat checks; no Ollama calls or recursive pytest |
+| Q04 | Portable orchestrator and deterministic replay audit | Q03, Q07 | All mandatory portable gates covered; repeat checks; no Ollama calls or recursive pytest |
 | Q05 | Portable CI integration | Q04 | Existing CI topology preserved; A011 portable pack tested on exact branch commit |
-| Q06 | Physical preflight and full-system orchestrator | Q03, Q04 | Missing runtime/model distinguished from wrong identity; fresh local portable plus sequential physical replay |
-| Q07 | Pack/report publication and artifact validation | Q01, Q03, Q04, Q06 | Atomic JSON/Markdown/raw-index output; hashes, roles, scopes, and finality agree |
+| Q06 | Physical preflight and full-system orchestrator | Q03, Q04, Q07 | Missing runtime/model distinguished from wrong identity; fresh local portable plus sequential physical replay |
+| Q07 | Pack/report publication and artifact validation | Q01, Q02, Q03 | Atomic JSON/Markdown/raw-index output; hashes, roles, scopes, and finality agree |
 | Q08 | Fresh system qualification and frozen evidence audit | Q05, Q06, Q07 | Complete portable/physical evidence on exact candidate; frozen identities/counts/outcomes unchanged |
 | Q09 | Whole-change review and applicable repairs | Q08 | Recorded review method; Critical/Important findings resolved with RED -> GREEN evidence |
 | Q10 | Reviewed main integration and exact CI | Q09 | Exact reviewed branch CI; non-destructive integration; exact main CI; clean/sync main |
@@ -212,7 +221,7 @@ Do not create an A012 or release as part of closure.
 
 ## Acceptance Criteria
 
-- [ ] Written spec explicitly approved.
+- [x] Written spec explicitly approved.
 - [ ] Implementation plan reviewed/approved and execution method selected.
 - [ ] A011 issue/worktree/activation follow G06.
 - [ ] Portable pack passes from a clean checkout without Ollama.
@@ -272,11 +281,14 @@ claimed in this documentation session.
 
 ## Current Action
 
-A011 remains PLANNED. Written spec and advance Task are published with exact
-CI GREEN. Wait for explicit user written-spec review/approval.
+A011 remains PLANNED. The written spec is explicitly approved; the detailed
+implementation plan is written and author self-reviewed. Complete exact
+publication CI, then wait for plan review/approval and execution-method choice.
 
 ## Next Action
 
-Stop for explicit user review/approval of the published written spec.
-Only then invoke writing-plans. Stop again for plan review and execution-method
-selection before creating an issue, worktree, ACTIVE state, or implementation.
+Stop for explicit user review/approval of the implementation plan and selection
+of Native or Subagent-driven execution. Native is recommended by the plan
+because the record, evidence, artifact, and runner interfaces are tightly shared.
+Only after both choices may G06/Task 1 create the actual issue and isolated
+worktree, change A011 to ACTIVE, and begin TDD implementation.
