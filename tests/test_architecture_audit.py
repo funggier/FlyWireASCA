@@ -122,3 +122,29 @@ def test_audit_rejects_sibling_relative_import_cycle(tmp_path: Path):
         and "model" in error
         for error in errors
     )
+
+
+def test_audit_rejects_qualification_to_cognitive_dependency(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "qualification" / "bad.py"
+    injected.parent.mkdir(exist_ok=True)
+    injected.write_text("from flywire_asca.integrated_loop import run_cognitive_loop\n", encoding="utf-8")
+    assert any("undeclared package dependency qualification -> integrated_loop" in e for e in audit(root))
+
+
+def test_audit_rejects_cognitive_to_qualification_dependency(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "model" / "bad_qualification.py"
+    injected.write_text("from flywire_asca.qualification import QualificationPack\n", encoding="utf-8")
+    assert any("undeclared package dependency model -> qualification" in e for e in audit(root))
+
+
+def test_audit_allows_qualification_to_contracts(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "qualification" / "allowed.py"
+    injected.parent.mkdir(exist_ok=True)
+    injected.write_text("from flywire_asca.contracts import CONTRACT_VERSION\n", encoding="utf-8")
+    assert audit(root) == []

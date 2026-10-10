@@ -46,5 +46,16 @@ jobs:
       - name: Qualify A010 dense non-selective baseline
         run: python scripts/qualify_baseline_comparison_a010.py
 
+      - name: Qualify A011 portable system
+        run: python scripts/qualify_asca_v0x_a011.py --expected-source-sha "$(git rev-parse HEAD)" --output-dir "$RUNNER_TEMP/a011-portable-${{ github.run_id }}-${{ github.run_attempt }}"
+
+      - name: Upload A011 portable qualification pack
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a011-portable-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/a011-portable-${{ github.run_id }}-${{ github.run_attempt }}/
+          if-no-files-found: error
+
       - name: Check whitespace
         run: git diff --check HEAD^ HEAD

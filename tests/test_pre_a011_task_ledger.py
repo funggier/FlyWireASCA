@@ -10,17 +10,11 @@ def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_pre_a011_is_done_and_current_returns_to_unactivated_a011():
-    current = read(TASKS / "CURRENT.md")
-    roadmap = read(TASKS / "ROADMAP.md")
+def test_pre_a011_is_done_and_records_historical_a011_resume():
     task = read(TASKS / "PRE-A011-architecture-process-stabilization.md")
-    assert "Current task: A011" in current
-    assert "Status: PLANNED" in current
-    assert "GitHub Issue: not created" in current
-    assert "| A011 | ASCA v0.x Qualification | PLANNED |" in roadmap
-    assert "PRE-A011" not in roadmap
     assert "Status: DONE" in task
     assert "GitHub Issue: #11 (closed as completed)" in task
+    assert "- [x] CURRENT returned to A011 / PLANNED / no issue." in task
 
 
 def test_pre_a011_task_records_approved_spec_plan_and_boundaries():
@@ -83,9 +77,8 @@ def test_pre_a011_closure_candidate_classifies_bounded_source_cleanup():
     assert "behavior-preserving" in report.lower()
 
 
-def test_pre_a011_task_marks_review_main_integration_issue_and_current_green():
+def test_pre_a011_task_records_completed_historical_closure_gates():
     task = read(TASKS / "PRE-A011-architecture-process-stabilization.md")
-    current = read(TASKS / "CURRENT.md")
     for line in (
         "- [x] Canonical architecture/qualification documentation published.",
         "- [x] Historical lifecycle tests decoupled from mutable CURRENT/ROADMAP state.",
@@ -100,9 +93,6 @@ def test_pre_a011_task_marks_review_main_integration_issue_and_current_green():
         "- [x] CURRENT returned to A011 / PLANNED / no issue.",
     ):
         assert line in task
-    assert "Current task: A011" in current
-    assert "Status: PLANNED" in current
-    assert "GitHub Issue: not created" in current
     assert "de7b9ab7227afc6e914ca0435b780d30b41eeea3" in task
     assert "38023542634" in task
 

@@ -1,53 +1,46 @@
 # Current Development Task
 
 Current task: A011
-Status: PLANNED
-GitHub Issue: not created
+Status: ACTIVE
+GitHub Issue: #12
 
 ## Current Action
 
-A011 — ASCA v0.x Qualification remains PLANNED and is not activated.
-PRE-A011 is complete; Issue #11 is CLOSED / COMPLETED. A001-A010 remain DONE.
+A011 — ASCA v0.x System Qualification / Certification Layer is active in the
+isolated branch `qualification/a011-asca-v0x`.
+Activation base: `e8f75a862e0cb0d28b7e4efe25a77fa088ad646f`; exact base CI: `38042756382` — success.
+Execution method: Native, approved 2026-10-10 16:52:26 +07:00 with
+“ทำ Native ได้เลยครับ ถ้าจำเป็นก็ Subagent-driven ได้”.
 
-The user approved the published written spec with “โอเคครับ ทำต่อได้เลย”
-on 2026-10-10 at 16:11:41 +07:00. The writing-plans skill has been invoked.
-The detailed implementation plan is written, author self-reviewed, published,
-and exact-CI GREEN.
+G03/G04/G05/G06 are complete. Execution Tasks1-9 are GREEN;
+Task10 independent review and two infrastructure repairs are GREEN;
+fresh repaired-feature qualification and integration are next. PRE-A011 stays DONE/#11 completed;
+A001-A010 stay DONE.
 
-The current gate is implementation-plan review/approval and execution-method
-selection. G03 and G04 are PASS; G05 is waiting. No method has been selected.
+- [A011 task and execution evidence](A011-asca-v0x-qualification.md)
+- [Approved design](../../superpowers/specs/2026-10-10-a011-asca-v0x-qualification-design.md)
+- [Approved implementation plan](../../superpowers/plans/2026-10-10-a011-asca-v0x-qualification.md)
+- [Historical plan-review handoff](../reports/ASCA-20261010-full-session-handoff-a011-plan-review.md)
 
-- [A011 planned Task](A011-asca-v0x-qualification.md)
-- [Approved written spec](../../superpowers/specs/2026-10-10-a011-asca-v0x-qualification-design.md)
-- [Implementation plan](../../superpowers/plans/2026-10-10-a011-asca-v0x-qualification.md)
-- [Latest full handoff](../reports/ASCA-20261010-full-session-handoff-a011-plan-review.md)
-
-Spec publication SHA: `6eb5fb1399bc21a05599b92d9aa8b312df70c9e1`
-Exact spec CI: `38039670308` — success
-Planning baseline SHA: `0ca486b136da127ce69543f8c5c9258b6663ece6`
-Exact baseline CI: `38039978481` — success
-Plan publication SHA: `9d17350a6e4f4305b797e7d2766bb619416a510b`
-Exact plan CI: `38042470411` — success
-
-Historical outcomes remain unchanged:
-
-- A006: `NOT_SUPPORTED`
-- A007: `SUPPORTED`
-- A008: `SUPPORTED`
-- A009: `SUPPORTED`
-- A010: `NOT_SUPPORTED`
+Research outcomes remain A006 NOT_SUPPORTED, A007 SUPPORTED, A008 SUPPORTED,
+A009 SUPPORTED, A010 NOT_SUPPORTED. Version stays `0.1.0.dev0`.
 
 ## Next Action
 
-Obtain explicit user plan review/approval and
-Native or Subagent-driven execution choice before creating an A011 issue,
-isolated worktree, ACTIVE state, or implementation. The plan recommends Native
-because records, evidence, artifacts, and runners share tight interfaces.
+Continue approved Tasks10-11 with repaired-feature qualification, integration and persistent evidence.
+Fresh full portable/physical qualification, whole-change review and exact
+branch/integration/main CI are required before closure.
 
 ## Resume Rule
 
-Live Git/GitHub/runtime are authoritative over stale prose. The written spec's
-AWAITING USER REVIEW label records its original publication stage; current
-approval evidence is in this ledger and the latest handoff.
-Do not reset/clean/rebase/force-push or reopen PRE-A011.
-Keep FlyWireLLM untouched and version `0.1.0.dev0`; no tag/release promotion.
+Live Git/GitHub/runtime override historical stage labels. Resume from the
+first incomplete execution Task; do not redo completed PRE-A011/design/spec/plan.
+Do not reset/clean/rebase/force-push or destroy WIP/history.
+Keep FlyWireLLM untouched; no cognitive retuning, release/tag/version promotion.
+
+## Candidate evidence
+
+Behavior SHA: f36080155957e30a0a9ab6be2270a67330a151e0.
+Exact branch CI38048466684 SUCCESS; fresh FULL_SYSTEM pack ENGINEERING_QUALIFIED,
+18 gates PASS. Candidate evidence/details are in the A011 task. This CURRENT
+update is metadata; integration/main has not yet been qualified.
