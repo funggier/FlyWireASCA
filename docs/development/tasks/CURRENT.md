@@ -9,11 +9,16 @@ GitHub Issue: not created
 A011 — ASCA v0.x Qualification remains PLANNED and is not activated.
 
 PRE-A011 — Architecture & Process Consistency Stabilization is complete and
-GitHub Issue #11 is closed as completed.
+GitHub Issue #11 is closed as completed. A001-A010 remain DONE.
 
-A001-A010 remain DONE.
+Conversational design approval was received in this session. The detailed
+written spec and advance Task are being published for written-spec review.
+
+- [A011 planned Task](A011-asca-v0x-qualification.md)
+- [A011 written spec](../../superpowers/specs/2026-10-10-a011-asca-v0x-qualification-design.md)
 
 Historical outcomes remain unchanged:
+
 - A006: `NOT_SUPPORTED`
 - A007: `SUPPORTED`
 - A008: `SUPPORTED`
@@ -22,9 +27,14 @@ Historical outcomes remain unchanged:
 
 ## Next Action
 
-Do not create or activate A011 until a new explicit design/plan gate approves it.
+Obtain explicit user review/approval of the published written spec after its
+self-review, commit/push, and exact CI. Then invoke writing-plans.
+Require plan review/approval and execution-method selection before creating
+an A011 issue, isolated worktree, ACTIVE task state, or implementation.
 
 ## Resume Rule
 
-Treat live Git/GitHub/runtime as authoritative over stale prose. Do not
-reset/clean/rebase/force-push. Keep FlyWireLLM untouched.
+Treat live Git/GitHub/runtime as authoritative over stale prose.
+Do not reset/clean/rebase/force-push. Do not reopen PRE-A011.
+Keep FlyWireLLM untouched and package version `0.1.0.dev0`.
+No tag/release promotion is authorized by A011.
