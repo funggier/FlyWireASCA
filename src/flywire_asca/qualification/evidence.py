@@ -49,6 +49,100 @@ def semantic_payload_sha256(payload, milestone, profile):
     return hashlib.sha256(raw).hexdigest()
 
 
+def _physical_detail_errors(gate_id, payload):
+    """Check the acceptance evidence emitted by the unchanged physical CLIs."""
+    errors = []
+    def reject(message):
+        errors.append(message)
+    def uint(value):
+        return type(value) is int and value >= 0
+    def ids(value):
+        return (type(value) is list and all(type(item) is str and item for item in value)
+                and len(set(value)) == len(value))
+    def same(left, right):
+        return json.dumps(left, sort_keys=True, allow_nan=False) == json.dumps(right, sort_keys=True, allow_nan=False)
+
+    if gate_id == "H02_A005":
+        report = payload.get("benchmark")
+        if type(report) is not dict:
+            return ("A005 benchmark detail is missing or malformed",)
+        if (report.get("scope") != "controlled_fixture_only" or
+            any(type(report.get(key)) is not float or report[key] != 1.0 for key in (
+                "recall_at_1", "recall_at_k", "mean_reciprocal_rank",
+                "no_hit_correctness", "metadata_filter_correctness")) or
+            any(type(report.get(key)) is not int or report[key] != 0 for key in (
+                "false_retrieval_count", "ambiguity_failure_count"))):
+            reject("A005 benchmark contradicts existing retrieval acceptance")
+        cases = report.get("case_results")
+        if (type(cases) is not list or not cases or
+            type(report.get("case_count")) is not int or report["case_count"] != len(cases) or
+            any(type(case) is not dict for case in cases)):
+            return tuple(errors + ["A005 benchmark case evidence is missing or inconsistent"])
+        case_ids = [case.get("case_id") for case in cases]
+        calibration_ids = payload.get("calibration_case_ids")
+        if (not ids(case_ids) or not same(case_ids,payload.get("qualification_case_ids")) or
+            not ids(calibration_ids) or not calibration_ids or
+            set(case_ids) & set(calibration_ids)):
+            reject("A005 benchmark case identities contradict qualification provenance")
+        for case in cases:
+            relevant, returned = case.get("relevant_memory_ids"), case.get("returned_memory_ids")
+            if (not ids(relevant) or not ids(returned) or
+                type(case.get("false_retrieval_count")) is not int or case["false_retrieval_count"] != 0 or
+                case.get("ambiguity_preserved") is not True or
+                any(case.get(key) is not None and
+                    (type(case[key]) is not float or case[key] != 1.0)
+                    for key in ("recall_at_1", "recall_at_k", "reciprocal_rank")) or
+                any(case.get(key) is not None and case[key] is not True
+                    for key in ("no_hit_correct", "metadata_filter_correct")) or
+                not uint(case.get("returned_count")) or case["returned_count"] != len(returned)):
+                reject("A005 per-case evidence contradicts successful retrieval summary")
+                continue
+            if ((relevant and (case.get("recall_at_k") != 1.0 or
+                               case.get("reciprocal_rank") != 1.0 or not set(relevant) <= set(returned))) or
+                (not relevant and (case.get("no_hit_correct") is not True or returned))):
+                reject("A005 per-case retrieval evidence contradicts existing acceptance")
+        model = payload.get("model", {})
+        for field, expected in (
+            ("frozen_threshold",payload.get("physical_threshold")),
+            ("threshold_origin",payload.get("threshold_origin")),
+            ("embedding_model_name",model.get("name")),
+            ("embedding_model_digest",model.get("digest")),
+        ):
+            if not same(report.get(field),expected):
+                reject("A005 benchmark identity differs from observed frozen identity: "+field)
+    elif gate_id == "H05_A009":
+        detail = payload.get("physical_integration")
+        if type(detail) is not dict:
+            return ("A009 physical integration detail is missing or malformed",)
+        if (any(detail.get(key) is not True for key in (
+                "success_case_completed", "fallback_case_exhausted",
+                "terminal_model_invoked", "terminal_model_response_nonempty")) or
+            any(type(detail.get(key)) is not int or detail[key] != expected
+                for key,expected in (("success_case_attempt_count",1),
+                    ("fallback_case_attempt_count",3),("terminal_model_request_count",1))) or
+            not ids(detail.get("success_case_final_working_set_ids")) or
+            "mem-physical" not in detail.get("success_case_final_working_set_ids", [])):
+            reject("A009 physical integration contradicts existing secondary acceptance")
+        metadata = payload.get("physical_metadata", {})
+        if (metadata.get("terminal_model_invoked") is not True or
+            type(metadata.get("terminal_model_request_count")) is not int or
+            metadata["terminal_model_request_count"] != 1):
+            reject("A009 terminal invocation metadata contradicts integration detail")
+    elif gate_id == "H06_A010":
+        comparison = payload.get("physical_comparison")
+        if type(comparison) is not dict or any(type(comparison.get(key)) is not dict for key in ("asca","dense")):
+            return ("A010 physical comparison detail is missing or malformed",)
+        for variant in ("asca","dense"):
+            detail = comparison[variant]
+            if (detail.get("procedure_success") is not True or
+                not ids(detail.get("final_selected_memory_ids")) or
+                "mem-000-target" not in detail.get("final_selected_memory_ids", []) or
+                type(detail.get("query_count")) is not int or
+                (detail["query_count"] != 3 if variant == "dense" else detail["query_count"] < 1)):
+                reject("A010 "+variant+" comparison contradicts existing secondary acceptance")
+    return tuple(errors)
+
+
 def normalize_child(gate_id, evidence, output_bytes, profile, validator=None):
     errors, checks = [], []
     payload = observation = semantic = None
@@ -222,6 +316,9 @@ def normalize_child(gate_id, evidence, output_bytes, profile, validator=None):
                 if payload.get("portable_primary_outcome") in ("SUPPORTED", "NOT_SUPPORTED"):
                     observation = ResearchObservation(ResearchOutcome(payload["portable_primary_outcome"]),
                         EvidenceRole.PHYSICAL_SECONDARY, Freshness.FRESH_PHYSICAL, ref)
+            if successful_exit and gate_id in ("H02_A005", "H05_A009", "H06_A010"):
+                for message in _physical_detail_errors(gate_id,payload):
+                    error("EVIDENCE_INVALID", message)
             diagnostic_without_experiment = (gate_id in ("H03_A006", "H04_A007") and
                 not successful_exit and "fixture_version" not in payload)
             if validator is not None and not diagnostic_without_experiment:

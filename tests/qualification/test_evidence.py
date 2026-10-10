@@ -176,3 +176,47 @@ def test_a004_baseline_success_requires_actual_legacy_acceptance(tmp_path,physic
     if contradiction == "per_case": baseline["case_results"] = [{"case_id":"bad","passed":False}]
     result = normalize_child("H01_A004",child(tmp_path,"H01_A004",payload),raw(payload),frozen_profile,None)
     assert result.status is GateStatus.FAIL
+
+
+@pytest.mark.parametrize("gate,detail", [
+    ("H02_A005", "benchmark"), ("H05_A009", "physical_integration"),
+    ("H06_A010", "physical_comparison"),
+])
+def test_physical_success_requires_emitted_detail_structure(
+    tmp_path, physical_payload, frozen_profile, gate, detail,
+):
+    payload = physical_payload(gate)
+    payload.pop(detail)
+    result = normalize_child(gate, child(tmp_path,gate,payload), raw(payload), frozen_profile)
+    assert result.status is GateStatus.FAIL
+    assert any(reason.code == "EVIDENCE_INVALID" for reason in result.errors)
+
+
+@pytest.mark.parametrize("gate,path,value", [
+    ("H02_A005", ("benchmark","recall_at_1"), 0.0),
+    ("H02_A005", ("benchmark","recall_at_k"), True),
+    ("H02_A005", ("benchmark","case_count"), 1),
+    ("H02_A005", ("benchmark","case_results",0,"recall_at_1"), 0.0),
+    ("H02_A005", ("benchmark","case_results",0,"false_retrieval_count"), 1),
+    ("H05_A009", ("physical_integration","terminal_model_invoked"), False),
+    ("H05_A009", ("physical_integration","success_case_completed"), 1),
+    ("H05_A009", ("physical_integration","fallback_case_attempt_count"), True),
+    ("H05_A009", ("physical_integration","success_case_final_working_set_ids"), []),
+    ("H05_A009", ("physical_metadata","terminal_model_request_count"), 0),
+    ("H06_A010", ("physical_comparison","dense","procedure_success"), False),
+    ("H06_A010", ("physical_comparison","dense","query_count"), True),
+    ("H06_A010", ("physical_comparison","asca","query_count"), 0),
+    ("H06_A010", ("physical_comparison","asca","final_selected_memory_ids"), []),
+])
+def test_physical_success_summary_cannot_override_legacy_detail_acceptance(
+    tmp_path, physical_payload, frozen_profile, gate, path, value,
+):
+    payload = physical_payload(gate)
+    owner = payload
+    for key in path[:-1]:
+        owner = owner[key]
+    owner[path[-1]] = value
+    result = normalize_child(gate, child(tmp_path,gate,payload), raw(payload), frozen_profile)
+    assert result.status is GateStatus.FAIL
+    assert result.observation is None
+    assert any(reason.code == "EVIDENCE_INVALID" for reason in result.errors)

@@ -13,7 +13,8 @@ Execution method: Native, approved 2026-10-10 16:52:26 +07:00 with
 “ทำ Native ได้เลยครับ ถ้าจำเป็นก็ Subagent-driven ได้”.
 
 G03/G04/G05/G06 are complete. Execution Tasks1-9 are GREEN;
-Task10 independent whole-change review/integration is next. PRE-A011 stays DONE/#11 completed;
+Task10 independent review and two infrastructure repairs are GREEN;
+fresh repaired-feature qualification and integration are next. PRE-A011 stays DONE/#11 completed;
 A001-A010 stay DONE.
 
 - [A011 task and execution evidence](A011-asca-v0x-qualification.md)
@@ -26,7 +27,7 @@ A009 SUPPORTED, A010 NOT_SUPPORTED. Version stays `0.1.0.dev0`.
 
 ## Next Action
 
-Continue approved Tasks10-11 with whole-change review and persistent evidence.
+Continue approved Tasks10-11 with repaired-feature qualification, integration and persistent evidence.
 Fresh full portable/physical qualification, whole-change review and exact
 branch/integration/main CI are required before closure.
 

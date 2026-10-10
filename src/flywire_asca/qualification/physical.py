@@ -80,6 +80,7 @@ class OllamaRuntimeProbe:
                 reason("EVIDENCE_INVALID", "Reachable metadata endpoint returned HTTP error: "+path)
             except (urllib.error.URLError, socket.timeout, TimeoutError, ConnectionError) as exc:
                 record["error"] = str(exc)
+                record["error_code"] = "PREREQUISITE_UNAVAILABLE"
                 reason("PREREQUISITE_UNAVAILABLE", "Metadata endpoint independently unreachable: "+path)
             except (QualificationError, UnicodeError, ValueError) as exc:
                 record["error"] = str(exc)
@@ -150,6 +151,15 @@ def runtime_issues(snapshot: RuntimeSnapshot, profile: FrozenProfile) -> tuple[R
         expected = {**profile.values[kind], "dimension":None} if kind == "terminal" else profile.values[kind]
         for key in ("model","digest","dimension"):
             value = descriptor.get(key)
+            # A failed /show request did not measure a dimension. Keep checking
+            # tag/digest observations: verified drift still dominates absence.
+            dimension_unobserved = (kind == "embedding" and key == "dimension" and value is None and
+                any(record.get("path") == "/api/show" and
+                    record.get("request", {}).get("model") == profile.values[kind]["model"] and
+                    record.get("error_code") == "PREREQUISITE_UNAVAILABLE"
+                    for record in snapshot.raw.get("requests", ())))
+            if dimension_unobserved:
+                continue
             if json.dumps(json_value(value),sort_keys=True) != json.dumps(json_value(expected[key]),sort_keys=True):
                 add("IDENTITY_DRIFT", "Runtime "+kind+"."+key+" differs from frozen identity")
     return tuple(issues)

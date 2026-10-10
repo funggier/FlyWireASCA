@@ -131,10 +131,42 @@ def _physical_payload(gate_id):
                          "case_results": [{"case_id":c.case_id,"passed":True} for c in
                              legacy_module("qualify_qwen_a004.py").build_qwen_a004_baseline_cases()]}}
     if gate_id == "H02_A005":
+        # Synthetic accepted evidence from the unchanged eight physical cases;
+        # no embedding execution and no claim of hardware freshness.
+        from flywire_asca.vector_memory.benchmark import (
+            VectorMemoryBenchmarkCaseResult, VectorMemoryBenchmarkReport,
+            benchmark_report_payload,
+        )
+        module = legacy_module("qualify_vector_memory_a005.py")
+        documents, cases = module.build_physical_qualification_fixture(threshold)
+        results = tuple(VectorMemoryBenchmarkCaseResult(
+            case.case_id, case.relevant_memory_ids, case.relevant_memory_ids,
+            1.0 if case.relevant_memory_ids and case.require_recall_at_1 else None,
+            1.0 if case.relevant_memory_ids else None,
+            1.0 if case.relevant_memory_ids else None,
+            True if not case.relevant_memory_ids else None,
+            True if case.metadata_filter_expected else None,
+            0, True, False, False, len(documents),
+            1 if case.metadata_filter_expected else len(documents),
+            1 if case.metadata_filter_expected else len(documents),
+            len(case.relevant_memory_ids), len(case.relevant_memory_ids),
+        ) for case in cases)
+        report = VectorMemoryBenchmarkReport(
+            "controlled_fixture_only", threshold, "physical_frozen_threshold_v1",
+            results, len(results), 1.0, 1.0, 1.0, 1.0, 1.0,
+            0, 0, 0, 0, len(documents),
+            sum(case.scored_vector_count for case in results), len(cases)+1,
+            len(documents)+len(cases), model["name"], model["digest"],
+            module.PROFILE_NAME,
+        )
+        calibration = module.build_physical_calibration_fixture()[1]
         return {"qualification_scope": "local_physical_vector_memory_a005",
             "mode": "qualification", "experiment_valid": True, "retrieval_qualified": True,
             "errors": [], "model": model, "physical_threshold": threshold,
             "threshold_origin": "physical_frozen_threshold_v1",
+            "benchmark": benchmark_report_payload(report),
+            "qualification_case_ids": [case.case_id for case in cases],
+            "calibration_case_ids": [case.case_id for case in calibration],
             "vector_health": {"dimension": 1024, "zero_vector_count": 0, "nonfinite_vector_count": 0}}
     if gate_id in ("H03_A006", "H04_A007"):
         milestone = "A006" if gate_id == "H03_A006" else "A007"
@@ -195,11 +227,25 @@ def _physical_payload(gate_id):
             "terminal_model_digest": values["terminal"]["digest"],
             "terminal_model_invoked": True, "terminal_model_request_count": 1,
             "primary_selector": "SINGLE_BEST", "primary_procedure_mode": "CHUNKED"})
+    details = {"physical_integration": {
+        "success_case_completed": True, "success_case_attempt_count": 1,
+        "success_case_scope_count": 1, "success_case_final_working_set_ids": ["mem-physical"],
+        "fallback_case_exhausted": True, "fallback_case_attempt_count": 3,
+        "fallback_case_scope_count": 3, "terminal_model_invoked": True,
+        "terminal_model_request_count": 1, "terminal_model_response_nonempty": True,
+        "terminal_model_prompt_tokens": 20, "terminal_model_generated_tokens": 10,
+        "terminal_model_total_duration_ns": 100,
+    }} if milestone == "A009" else {"physical_comparison": {
+        variant: {"procedure_success": True, "final_state_correct": True,
+            "query_count": 1 if variant == "asca" else 3, "scored_vector_count": 3,
+            "cumulative_selected_count": 3, "peak_selected_count": 3,
+            "procedure_attempt_count": 1, "final_selected_memory_ids": ["mem-000-target"],
+            "runner_duration_ns": 100} for variant in ("asca", "dense")}}
     return {"qualification_scope": "physical_integrated_cognitive_loop_a009" if milestone == "A009"
             else "physical_dense_nonselective_baseline_a010", "fixture_version": milestone.lower()+"-physical-v1",
             "portable_primary_outcome": values["research_outcomes"][milestone],
             "physical_metadata": metadata, "physical_prerequisites_valid": True,
-            "physical_integration_valid": True, "errors": []}
+            "physical_integration_valid": True, "errors": [], **details}
 
 
 class FakeRunner:

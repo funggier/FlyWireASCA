@@ -216,3 +216,64 @@ def test_flattened_legacy_a006_a007_emission_is_accepted(qualification_context, 
         context.runner.mutations[(g,1)] = flatten
     pack = run_full(context,Probe(snapshot(frozen_profile)))
     assert pack.engineering_verdict is EngineeringVerdict.ENGINEERING_QUALIFIED
+
+
+@pytest.mark.parametrize("gate_name,detail", [
+    ("H02_A005", "benchmark"), ("H05_A009", "physical_integration"),
+    ("H06_A010", "physical_comparison"),
+])
+def test_incomplete_physical_detail_never_publishes_qualified_full_pack(
+    qualification_context, frozen_profile, gate_name, detail,
+):
+    context = qualification_context
+    context.runner.mutations[(gate_name,1)] = lambda payload: payload.pop(detail)
+    pack = run_full(context, Probe(snapshot(frozen_profile)))
+    assert gate(pack,gate_name).status is GateStatus.FAIL
+    assert pack.engineering_verdict is EngineeringVerdict.ENGINEERING_NOT_QUALIFIED
+    assert pack_exit_code(pack) == 1
+    path,_ = publish_pack(context.store,pack)
+    assert decode_pack(path.read_bytes()).engineering_verdict is EngineeringVerdict.ENGINEERING_NOT_QUALIFIED
+
+
+@pytest.mark.parametrize("scenario", ["transport_loss", "wrong_digest_and_loss", "malformed_show"])
+def test_partial_show_loss_keeps_unobserved_dimension_separate_from_identity_drift(
+    qualification_context, frozen_profile, monkeypatch, scenario,
+):
+    calls = []
+    class Response:
+        def __init__(self,value): self.value=value
+        def __enter__(self): return self
+        def __exit__(self,*args): pass
+        def read(self): return json.dumps(self.value).encode()
+    def open_metadata(request, timeout):
+        calls.append((request.method,request.full_url,request.data))
+        if request.full_url.endswith("/api/version"):
+            return Response({"version":"0.32.15"})
+        if request.full_url.endswith("/api/tags"):
+            models = [{"name":v["model"],"digest":v["digest"]} for v in (
+                frozen_profile.values["terminal"],frozen_profile.values["embedding"])]
+            if scenario == "wrong_digest_and_loss":
+                models[1]["digest"] = "b"*64
+            return Response({"models":models})
+        assert request.full_url.endswith("/api/show")
+        if scenario == "malformed_show":
+            return Response({"model_info":{}})
+        raise urllib.error.URLError(ConnectionRefusedError("runtime disappeared"))
+    monkeypatch.setattr(urllib.request,"urlopen",open_metadata)
+    state = OllamaRuntimeProbe().inspect()
+    issues = runtime_issues(state,frozen_profile)
+    pack = run_full(qualification_context,Probe(state))
+    assert len(calls) == 4
+    if scenario == "transport_loss":
+        assert all(reason.code == "PREREQUISITE_UNAVAILABLE" for reason in issues)
+        assert gate(pack,"H00_PREREQUISITES").status is GateStatus.BLOCKED
+        assert pack.engineering_verdict is EngineeringVerdict.QUALIFICATION_BLOCKED
+        assert pack_exit_code(pack) == 2
+    else:
+        assert gate(pack,"H00_PREREQUISITES").status is GateStatus.FAIL
+        assert pack.engineering_verdict is EngineeringVerdict.ENGINEERING_NOT_QUALIFIED
+        assert pack_exit_code(pack) == 1
+        assert any(reason.code == ("IDENTITY_DRIFT" if scenario == "wrong_digest_and_loss"
+            else "EVIDENCE_INVALID") for reason in issues)
+    path,_ = publish_pack(qualification_context.store,pack)
+    assert decode_pack(path.read_bytes()) == pack

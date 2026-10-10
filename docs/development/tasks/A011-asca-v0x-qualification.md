@@ -313,7 +313,7 @@ test_pre_a011_stays_completed_during_a011_lifecycle failed on ACTIVE assertion;
 | 7 Physical pack | DONE |
 | 8 Portable CI | DONE |
 | 9 Fresh qualification | DONE |
-| 10 Review/integration | NEXT — independent whole-change review |
+| 10 Review/integration | ACTIVE — independent review complete, repairs GREEN; new qualification/integration pending |
 | 11 Closure/handoff | PLANNED |
 
 Ruling: Skill helper/reference resources were not available via advertised
@@ -327,9 +327,10 @@ Task 1: Ruling: full suite exposed two PRE-A011 historical tests still owning mu
 
 ## Current Action
 
-A011 ACTIVE. Tasks1-9 are GREEN, including exact candidate CI and fresh
-18-gate full-system qualification. Proceed to Task10 independent whole-change
-review, applicable RED/GREEN infrastructure repair, and reviewed integration.
+A011 ACTIVE. Tasks1-9 are GREEN. Task10 independent review found two Important
+qualification infrastructure defects; both are repaired with observed
+RED/GREEN and full suite952 PASS. Qualify the repaired feature SHA with fresh
+evidence/exact CI, then integrate and qualify the exact main SHA.
 
 ## Next Action
 
@@ -400,3 +401,29 @@ All original ablations/cases/repeat payloads retained and full frozen semantic d
 
 This is candidate evidence. Whole-change review and integration/main qualification remain required.
 The commit containing this ledger is documentation metadata, distinct from qualified behavior SHA.
+
+## Whole-change review and infrastructure repairs
+
+Independent fresh reviewer: /root/a011_whole_change_review_resumed,
+gpt-6-astra/high; exact range
+e8f75a862e0cb0d28b7e4efe25a77fa088ad646f..ba7b150cba8f4738415745678db5977f898dcde1.
+The first review attempt ended at usage limit without a review result.
+Critical0 / Important2 / Minor0; declined to judge none.
+
+- I1: require actual A005 benchmark and A009/A010 physical detail structures,
+  strict acceptance primitives and summary/metadata agreement. Missing or
+  contradictory detail now fails; unchanged legacy workloads/criteria retained.
+- I2: confirmed partial /api/show transport loss leaves dimension unobserved;
+  classify absence as BLOCKED while observed wrong digest or malformed reachable
+  metadata still FAILS. No retries or inference added.
+
+Root retained both Important grades and completed one TDD repair pass:
+regression RED21 failed/2 passed; focused GREEN78 passed; full suite952 passed
+in77.72s. Architecture/repository audits and whitespace PASS.
+Independent focused review tests398 passed; protected67 paths/profile unchanged.
+No second review was dispatched; repair verification is author TDD/full suite.
+All review/reproducer/logs retained in this plan's ignored execution workspace.
+
+The prior real f360801 pack has consistent actual details and remains historical
+evidence for that SHA. It does not qualify these repairs or integration/main.
+Fresh repaired-feature and exact integration qualification are required.
