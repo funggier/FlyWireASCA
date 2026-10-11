@@ -223,3 +223,77 @@ def test_audit_rejects_relational_reasoning_reverse_dependency_on_activation(tmp
         for error in errors
     )
     assert any("package dependency cycle" in error for error in errors)
+
+def test_audit_allows_declared_a014_structural_routing_dependencies(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    errors = audit(root)
+    assert not any("structural_routing" in error for error in errors)
+
+
+def test_audit_rejects_structural_routing_dependency_on_integrated_loop(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "structural_routing" / "bad_integrated.py"
+    injected.write_text(
+        "from flywire_asca.integrated_loop import run_cognitive_loop\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any(
+        "undeclared package dependency structural_routing -> integrated_loop" in error
+        for error in errors
+    )
+
+
+def test_audit_rejects_structural_routing_dependency_on_baseline_comparison(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "structural_routing" / "bad_baseline.py"
+    injected.write_text(
+        "from flywire_asca.baseline_comparison import run_baseline_comparison\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any(
+        "undeclared package dependency structural_routing -> baseline_comparison" in error
+        for error in errors
+    )
+
+
+def test_audit_rejects_structural_routing_dependency_on_qualification(tmp_path: Path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "structural_routing" / "bad_qualification.py"
+    injected.write_text(
+        "from flywire_asca.qualification import QualificationPack\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any(
+        "undeclared package dependency structural_routing -> qualification" in error
+        for error in errors
+    )
+
+
+def test_audit_rejects_relational_activation_reverse_dependency_on_structural_routing(
+    tmp_path: Path,
+):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src" / "flywire_asca" / "relational_activation" / "bad_structural.py"
+    injected.write_text(
+        "from flywire_asca.structural_routing import StructuralRoutingRequest\n",
+        encoding="utf-8",
+    )
+    errors = audit(root)
+    assert any(
+        "undeclared package dependency relational_activation -> structural_routing" in error
+        for error in errors
+    )
+    assert any(
+        "package dependency cycle" in error
+        and "relational_activation" in error
+        and "structural_routing" in error
+        for error in errors
+    )

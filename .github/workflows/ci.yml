@@ -71,5 +71,15 @@ jobs:
           path: ${{ runner.temp }}/a013-relational-activation-${{ github.run_id }}-${{ github.run_attempt }}.json
           if-no-files-found: error
 
+      - name: Qualify A014 structural need routing
+        run: python scripts/qualify_structural_routing_a014.py --output "$RUNNER_TEMP/a014-structural-routing-${{ github.run_id }}-${{ github.run_attempt }}.json"
+
+      - name: Upload A014 portable structural routing evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a014-structural-routing-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/a014-structural-routing-${{ github.run_id }}-${{ github.run_attempt }}.json
+          if-no-files-found: error
       - name: Check whitespace
         run: git diff --check HEAD^ HEAD

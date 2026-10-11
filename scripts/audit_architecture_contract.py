@@ -35,6 +35,7 @@ ALLOWED_PACKAGE_DEPENDENCIES: dict[str, frozenset[str]] = {
     "relational_activation": frozenset(
         {"contracts", "embedding", "vector_memory", "relational_reasoning"}
     ),
+    "structural_routing": frozenset({"contracts", "model", "relational_activation"}),
     "selective_activation": frozenset({"contracts", "vector_memory"}),
     "uncertainty_expansion": frozenset({"contracts", "selective_activation"}),
     "integrated_loop": frozenset(

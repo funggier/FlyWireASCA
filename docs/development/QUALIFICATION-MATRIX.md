@@ -28,6 +28,7 @@ outcome roles, and A011 qualification claims boundaries.
 | A010 | baseline-comparison qualifier | A010 physical qualifier | `NOT_SUPPORTED` |
 | A012 | relational-reasoning structure qualifier | A012 embedding replay (secondary) | `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED` |
 | A013 | target-free relational-activation qualifier | none required | `SIGNAL_GATED_RELATION_JUSTIFIED` |
+| A014 | target-free structural-need routing qualifier | pinned `qwen3.5:4b` routing qualifier | physical architecture decision from predeclared A014 vocabulary |
 
 ## 3. Portable GitHub CI commands
 
@@ -45,6 +46,7 @@ python scripts/qualify_baseline_comparison_a010.py
 python scripts/verify_a011_frozen_profile_preservation.py
 python scripts/qualify_relational_reasoning_a012.py --output "$RUNNER_TEMP/a012-relational-${{ github.run_id }}-${{ github.run_attempt }}.json"
 python scripts/qualify_relational_activation_a013.py --output "$RUNNER_TEMP/a013-relational-activation-${{ github.run_id }}-${{ github.run_attempt }}.json"
+python scripts/qualify_structural_routing_a014.py --output "$RUNNER_TEMP/a014-structural-routing-${{ github.run_id }}-${{ github.run_attempt }}.json"
 ```
 
 A004-A007, A009/A010, and A012 physical scripts are intentionally absent from
@@ -65,6 +67,7 @@ python scripts/qualify_uncertainty_expansion_a007.py
 python scripts/qualify_integrated_loop_a009_physical.py --portable-primary-outcome SUPPORTED
 python scripts/qualify_baseline_comparison_a010_physical.py --portable-primary-outcome NOT_SUPPORTED
 python scripts/qualify_relational_reasoning_a012_physical.py
+python scripts/qualify_structural_routing_a014_physical.py --expected-source-sha <exact-implementation-sha> --output docs/development/qualification/a014-structural-routing-physical-v1.json
 ```
 
 These commands require the pinned local Ollama/model prerequisites and are
@@ -221,3 +224,28 @@ This result assumes an explicit typed `StructuralNeed` contract. A013 does not
 claim that a model can infer structural need from unconstrained natural
 language, does not justify a persistent graph database, and does not establish
 general latency, FLOP, energy, RAM, or production-safety superiority.
+
+## 12. A014 structural-need routing decision topology
+
+A014 is a post-A011, target-free routing layer above `contracts`, `model`, and
+`relational_activation`. Runtime/model routing receives ordinary English/Thai
+query text only and must not receive evaluator targets, expected relation labels,
+benchmark labels, graph contents, retrieval results, or post-hoc correctness.
+
+Portable GitHub CI validates frozen bilingual fixture integrity, strict model
+output parsing, deterministic rule/model/hybrid control flow, downstream A013
+composition, and evidence derivation. Portable scripted adapters are engineering
+control-flow evidence only and do **not** establish a physical architecture
+decision.
+
+The mandatory local physical gate uses pinned `qwen3.5:4b` digest
+`2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd`
+with temperature 0, seed 0, thinking disabled, bounded output, exact source
+manifest binding, frozen fixture/prompt fingerprints, and retained raw model
+outputs. One of the predeclared A014 decisions is derived from that physical
+evidence. A negative or `MIXED` decision remains a valid research result when
+experiment integrity is valid.
+
+At the Task 10 portable-CI stage, GitHub CI does not execute Ollama and does not
+yet require the committed physical-evidence verifier. That verifier is enabled
+only after Task 11 creates and locally verifies the source-bound physical JSON.

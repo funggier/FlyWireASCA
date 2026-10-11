@@ -177,3 +177,26 @@ def test_qualification_matrix_records_a013_target_free_decision():
     assert "A013" in matrix
     assert "SIGNAL_GATED_RELATION_JUSTIFIED" in matrix
     assert "target-free" in matrix.lower()
+
+def test_ci_runs_a014_portable_qualification_and_uploads_evidence_only():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    lower = text.lower()
+    assert "python scripts/qualify_structural_routing_a014.py" in text
+    assert "Upload A014 portable structural routing evidence" in text
+    assert "a014-structural-routing-${{ github.run_id }}-${{ github.run_attempt }}" in text
+    assert "qualify_structural_routing_a014_physical.py" not in text
+    assert "verify_a014_physical_evidence.py" not in text
+    assert "ollama pull" not in lower
+    assert "ollama run" not in lower
+    assert "127.0.0.1:11434" not in lower
+    assert "localhost" not in lower
+
+
+def test_qualification_matrix_records_a014_portable_and_local_physical_split():
+    matrix = MATRIX.read_text(encoding="utf-8")
+    assert "| A014 |" in matrix
+    assert "python scripts/qualify_structural_routing_a014.py" in matrix
+    assert "python scripts/qualify_structural_routing_a014_physical.py" in matrix
+    assert "qwen3.5:4b" in matrix
+    assert "target-free" in matrix.lower()
+    assert "physical architecture decision" in matrix.lower()
