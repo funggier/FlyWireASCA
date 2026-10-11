@@ -39,6 +39,13 @@ Start with:
 - [Implementation plans](docs/superpowers/plans/)
 - [Development tasks](docs/development/tasks/)
 
+## Preserved release
+
+`v0.1.0` is the first preserved post-A014 / pre-A015 baseline. It contains the
+qualified A001-A014 system and evidence while A015 remains unactivated. See
+docs/development/reports/ASCA-20261011-v0.1.0-release.md for the release
+record.
+
 ## Current stage
 
 A011 - ASCA v0.x Qualification is **DONE**. The frozen `asca-v0x-a011-v1`
