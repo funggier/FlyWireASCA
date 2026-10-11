@@ -1,61 +1,55 @@
 # Current Development Task
 
-Current task: A013
-Status: DONE
-GitHub Issue: #16
+Current task: A014
+Status: ACTIVE
+GitHub Issue: #18
 
 ## Current Action
 
-A013 — Selective Relational Activation / Hybrid Recall Integration Gate is
-complete and integrated on main.
+A014 — Structural Need Inference / Query Intent Routing Gate is active.
 
-Frozen primary result:
+The approved design asks whether ordinary English/Thai query text can be
+converted into the target-free `StructuralNeed` contract already consumed by
+A013, comparing:
 
-`SIGNAL_GATED_RELATION_JUSTIFIED`
+- `RULE_ONLY`;
+- `MODEL_ONLY`;
+- `HYBRID_RULE_THEN_MODEL`.
 
-The target-free signal-gated policy matches always-on relation correctness on
-the frozen mixed workload while reducing relation invocations from 16 to 10,
-scanned edges from 16 to 11, and relation visited nodes from 29 to 18. Valid
-success counts are 10/16 for vector-only and 16/16 for both relation policies.
-All declared regression, false/missed activation, identity, provenance, budget,
-and duplicate-visit failure counts are zero.
+The primary decision is based on downstream A013 recall and routing integrity,
+not classifier accuracy alone.
 
-Normal merge commit:
+Implementation order is evidence-sensitive:
 
-`92f534a25771ffabf06f4076bc6b7deb27bd80b5`
+1. define target-free routing contracts;
+2. freeze the bilingual benchmark before router tuning;
+3. implement deterministic, model-only, and hybrid routing under TDD;
+4. evaluate inferred need through the existing A013 signal-gated path;
+5. run portable engineering qualification;
+6. run mandatory pinned `qwen3.5:4b` physical qualification and bind evidence
+   to exact source/fixture/prompt/model identities.
 
-Exact integration/main CI:
+## Preserved Boundaries
 
-- run `38088760197`;
-- result: GREEN;
-- A013 artifact digest:
-  `sha256:7cde5442f4d905a42d312e4a11e0707d9c82c610ba489f0af185cf9f666f0b1d`.
-
-A005/A011/A012 historical boundaries remain unchanged. FlyWireLLM was
-untouched.
-
-## Next Action
-
-No A014 task is activated automatically.
-
-Before starting another milestone, read the A013 final report and full-session
-handoff, verify live Git/GitHub/runtime state, and define the next research
-question explicitly from remaining evidence gaps.
-
-Issue #16 should be closed as completed only after this closure-metadata commit
-receives exact main CI GREEN.
+- A011 remains historical qualification of its exact frozen v0.x source profile.
+- A012 remains `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED` for its frozen workload.
+- A013 remains `SIGNAL_GATED_RELATION_JUSTIFIED` for its frozen workload.
+- A014 must not modify A011-protected cognitive source blobs.
+- FlyWireLLM remains untouched.
+- No release/tag/version promotion is authorized.
+- A015 is not activated automatically.
 
 ## Resume Rule
 
 Read:
 
-- `docs/development/reports/ASCA-20261011-A013-selective-relational-activation.md`;
-- `docs/development/reports/ASCA-20261011-full-session-handoff-a013-completed.md`;
-- the A013 design/plan/task;
-- the qualification matrix.
+- `docs/development/tasks/A014-structural-need-inference.md`;
+- `docs/superpowers/specs/2026-10-11-a014-structural-need-inference-design.md`;
+- `docs/superpowers/plans/2026-10-11-a014-structural-need-inference.md`;
+- `docs/development/QUALIFICATION-MATRIX.md`;
+- the latest A014 execution ledger under `.superpowers/sdd/`.
 
 Then verify live Git/GitHub/runtime state. Live state overrides stale prose.
 
 Do not reset/clean/rebase/force-push or modify A011-protected cognitive source
-blobs. Keep FlyWireLLM untouched. No release/tag/version promotion is
-authorized.
+blobs.
