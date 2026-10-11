@@ -17,7 +17,7 @@ def test_ci_retains_every_existing_standalone_gate():
         "git diff --check HEAD^ HEAD",
     )
     assert all([line.strip() for line in text.splitlines()].count("run: "+c) == 1 for c in commands)
-    assert "fetch-depth: 2" in text and 'python-version: "3.11"' in text
+    assert "fetch-depth: 0" in text and 'python-version: "3.11"' in text
 
 def test_ci_preserves_a011_then_qualifies_a012_and_uploads_even_on_failure():
     text = CI.read_text(encoding="utf-8")
