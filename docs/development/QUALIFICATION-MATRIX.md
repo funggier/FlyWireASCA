@@ -47,6 +47,7 @@ python scripts/verify_a011_frozen_profile_preservation.py
 python scripts/qualify_relational_reasoning_a012.py --output "$RUNNER_TEMP/a012-relational-${{ github.run_id }}-${{ github.run_attempt }}.json"
 python scripts/qualify_relational_activation_a013.py --output "$RUNNER_TEMP/a013-relational-activation-${{ github.run_id }}-${{ github.run_attempt }}.json"
 python scripts/qualify_structural_routing_a014.py --output "$RUNNER_TEMP/a014-structural-routing-${{ github.run_id }}-${{ github.run_attempt }}.json"
+python scripts/verify_a014_physical_evidence.py docs/development/qualification/a014-structural-routing-physical-v1.json
 ```
 
 A004-A007, A009/A010, and A012 physical scripts are intentionally absent from
@@ -246,6 +247,8 @@ outputs. One of the predeclared A014 decisions is derived from that physical
 evidence. A negative or `MIXED` decision remains a valid research result when
 experiment integrity is valid.
 
-At the Task 10 portable-CI stage, GitHub CI does not execute Ollama and does not
-yet require the committed physical-evidence verifier. That verifier is enabled
-only after Task 11 creates and locally verifies the source-bound physical JSON.
+After Task 11 creates and locally verifies the source-bound physical JSON,
+GitHub CI verifies that committed evidence against the exact frozen source,
+fixture, prompt, model identity, raw per-case records, recomputed policy metrics,
+and derived decision. GitHub CI remains Ollama-free; it never runs the physical
+model qualifier.

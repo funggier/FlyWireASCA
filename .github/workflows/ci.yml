@@ -81,5 +81,7 @@ jobs:
           name: a014-structural-routing-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/a014-structural-routing-${{ github.run_id }}-${{ github.run_attempt }}.json
           if-no-files-found: error
+      - name: Verify committed A014 physical structural routing evidence
+        run: python scripts/verify_a014_physical_evidence.py docs/development/qualification/a014-structural-routing-physical-v1.json
       - name: Check whitespace
         run: git diff --check HEAD^ HEAD
