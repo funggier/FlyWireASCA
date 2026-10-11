@@ -1,6 +1,6 @@
-# FlyWireASCA
+# ProjectASCA
 
-FlyWireASCA is an independent research and engineering project for
+ProjectASCA is an independent research and engineering project for
 **Associative Selective Cognition Architecture (ASCA)**.
 
 ASCA is a research direction rather than a requirement that every component be
@@ -10,20 +10,35 @@ choice.
 
 ## Project boundary
 
-FlyWireASCA is independent from `funggier/FlyWireLLM`.
+ProjectASCA is independent from `funggier/FlyWireLLM`.
 
-- **FlyWireASCA** studies cognitive control, familiarity, recall, working-set
+- **ProjectASCA** studies cognitive control, familiarity, recall, working-set
   selection, surprise/uncertainty, procedural memory, and related architecture.
 - **FlyWireLLM** remains a separate language-model architecture and training
   project.
 
-FlyWireASCA is model-agnostic. It may use local or remote models through a
+ProjectASCA is model-agnostic. It may use local or remote models through a
 model-adapter boundary, but no specific LLM, Transformer, provider, or cloud
 service is a mandatory core dependency.
 
 The current model-under-test is local `qwen3.5:4b` through Ollama. FlyWireLLM
 remains an independent project and a future adapter candidate rather than an
 A004 dependency.
+
+## Repository identity
+
+The current repository is [funggier/ProjectASCA](https://github.com/funggier/ProjectASCA),
+renamed from FlyWireASCA on 2026-10-12. The primary checkout is
+`T:\Space\Projects\ProjectsAI\ProjectASCA`.
+
+The preserved `v0.1.0` baseline and A001-A014 history remain unchanged.
+The existing Python namespace `flywire_asca` and distribution identity
+`FlyWireASCA` / `0.1.0.dev0` are retained for frozen-source compatibility.
+See [Repository rename record](docs/development/reports/ASCA-20261012-repository-rename-projectasca.md).
+
+A015 is in conversational architecture design for a new unified agent runtime;
+its task is not activated. The selected direction is Approach 3, targeting
+Stage C while qualifying internal Stage A first.
 
 ## Development method
 
@@ -113,7 +128,7 @@ real-world side-effect replay.
 
 ## Claims boundary
 
-FlyWireASCA does **not** currently claim:
+ProjectASCA does **not** currently claim:
 
 - equivalence to human cognition;
 - biological fidelity;
