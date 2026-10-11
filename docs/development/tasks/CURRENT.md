@@ -1,55 +1,76 @@
 # Current Development Task
 
 Current task: A014
-Status: ACTIVE
+Status: DONE
 GitHub Issue: #18
 
 ## Current Action
 
-A014 — Structural Need Inference / Query Intent Routing Gate is active.
+A014 — Structural Need Inference / Query Intent Routing Gate is complete and
+integrated on main.
 
-The approved design asks whether ordinary English/Thai query text can be
-converted into the target-free `StructuralNeed` contract already consumed by
-A013, comparing:
+Frozen physical result:
 
-- `RULE_ONLY`;
-- `MODEL_ONLY`;
-- `HYBRID_RULE_THEN_MODEL`.
+`HYBRID_STRUCTURAL_ROUTING_JUSTIFIED`
 
-The primary decision is based on downstream A013 recall and routing integrity,
-not classifier accuracy alone.
+On the frozen 32-case English/Thai workload:
 
-Implementation order is evidence-sensitive:
+- `RULE_ONLY`: 27/32 downstream successes, 9 missed activations, 0 model calls;
+- `MODEL_ONLY`: 32/32 downstream successes, 2 false activations, 32 model calls;
+- `HYBRID_RULE_THEN_MODEL`: 32/32 downstream successes, zero false/missed
+  activations, 9 model calls.
 
-1. define target-free routing contracts;
-2. freeze the bilingual benchmark before router tuning;
-3. implement deterministic, model-only, and hybrid routing under TDD;
-4. evaluate inferred need through the existing A013 signal-gated path;
-5. run portable engineering qualification;
-6. run mandatory pinned `qwen3.5:4b` physical qualification and bind evidence
-   to exact source/fixture/prompt/model identities.
+Final implementation/main integration SHA before closure metadata:
 
-## Preserved Boundaries
+`37e1cf36078d525123ea64d99134b701f79a4653`
 
-- A011 remains historical qualification of its exact frozen v0.x source profile.
-- A012 remains `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED` for its frozen workload.
-- A013 remains `SIGNAL_GATED_RELATION_JUSTIFIED` for its frozen workload.
-- A014 must not modify A011-protected cognitive source blobs.
-- FlyWireLLM remains untouched.
-- No release/tag/version promotion is authorized.
-- A015 is not activated automatically.
+Exact integration/main CI:
+
+- run `38152301384`;
+- result: GREEN;
+- A014 artifact digest:
+  `sha256:d37c4cfa6ab28d2f2ff3d5f3f25c6387245ec322b923578d22be2bdaa6a3f604`.
+
+The user selected local-main integration rather than PR integration, so A014
+has no PR/PR-CI evidence. This is recorded explicitly rather than synthesized.
+
+A005-A013 historical outcomes remain unchanged. A011 frozen protected source
+remains preserved. FlyWireLLM was untouched.
+
+## Runtime Boundary
+
+A014 can infer an A013-compatible `StructuralNeed` from ordinary English/Thai
+`query_text` without expected-answer metadata. However, the current A014
+composition with A013 exists as the structural-routing/evaluation path; it is
+not yet a single production-style public entry point wired through the frozen
+A009 cognitive loop and tool/action execution.
+
+Therefore A014 does not yet mean that arbitrary ordinary text can be submitted
+to one runtime API and autonomously complete every task end-to-end.
+
+## Next Action
+
+No A015 task is activated automatically.
+
+Before starting another milestone, verify live Git/GitHub/runtime state and use
+the A014 final report plus full-session handoff to define the next research
+question. A natural next gate is end-to-end natural-language integration, but
+it must be designed and activated explicitly.
+
+Issue #18 may be closed as completed only after this closure-metadata commit
+receives exact main CI GREEN.
 
 ## Resume Rule
 
 Read:
 
-- `docs/development/tasks/A014-structural-need-inference.md`;
-- `docs/superpowers/specs/2026-10-11-a014-structural-need-inference-design.md`;
-- `docs/superpowers/plans/2026-10-11-a014-structural-need-inference.md`;
-- `docs/development/QUALIFICATION-MATRIX.md`;
-- the latest A014 execution ledger under `.superpowers/sdd/`.
+- `docs/development/reports/ASCA-20261011-A014-structural-need-inference.md`;
+- `docs/development/reports/ASCA-20261011-full-session-handoff-a014-completed.md`;
+- the A014 design/plan/task;
+- `docs/development/QUALIFICATION-MATRIX.md`.
 
 Then verify live Git/GitHub/runtime state. Live state overrides stale prose.
 
 Do not reset/clean/rebase/force-push or modify A011-protected cognitive source
-blobs.
+blobs. Keep FlyWireLLM untouched. No release/tag/version promotion is
+authorized.

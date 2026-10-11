@@ -84,11 +84,20 @@ relation invocations from 16 to 10, scanned edges from 16 to 11, and relation
 visited nodes from 29 to 18. False/missed activation and all declared
 identity/provenance/budget/duplicate-visit failure counts are zero.
 
-The A013 signal is an explicit typed `StructuralNeed`. A013 does not claim that
-a model can infer that signal from unconstrained natural language.
+The A013 signal is an explicit typed `StructuralNeed`. A014 now supplies a
+qualified target-free way to infer that signal from ordinary English/Thai query
+text on its frozen bilingual workload.
+
+A014 - Structural Need Inference / Query Intent Routing Gate is **DONE**. Its
+physical result is `HYBRID_STRUCTURAL_ROUTING_JUSTIFIED`: rule-only succeeds on
+27/32 cases; model-only and hybrid both succeed on 32/32; hybrid has zero
+false/missed activations and reduces model invocations from 32 to 9. A014 does
+not yet provide a single production-style end-to-end runtime that carries
+arbitrary text through A009 cognition and real tool/action execution until task
+completion.
 
 A011 remains the qualification of its frozen v0.x profile; it does not
-automatically qualify A012 or A013. A012 and A013 are separate post-A011
+automatically qualify A012, A013, or A014. A012-A014 are separate post-A011
 research gates with their own evidence.
 
 These results are control/retrieval/procedure evidence. They are not claims of

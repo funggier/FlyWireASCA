@@ -8,28 +8,28 @@ TASKS = ROOT / "docs" / "development" / "tasks"
 TASK = TASKS / "A014-structural-need-inference.md"
 DESIGN = ROOT / "docs" / "superpowers" / "specs" / "2026-10-11-a014-structural-need-inference-design.md"
 PLAN = ROOT / "docs" / "superpowers" / "plans" / "2026-10-11-a014-structural-need-inference.md"
+REPORT = ROOT / "docs" / "development" / "reports" / "ASCA-20261011-A014-structural-need-inference.md"
+HANDOFF = ROOT / "docs" / "development" / "reports" / "ASCA-20261011-full-session-handoff-a014-completed.md"
 
 
-def test_a014_active_lifecycle_is_recorded():
+def test_a014_completed_lifecycle_is_recorded_self_contained():
     task = TASK.read_text(encoding="utf-8")
-    current = (TASKS / "CURRENT.md").read_text(encoding="utf-8")
-    roadmap = (TASKS / "ROADMAP.md").read_text(encoding="utf-8")
 
-    assert "Status: ACTIVE" in task
+    assert "Status: DONE" in task
     assert "GitHub Issue: #18" in task
-    assert "Branch: research/a014-structural-need-inference" in task
+    assert "Historical branch: research/a014-structural-need-inference" in task
     assert "Activation base: 4549951e3d2dbdbd877559d6b06ad501999e71f6" in task
     assert DESIGN.exists()
     assert PLAN.exists()
+    assert REPORT.exists()
+    assert HANDOFF.exists()
 
-    assert "Current task: A014" in current
-    assert current.count("Current task:") == 1
-    assert "Status: ACTIVE" in current
-    assert "GitHub Issue: #18" in current
-    assert (
-        "| A014 | Structural Need Inference / Query Intent Routing Gate | ACTIVE |"
-        in roadmap
-    )
+    report = REPORT.read_text(encoding="utf-8")
+    assert "HYBRID_STRUCTURAL_ROUTING_JUSTIFIED" in report
+    assert "38116882068" in report
+    assert "38152301384" in report
+    assert "1162 passed in 98.61s" in report
+    assert "71.875%" in report
 
 
 def test_a014_task_preserves_boundaries():
@@ -42,3 +42,4 @@ def test_a014_task_preserves_boundaries():
     assert "FlyWireLLM" in text
     assert "A011-protected" in text
     assert "A015" in text
+    assert "end-to-end" in lower

@@ -13,26 +13,26 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_active_a014_after_activation():
+def test_current_points_to_completed_a014_after_closure():
     current = _read("CURRENT.md")
     a011 = _read("A011-asca-v0x-qualification.md")
     a012 = _read("A012-relational-reasoning-structure-decision.md")
     a013 = _read("A013-selective-relational-activation.md")
+    a014 = _read("A014-structural-need-inference.md")
     roadmap = _read("ROADMAP.md")
     assert "Current task: A014" in current
     assert current.count("Current task:") == 1
-    assert "Status: ACTIVE" in current
+    assert "Status: DONE" in current
     assert "GitHub Issue: #18" in current
     assert "Status: DONE" in a011
-    assert "GitHub Issue: #12" in a011
     assert "Status: DONE" in a012
-    assert "GitHub Issue: #14" in a012
     assert "Status: DONE" in a013
-    assert "GitHub Issue: #16" in a013
+    assert "Status: DONE" in a014
     assert "| A011 | ASCA v0.x Qualification | DONE |" in roadmap
     assert "| A012 | Relational Reasoning / Structure Decision Gate | DONE |" in roadmap
     assert "| A013 | Selective Relational Activation / Hybrid Recall Integration Gate | DONE |" in roadmap
-    assert "| A014 | Structural Need Inference / Query Intent Routing Gate | ACTIVE |" in roadmap
+    assert "| A014 | Structural Need Inference / Query Intent Routing Gate | DONE |" in roadmap
+    assert "A015" not in roadmap
 
 def test_a003_contains_recovery_and_evidence_sections():
     text = _read("A003-familiarity-system.md")
@@ -176,23 +176,24 @@ def test_historical_milestone_ledger_tests_do_not_own_mutable_current_or_roadmap
         assert "ROADMAP.md" not in text, path.name
 
 
-def test_pre_a011_through_a013_stay_completed_during_a014():
+def test_pre_a011_through_a014_stay_completed_after_a014_closure():
     current = _read("CURRENT.md")
     roadmap = _read("ROADMAP.md")
     pre = _read("PRE-A011-architecture-process-stabilization.md")
     a011 = _read("A011-asca-v0x-qualification.md")
+    a014 = _read("A014-structural-need-inference.md")
     assert "Current task: A014" in current
-    assert "Status: ACTIVE" in current
+    assert "Status: DONE" in current
     assert "GitHub Issue: #18" in current
     assert "Status: DONE" in pre
     assert "GitHub Issue: #11 (closed as completed)" in pre
     assert "Status: DONE" in a011
     assert "GitHub Issue: #12" in a011
+    assert "Status: DONE" in a014
     assert "PRE-A011" not in roadmap
-    for number in range(1, 14):
+    for number in range(1, 15):
         task_id = f"A{number:03d}"
         assert f"| {task_id} |" in roadmap
         row = next(line for line in roadmap.splitlines() if f"| {task_id} |" in line)
         assert row.rstrip().endswith("| DONE |")
-    a014_row = next(line for line in roadmap.splitlines() if "| A014 |" in line)
-    assert a014_row.rstrip().endswith("| ACTIVE |")
+    assert "A015" not in roadmap

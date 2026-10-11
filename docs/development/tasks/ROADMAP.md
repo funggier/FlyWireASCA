@@ -15,4 +15,4 @@
 | A011 | ASCA v0.x Qualification | DONE |
 | A012 | Relational Reasoning / Structure Decision Gate | DONE |
 | A013 | Selective Relational Activation / Hybrid Recall Integration Gate | DONE |
-| A014 | Structural Need Inference / Query Intent Routing Gate | ACTIVE |
+| A014 | Structural Need Inference / Query Intent Routing Gate | DONE |

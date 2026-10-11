@@ -28,7 +28,7 @@ outcome roles, and A011 qualification claims boundaries.
 | A010 | baseline-comparison qualifier | A010 physical qualifier | `NOT_SUPPORTED` |
 | A012 | relational-reasoning structure qualifier | A012 embedding replay (secondary) | `EXPLICIT_RELATION_TRAVERSAL_JUSTIFIED` |
 | A013 | target-free relational-activation qualifier | none required | `SIGNAL_GATED_RELATION_JUSTIFIED` |
-| A014 | target-free structural-need routing qualifier | pinned `qwen3.5:4b` routing qualifier | physical architecture decision from predeclared A014 vocabulary |
+| A014 | target-free structural-need routing qualifier | pinned `qwen3.5:4b` routing qualifier | `HYBRID_STRUCTURAL_ROUTING_JUSTIFIED` |
 
 ## 3. Portable GitHub CI commands
 
@@ -252,3 +252,9 @@ GitHub CI verifies that committed evidence against the exact frozen source,
 fixture, prompt, model identity, raw per-case records, recomputed policy metrics,
 and derived decision. GitHub CI remains Ollama-free; it never runs the physical
 model qualifier.
+Frozen A014 physical architecture decision: `HYBRID_STRUCTURAL_ROUTING_JUSTIFIED`. On 32 valid
+English/Thai cases, RULE_ONLY succeeds on 27/32, MODEL_ONLY on 32/32, and
+HYBRID_RULE_THEN_MODEL on 32/32. Hybrid records zero false/missed activations
+and invokes the model on 9/32 cases versus 32/32 for model-only. This establishes
+a routing/control-flow trade-off for the frozen workload, not general latency,
+FLOP, energy, RAM, token, or production-safety superiority.
