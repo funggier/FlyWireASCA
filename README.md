@@ -128,7 +128,10 @@ real-world side-effect replay.
 
 ## Claims boundary
 
-ProjectASCA does **not** currently claim:
+ProjectASCA retains the claims boundary of the preserved FlyWireASCA baseline.
+The historical statement remains:
+
+FlyWireASCA does **not** currently claim:
 
 - equivalence to human cognition;
 - biological fidelity;

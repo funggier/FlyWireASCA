@@ -94,12 +94,20 @@ application/tool side effects.
 Fresh local checks after relocation and documentation updates:
 
 - repository/frozen-preservation/documentation tests: 14 passed
+- full local regression after preserving the A010 claims phrase: 1162 passed
 - architecture contract audit: PASS
 - A011 frozen profile and all 67 protected blobs: PASS
 - A014 committed physical evidence verifier: experiment_valid=true
 - historical linked-worktree HEADs unchanged and worktrees clean
 - v0.1.0 local tag object and peeled commit unchanged
 - git diff whitespace check: PASS
+
+The initial rename documentation commit `5e0dd0b716ef70203d80ca1224637afc95c2033e`
+had one CI failure in run `38158847122`: A010's historical README contract
+checks the exact phrase `FlyWireASCA does **not** currently claim:`. That phrase
+is retained with current ProjectASCA context; the historical test is unchanged.
+The other 1161 tests passed in that run. Missing downstream evidence uploads
+were consequences of the failed test step, not additional runtime failures.
 
 These are maintenance checks, not a new A015 implementation qualification.
 Exact maintenance commit and its CI are available through the current Git/GitHub
