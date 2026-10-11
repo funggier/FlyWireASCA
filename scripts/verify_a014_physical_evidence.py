@@ -15,14 +15,22 @@ for path in (SRC, SCRIPTS):
 
 from qualify_structural_routing_a014_physical import (
     EXPECTED_DIGEST,
+    EVIDENCE_ROLE,
+    FIXTURE_VERSION,
     MODEL_NAME,
+    _canonical_sha,
     a014_source_manifest,
     a014_source_manifest_fingerprint,
 )
-from flywire_asca.structural_routing import RoutingPolicy
+from flywire_asca.structural_routing import (
+    RoutingInferenceStatus,
+    RoutingPolicy,
+    StructuralRoutingRequest,
+)
 from flywire_asca.structural_routing.benchmark import (
     RoutingPolicyMetrics,
     StructuralRoutingBenchmarkReport,
+    _runtime_leakage_failure_count,
     classify_a014_architecture,
 )
 from flywire_asca.structural_routing.benchmark_fixture import (
@@ -30,8 +38,10 @@ from flywire_asca.structural_routing.benchmark_fixture import (
     EXPECTED_A014_EVALUATOR_FINGERPRINTS,
     EXPECTED_A014_FIXTURE_FINGERPRINT,
     EXPECTED_A014_RUNTIME_INPUT_FINGERPRINTS,
+    build_a014_frozen_fixture,
 )
-from flywire_asca.structural_routing.model_router import router_prompt_fingerprint
+from flywire_asca.structural_routing.model_router import _parse_payload, router_prompt_fingerprint
+from flywire_asca.structural_routing.rules import route_by_rules
 
 
 def _usage_total(cases: list[dict[str, object]], field: str) -> int | None:
@@ -160,6 +170,179 @@ def _recompute_policy_metrics(
     )
 
 
+
+def _need_payload(need) -> dict[str, object]:
+    return {
+        "required_relations": [relation.value for relation in need.required_relations],
+        "requires_path_provenance": need.requires_path_provenance,
+    }
+
+
+def _verify_case_semantics(cases: list[dict[str, object]]) -> list[str]:
+    errors: list[str] = []
+    fixture = build_a014_frozen_fixture()
+    fixture_by_id = {case.routing_case_id: case for case in fixture}
+    expected_pairs = {
+        (case.routing_case_id, policy.value)
+        for case in fixture
+        for policy in RoutingPolicy
+    }
+    observed_pairs: set[tuple[str, str]] = set()
+
+    for index, case in enumerate(cases):
+        if not isinstance(case, dict):
+            errors.append(f"case {index} must be an object")
+            continue
+        case_id = case.get("routing_case_id")
+        policy_value = case.get("policy")
+        if not isinstance(case_id, str) or case_id not in fixture_by_id:
+            errors.append(f"case {index} has unknown routing_case_id")
+            continue
+        try:
+            policy = RoutingPolicy(policy_value)
+        except (TypeError, ValueError):
+            errors.append(f"case {case_id} has invalid policy")
+            continue
+        pair = (case_id, policy.value)
+        if pair in observed_pairs:
+            errors.append(f"duplicate case/policy record: {case_id}/{policy.value}")
+        observed_pairs.add(pair)
+
+        expected_case = fixture_by_id[case_id]
+        if case.get("base_a013_case_id") != expected_case.base_a013_case_id:
+            errors.append(f"{case_id}/{policy.value} base A013 case mismatch")
+        if case.get("language") != expected_case.language:
+            errors.append(f"{case_id}/{policy.value} language mismatch")
+        if case.get("expected_structural_need") != _need_payload(
+            expected_case.expected_structural_need
+        ):
+            errors.append(f"{case_id}/{policy.value} evaluator structural need mismatch")
+        if case.get("expected_found") is not expected_case.expected_found:
+            errors.append(f"{case_id}/{policy.value} expected_found mismatch")
+        if (
+            case.get("primary_relation_positive")
+            is not expected_case.primary_relation_positive
+        ):
+            errors.append(f"{case_id}/{policy.value} relation-positive label mismatch")
+
+        final_ids = case.get("final_selected_ids")
+        if not isinstance(final_ids, list) or any(
+            not isinstance(value, str) for value in final_ids
+        ):
+            errors.append(f"{case_id}/{policy.value} final_selected_ids invalid")
+        else:
+            final = set(final_ids)
+            targets = set(expected_case.expected_target_ids)
+            found = sorted(final.intersection(targets))
+            if case.get("found_expected_ids") != found:
+                errors.append(f"{case_id}/{policy.value} found_expected_ids mismatch")
+            task_success = (
+                targets.issubset(final)
+                if expected_case.expected_found
+                else targets.isdisjoint(final)
+            )
+            if case.get("task_success") is not task_success:
+                errors.append(f"{case_id}/{policy.value} task_success mismatch")
+
+        inferred = case.get("inferred_structural_need")
+        model_invoked = case.get("model_invoked") is True
+        raw = case.get("raw_model_output")
+        status = case.get("routing_status")
+        source = case.get("routing_source")
+        if model_invoked:
+            if case.get("model_name") != MODEL_NAME:
+                errors.append(f"{case_id}/{policy.value} model name mismatch")
+            if case.get("model_digest") != EXPECTED_DIGEST:
+                errors.append(f"{case_id}/{policy.value} model digest mismatch")
+            if not isinstance(raw, str) or not raw:
+                errors.append(f"{case_id}/{policy.value} missing raw model output")
+            else:
+                parsed = _parse_payload(raw)
+                if status == RoutingInferenceStatus.INVALID_MODEL_OUTPUT.value:
+                    if parsed is not None:
+                        errors.append(
+                            f"{case_id}/{policy.value} invalid-output status parses as valid"
+                        )
+                elif status == RoutingInferenceStatus.MODEL_ERROR.value:
+                    if inferred != {"required_relations": [], "requires_path_provenance": False}:
+                        errors.append(
+                            f"{case_id}/{policy.value} model error must fail closed"
+                        )
+                else:
+                    if parsed is None:
+                        errors.append(
+                            f"{case_id}/{policy.value} raw model output does not parse"
+                        )
+                    else:
+                        if inferred != _need_payload(parsed):
+                            errors.append(
+                                f"{case_id}/{policy.value} raw output/inferred need mismatch"
+                            )
+                        expected_status = (
+                            RoutingInferenceStatus.DECIDED_RELATIONAL.value
+                            if parsed.active
+                            else RoutingInferenceStatus.DECIDED_NON_RELATIONAL.value
+                        )
+                        if status != expected_status:
+                            errors.append(
+                                f"{case_id}/{policy.value} raw output/status mismatch"
+                            )
+                        if source != "MODEL":
+                            errors.append(
+                                f"{case_id}/{policy.value} model decision source mismatch"
+                            )
+        else:
+            if raw is not None:
+                errors.append(f"{case_id}/{policy.value} unexpected raw model output")
+            if any(
+                case.get(name) is not None
+                for name in (
+                    "model_name",
+                    "model_digest",
+                    "prompt_tokens",
+                    "generated_tokens",
+                    "total_duration_ns",
+                )
+            ):
+                errors.append(f"{case_id}/{policy.value} unexpected model evidence")
+            rule = route_by_rules(
+                StructuralRoutingRequest(
+                    expected_case.request_id,
+                    expected_case.query_text,
+                    expected_case.language,
+                )
+            )
+            if status != rule.status.value:
+                errors.append(f"{case_id}/{policy.value} rule status mismatch")
+            if source != rule.source.value:
+                errors.append(f"{case_id}/{policy.value} rule source mismatch")
+            if inferred != _need_payload(rule.structural_need):
+                errors.append(f"{case_id}/{policy.value} rule inferred need mismatch")
+            if case.get("rule_evidence_ids") != list(rule.rule_evidence_ids):
+                errors.append(f"{case_id}/{policy.value} rule evidence mismatch")
+
+    missing = expected_pairs - observed_pairs
+    extra = observed_pairs - expected_pairs
+    if missing:
+        errors.append(f"missing case/policy records: {len(missing)}")
+    if extra:
+        errors.append(f"unexpected case/policy records: {len(extra)}")
+    return errors
+
+
+def _aggregate_metric_counts(
+    metrics: tuple[RoutingPolicyMetrics, ...],
+) -> dict[str, int]:
+    return {
+        "identity_failure_count": sum(item.identity_failure_count for item in metrics),
+        "provenance_failure_count": sum(item.provenance_failure_count for item in metrics),
+        "budget_violation_count": sum(item.budget_violation_count for item in metrics),
+        "duplicate_visit_failure_count": sum(
+            item.duplicate_visit_failure_count for item in metrics
+        ),
+    }
+
+
 def _metrics_payload(item: RoutingPolicyMetrics) -> dict[str, object]:
     payload = {field.name: getattr(item, field.name) for field in fields(item)}
     payload["policy"] = item.policy.value
@@ -198,12 +381,27 @@ def verify_payload(payload: dict[str, object], *, root: Path = ROOT) -> list[str
     errors: list[str] = []
     if not isinstance(payload, dict):
         return ["physical evidence must be a JSON object"]
+    if payload.get("qualification_scope") != "physical_structural_routing_a014":
+        errors.append("qualification scope mismatch")
+    if payload.get("fixture_version") != FIXTURE_VERSION:
+        errors.append("fixture version mismatch")
     if payload.get("experiment_valid") is not True:
         errors.append("experiment_valid must be true")
     if payload.get("physical_evidence") is not True:
         errors.append("physical_evidence must be true")
-    if payload.get("evidence_role") != "physical_model_capability":
+    if payload.get("model_capability_qualified") is not True:
+        errors.append("model_capability_qualified must be true")
+    if payload.get("evidence_role") != EVIDENCE_ROLE:
         errors.append("physical evidence role mismatch")
+
+    recorded_evidence_sha = payload.get("physical_evidence_sha256")
+    unsigned_payload = dict(payload)
+    unsigned_payload.pop("physical_evidence_sha256", None)
+    if (
+        not isinstance(recorded_evidence_sha, str)
+        or recorded_evidence_sha != _canonical_sha(unsigned_payload)
+    ):
+        errors.append("physical evidence SHA256 mismatch")
 
     source = payload.get("source")
     if not isinstance(source, dict):
@@ -271,18 +469,18 @@ def verify_payload(payload: dict[str, object], *, root: Path = ROOT) -> list[str
     if len(cases) != len(EXPECTED_A014_CASE_IDS) * len(RoutingPolicy):
         errors.append("unexpected physical case-result count")
 
-    for case in cases:
-        if not isinstance(case, dict):
-            errors.append("case record must be an object")
-            continue
-        if case.get("model_invoked") is True:
-            raw = case.get("raw_model_output")
-            if not isinstance(raw, str) or not raw:
-                errors.append("model invocation missing raw model output")
+    errors.extend(_verify_case_semantics(cases))
 
     recomputed = tuple(_recompute_policy_metrics(policy, cases) for policy in RoutingPolicy)
     if benchmark.get("policy_metrics") != [_metrics_payload(item) for item in recomputed]:
         errors.append("policy metrics do not recompute from raw cases")
+    if benchmark.get("case_count") != len(EXPECTED_A014_CASE_IDS):
+        errors.append("benchmark case_count mismatch")
+    if benchmark.get("leakage_failure_count") != _runtime_leakage_failure_count():
+        errors.append("benchmark leakage count mismatch")
+    for name, expected in _aggregate_metric_counts(recomputed).items():
+        if benchmark.get(name) != expected:
+            errors.append(f"benchmark {name} mismatch")
 
     decision = _decision_from_payload(benchmark, recomputed)
     if payload.get("physical_architecture_decision") != decision.value:

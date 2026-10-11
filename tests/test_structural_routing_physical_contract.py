@@ -199,3 +199,51 @@ def test_verifier_missing_evidence_file_exits_nonzero(tmp_path):
     v = _load(VERIFY_SCRIPT, "a014verify_missing")
     missing = tmp_path / "missing.json"
     assert v.main([str(missing)]) == 1
+
+def _rehash_physical_payload(physical_module, payload):
+    payload.pop("physical_evidence_sha256", None)
+    payload["physical_evidence_sha256"] = physical_module._canonical_sha(payload)
+    return payload
+
+
+def test_verifier_reconstructs_raw_case_semantics_and_checks_evidence_sha(tmp_path):
+    p = _load(PHYSICAL_SCRIPT, "a014physical_semantic_verify")
+    v = _load(VERIFY_SCRIPT, "a014verify_semantic")
+    root, head = _source_repo(tmp_path)
+    payload = p.run_physical_qualification(
+        adapter=_FakePhysicalAdapter(p), expected_source_sha=head, root=root
+    )
+    assert v.verify_payload(payload, root=root) == []
+
+    stale_hash = json.loads(json.dumps(payload))
+    stale_hash["physical_evidence_sha256"] = "0" * 64
+    assert v.verify_payload(stale_hash, root=root)
+
+    raw_mismatch = json.loads(json.dumps(payload))
+    raw_case = next(
+        item
+        for item in raw_mismatch["benchmark"]["cases"]
+        if item["model_invoked"] and item["inferred_structural_need"]["required_relations"]
+    )
+    raw_case["raw_model_output"] = json.dumps(
+        {
+            "requires_relation": False,
+            "required_relations": [],
+            "requires_path_provenance": False,
+        },
+        separators=(",", ":"),
+    )
+    _rehash_physical_payload(p, raw_mismatch)
+    assert v.verify_payload(raw_mismatch, root=root)
+
+    outcome_mismatch = json.loads(json.dumps(payload))
+    outcome_case = next(
+        item
+        for item in outcome_mismatch["benchmark"]["cases"]
+        if item["policy"] == "MODEL_ONLY"
+        and item["task_success"]
+        and item["found_expected_ids"]
+    )
+    outcome_case["final_selected_ids"] = []
+    _rehash_physical_payload(p, outcome_mismatch)
+    assert v.verify_payload(outcome_mismatch, root=root)
