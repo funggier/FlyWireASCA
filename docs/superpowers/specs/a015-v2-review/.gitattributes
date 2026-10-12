@@ -1,2 +1,3 @@
 # Preserve exact review-artifact bytes and their recorded hashes.
-* -text
+# Recorded CRLF is intentional; retain the ordinary whitespace checks.
+* -text whitespace=trailing-space,space-before-tab,cr-at-eol
