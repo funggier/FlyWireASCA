@@ -1,76 +1,42 @@
 # Current Development Task
 
-Current task: A014
-Status: DONE
-GitHub Issue: #18
+Current task: A015
+Status: ACTIVE
+GitHub Issue: #19
 
 ## Current Action
 
-A014 — Structural Need Inference / Query Intent Routing Gate is complete and
-integrated on main.
+Execute the approved A015 Unified Agent Runtime plan using Native.
+Branch: research/a015-unified-agent-runtime
+Activation base: 4ca246df6976c7aa21ad07826017f167f0ee27da
 
-Frozen physical result:
+Task 1: lifecycle activation after isolated baseline and approved plan/method.
+Task 2 is next: immutable contracts, ledger, trace and architecture guard.
+No interpreter/controller/ranker tuning or new benchmark performance run before
+the Task 4 freeze commit and complete direct-prompt context certificate.
 
-`HYBRID_STRUCTURAL_ROUTING_JUSTIFIED`
+## Evidence
 
-On the frozen 32-case English/Thai workload:
+Written design: docs/superpowers/specs/2026-10-12-a015-unified-agent-runtime-design.md
+Approved plan: docs/superpowers/plans/2026-10-12-a015-unified-agent-runtime.md
+Task record: docs/development/tasks/A015-unified-agent-runtime.md
+Isolated baseline: 1162 passed in 105.32s.
+Activation-base CI: 38178491835 SUCCESS.
+Repository qualification, architecture audit and A011 preservation PASS.
 
-- `RULE_ONLY`: 27/32 downstream successes, 9 missed activations, 0 model calls;
-- `MODEL_ONLY`: 32/32 downstream successes, 2 false activations, 32 model calls;
-- `HYBRID_RULE_THEN_MODEL`: 32/32 downstream successes, zero false/missed
-  activations, 9 model calls.
-
-Final implementation/main integration SHA before closure metadata:
-
-`37e1cf36078d525123ea64d99134b701f79a4653`
-
-Exact integration/main CI:
-
-- run `38152301384`;
-- result: GREEN;
-- A014 artifact digest:
-  `sha256:d37c4cfa6ab28d2f2ff3d5f3f25c6387245ec322b923578d22be2bdaa6a3f604`.
-
-The user selected local-main integration rather than PR integration, so A014
-has no PR/PR-CI evidence. This is recorded explicitly rather than synthesized.
-
-A005-A013 historical outcomes remain unchanged. A011 frozen protected source
-remains preserved. FlyWireLLM was untouched.
-
-## Runtime Boundary
-
-A014 can infer an A013-compatible `StructuralNeed` from ordinary English/Thai
-`query_text` without expected-answer metadata. However, the current A014
-composition with A013 exists as the structural-routing/evaluation path; it is
-not yet a single production-style public entry point wired through the frozen
-A009 cognitive loop and tool/action execution.
-
-Therefore A014 does not yet mean that arbitrary ordinary text can be submitted
-to one runtime API and autonomously complete every task end-to-end.
+A001-A014 remain DONE. A014 Issue #18 remains closed completed.
+Historical conclusions, v0.1.0 and all 67 A011 protected paths are preserved.
 
 ## Next Action
 
-No A015 task is activated automatically.
-
-Before starting another milestone, verify live Git/GitHub/runtime state and use
-the A014 final report plus full-session handoff to define the next research
-question. A natural next gate is end-to-end natural-language integration, but
-it must be designed and activated explicitly.
-
-Issue #18 may be closed as completed only after this closure-metadata commit
-receives exact main CI GREEN.
+Complete Task 1 verification/commit, then Task 2. Work only on the isolated
+research branch. Stage A permits configured inference infrastructure and pure/
+in-memory capabilities only; Stage B/C needs a later design gate.
 
 ## Resume Rule
 
-Read:
-
-- `docs/development/reports/ASCA-20261011-A014-structural-need-inference.md`;
-- `docs/development/reports/ASCA-20261011-full-session-handoff-a014-completed.md`;
-- the A014 design/plan/task;
-- `docs/development/QUALIFICATION-MATRIX.md`.
-
-Then verify live Git/GitHub/runtime state. Live state overrides stale prose.
-
-Do not reset/clean/rebase/force-push or modify A011-protected cognitive source
-blobs. Keep FlyWireLLM untouched. No release/tag/version promotion is
-authorized.
+Read the A015 task/design/plan and this plan's execution ledger first, then
+verify live Git/GitHub/runtime. Resume the first incomplete task from its brief;
+do not infer completion from stale documentation or repeat committed work.
+Never reset/clean/rebase/force-push, modify v0.1.0/A011 protected source, or
+access FlyWireLLM. No release or Stage B/C activation is authorized.

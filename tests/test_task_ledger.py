@@ -13,17 +13,17 @@ def _read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_points_to_completed_a014_after_closure():
+def test_current_points_to_active_a015_after_approved_activation():
     current = _read("CURRENT.md")
     a011 = _read("A011-asca-v0x-qualification.md")
     a012 = _read("A012-relational-reasoning-structure-decision.md")
     a013 = _read("A013-selective-relational-activation.md")
     a014 = _read("A014-structural-need-inference.md")
     roadmap = _read("ROADMAP.md")
-    assert "Current task: A014" in current
+    assert "Current task: A015" in current
     assert current.count("Current task:") == 1
-    assert "Status: DONE" in current
-    assert "GitHub Issue: #18" in current
+    assert "Status: ACTIVE" in current
+    assert "GitHub Issue: #19" in current
     assert "Status: DONE" in a011
     assert "Status: DONE" in a012
     assert "Status: DONE" in a013
@@ -32,7 +32,7 @@ def test_current_points_to_completed_a014_after_closure():
     assert "| A012 | Relational Reasoning / Structure Decision Gate | DONE |" in roadmap
     assert "| A013 | Selective Relational Activation / Hybrid Recall Integration Gate | DONE |" in roadmap
     assert "| A014 | Structural Need Inference / Query Intent Routing Gate | DONE |" in roadmap
-    assert "A015" not in roadmap
+    assert "| A015 | End-to-End Unified Agent Runtime | ACTIVE |" in roadmap
 
 def test_a003_contains_recovery_and_evidence_sections():
     text = _read("A003-familiarity-system.md")
@@ -176,15 +176,15 @@ def test_historical_milestone_ledger_tests_do_not_own_mutable_current_or_roadmap
         assert "ROADMAP.md" not in text, path.name
 
 
-def test_pre_a011_through_a014_stay_completed_after_a014_closure():
+def test_pre_a011_through_a014_stay_completed_after_a015_activation():
     current = _read("CURRENT.md")
     roadmap = _read("ROADMAP.md")
     pre = _read("PRE-A011-architecture-process-stabilization.md")
     a011 = _read("A011-asca-v0x-qualification.md")
     a014 = _read("A014-structural-need-inference.md")
-    assert "Current task: A014" in current
-    assert "Status: DONE" in current
-    assert "GitHub Issue: #18" in current
+    assert "Current task: A015" in current
+    assert "Status: ACTIVE" in current
+    assert "GitHub Issue: #19" in current
     assert "Status: DONE" in pre
     assert "GitHub Issue: #11 (closed as completed)" in pre
     assert "Status: DONE" in a011
@@ -196,4 +196,4 @@ def test_pre_a011_through_a014_stay_completed_after_a014_closure():
         assert f"| {task_id} |" in roadmap
         row = next(line for line in roadmap.splitlines() if f"| {task_id} |" in line)
         assert row.rstrip().endswith("| DONE |")
-    assert "A015" not in roadmap
+    assert "| A015 | End-to-End Unified Agent Runtime | ACTIVE |" in roadmap
