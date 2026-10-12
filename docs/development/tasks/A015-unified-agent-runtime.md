@@ -3,7 +3,7 @@
 Status: ACTIVE
 GitHub Issue: #19
 Execution method: Native
-Execution checkpoint: independent whole-branch review BLOCKED; consolidated correction verification and v2 written-spec review
+Execution checkpoint: first five corrections verified; v2 spec approved; implementation plan awaiting review
 Branch: research/a015-unified-agent-runtime
 Activation base: 4ca246df6976c7aa21ad07826017f167f0ee27da
 Approved on: 2026-10-12 (Asia/Bangkok)
@@ -246,3 +246,29 @@ Finding6 remains a written protocol amendment: [complete v2 design](../../superp
 Next action: finish correction verification and exact feature CI, review the committed written v2 amendment, then execute only the approved protocol/plan. Current physical qualification, final integration/main CI, Issue#19 closure and any release remain pending. A015 stays ACTIVE; A001-A014 remain DONE.
 
 Correction verification checkpoint:1454 tests passed in227.09s, all listed audits/freeze/preservation/portable/history commands exit0. New physical generation/embedding calls0. Sixth review finding and v2 written-spec approval remain pending.
+
+
+## Latest v2 spec approval and plan-review checkpoint — 2026-10-12
+
+User approved the complete written v2 spec at2026-10-12 23:14:50 Asia/Bangkok:
+`docs/superpowers/specs/2026-10-12-a015-v2-wire-contract-design.md`,
+commit48d7a8915783f07dc68f121c95e6ebe1e80645d2,
+blob4fa4a173d349f49296c537c38fa0af97a80e036c. Approved artifact bytes are
+unchanged. This checkpoint supersedes earlier pending-spec/correction notes.
+
+The completed Native correction passed1454 tests in227.09s plus all listed
+audits/preservation/portable/history checks; exact48d7a891 CI38274882155 SUCCESS
+was rechecked live. Corrected source125 fingerprint
+8500fe9e5dbf7fca7858d3653ca45b577d27be0e5d8df9e90923fd997c9e99f8 is NOT_G4_V2.
+
+Saved root-self-reviewed plan for review:
+`docs/superpowers/plans/2026-10-12-a015-v2-implementation-amendment.md`.
+Six tasks cover wire/profile dispatch, parser/semantic correspondence, immutable
+G2, closed evidence/actual setup/current CI, exact G4/fixed384 qualification,
+and fresh whole-branch review/integration. Native remains selected.
+The plan records the existing8192 warm-up default as a v2 dispatch test and
+keeps the historical generic setup probe in original v1 data only.
+
+Next gate is human review of this newly written plan, then Task1. No v2 product
+change, new generation/embedding call, G2/G4 approval, successful physical result,
+integration, Issue closure or release is claimed. A015 remains ACTIVE.
