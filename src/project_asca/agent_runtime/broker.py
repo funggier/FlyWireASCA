@@ -38,13 +38,15 @@ class ModelBroker:
                 "subrequest_id":control.run_id+":"+str(uuid.uuid4()),
                 "invoked":False,"transport_dispatches":None,"output":None,"error":None,
                 "prompt_tokens":None,"output_tokens":None,"timings":{},
-                "identity":identity_key(self.identity)}
+                "identity":identity_key(self.identity),"prompt":prompt,"response_identity":None,
+                "response_subrequest_id":None,"request_parameters":None}
         error=None;accepted=None
         started=control.clock.now()
         try:
             control.check_dispatch()
             # The scope itself rejects a role/variant escalation before dispatch.
             with control.model_assist(purpose,record["prompt_fingerprint"]):
+                control.capture(prompt)
                 bound=self.bounds.bound(prompt)
                 remaining=control.profile.output_tokens-control.ledger.snapshot().output_token_reservations
                 requested=min(max_output_tokens,control.profile.output_per_call,remaining)
@@ -58,6 +60,8 @@ class ModelBroker:
                     Resource.MODEL_CALLS:1,Resource.PROMPT_TOKENS:bound.upper_tokens,
                     Resource.OUTPUT_TOKENS:requested})
                 request=BrokerModelRequest(record["subrequest_id"],prompt,requested)
+                record["request_parameters"]={"context_limit":request.context_limit,"temperature":request.temperature,
+                    "seed":request.seed,"thinking":request.thinking,"max_output_tokens":request.max_output_tokens}
                 control.check_dispatch()
                 invoked=True;record["invoked"]=True
                 control.ledger.record("model_invocations")
@@ -65,6 +69,8 @@ class ModelBroker:
                 response=self.model.generate(request,
                     deadline=min(control.ledger.deadline,control.clock.now()+control.profile.model_call_seconds),
                     cancellation=control.cancellation)
+                record["response_identity"]=response.identity
+                record["response_subrequest_id"]=response.subrequest_id
                 record["transport_dispatches"]=response.transport_dispatches
                 record["output"]=response.content
                 record["timings"]=dict(response.timings)

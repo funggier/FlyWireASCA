@@ -204,3 +204,11 @@ def test_qualification_matrix_records_a014_portable_and_local_physical_split():
     assert "qwen3.5:4b" in matrix
     assert "target-free" in matrix.lower()
     assert "physical architecture decision" in matrix.lower()
+
+def test_ci_adds_a015_portable_freeze_and_audit_without_physical_generation():
+    text=WORKFLOW.read_text(encoding="utf-8")
+    assert "python scripts/qualify_agent_runtime_a015.py" in text
+    assert "python scripts/freeze_agent_runtime_a015.py --check" in text
+    assert "python scripts/audit_agent_runtime_contract.py" in text
+    assert "qualify_agent_runtime_a015_physical.py" not in text
+    assert "Upload A015 portable engineering evidence" in text

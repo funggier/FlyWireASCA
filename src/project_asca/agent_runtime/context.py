@@ -66,5 +66,6 @@ class ContextAcquirer:
             raise IntegrityStop(message="working context exceeds profile")
         control.ledger.peak("active_context_peak",len(context.items))
         control.ledger.peak("active_context_bytes_peak",context.canonical_bytes)
-        control.event("context",{"context_fingerprint":context.fingerprint,"items":len(context.items),
+        context_ref=control.capture(context)
+        control.event("context",{"context_ref":context_ref,"context_fingerprint":context.fingerprint,"items":len(context.items),
                                 "bytes":context.canonical_bytes,"deficits":tuple(d.kind for d in context.deficits)})

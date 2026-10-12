@@ -118,7 +118,7 @@ class _Run:
             self.candidate.evidence_refs if self.candidate else (),
             self.attempt.final_state.snapshot_id if self.attempt else None,
             c.ledger.snapshot(),c.trace.freeze(),status is not TerminalStatus.SUCCEEDED and self.attempt is not None,
-            explanation)
+            explanation,artifacts=c.trace.artifacts())
         return self.latch.publish(result)
     def interpret(self):
         self.machine.move(Phase.INTERPRETING);self.check()
@@ -127,7 +127,7 @@ class _Run:
         if found.unsupported:return self.publish(TerminalStatus.UNSUPPORTED,TerminalReason.UNSUPPORTED_CAPABILITY)
         if found.failure:return self.stop(found.failure)
         self.goal=self.parts.compiler.compile(found.intent,self.control.request,self.parts.schemas)
-        self.goal_identity=fingerprint(self.goal)
+        self.goal_identity=self.control.capture(self.goal)
         self.control.event("goal",{"goal":self.goal.goal_id,"fingerprint":self.goal_identity,"kind":self.goal.kind.value})
         return None
     def acquire(self):
@@ -168,7 +168,9 @@ class _Run:
         self.attempt=execute_attempt(checked.plan,self.goal,self.context,initial=self.configuration.initial_state,
              catalog=self.configuration.catalog,registry=self.parts.registry,authorization=self.parts.authorization,
              control=self.control,executor=self.parts.executor)
-        self.control.event("attempt",{"goal":self.goal.goal_id,"execution_id":self.attempt.execution_id,
+        self.control.event("attempt",{"attempt_ref":self.control.capture(self.attempt),
+             "receipt_ref":self.control.capture(self.control.execution_receipt),
+             "plan_ref":self.control.capture(self.proposal),"context_ref":self.control.capture(self.context),"goal":self.goal.goal_id,"execution_id":self.attempt.execution_id,
              "plan_fingerprint":plan_fingerprint(self.proposal),"context_fingerprint":context_fingerprint(self.context),
              "initial_state":self.configuration.initial_state.snapshot_id,
              "observation_refs":tuple(fingerprint(o) for o in self.attempt.observations),
@@ -176,9 +178,12 @@ class _Run:
         self.machine.move(Phase.OBSERVING);self.check()
         self.candidate=candidate_from_attempt(self.goal,self.context,self.attempt)
         self.machine.move(Phase.VERIFYING);self.check()
+        self.control.capture(self.candidate)
+        verification_control=self.control.snapshot();control_ref=self.control.capture(verification_control)
         self.verification=verify_completion(self.goal,self.candidate,knowledge=self.configuration.knowledge,
-                           final_state=self.attempt.final_state,control_snapshot=self.control.snapshot())
-        self.control.event("verification",{"passed":self.verification.passed,
+                           final_state=self.attempt.final_state,control_snapshot=verification_control)
+        self.control.capture(self.verification)
+        self.control.event("verification",{"control_ref":control_ref,"passed":self.verification.passed,
                           "verification_ref":fingerprint(self.verification),
                           "execution_id":self.attempt.execution_id,"state_ref":self.attempt.final_state.snapshot_id})
         if self.verification.passed:return self.publish(TerminalStatus.SUCCEEDED,TerminalReason.VERIFIED)

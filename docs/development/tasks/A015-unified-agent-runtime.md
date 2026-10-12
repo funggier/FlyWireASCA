@@ -3,7 +3,7 @@
 Status: ACTIVE
 GitHub Issue: #19
 Execution method: Native
-Execution checkpoint: user resumed; Task10 verified; next Task11
+Execution checkpoint: user resumed; Task11 protocol verified; G4 CI and physical comparison pending
 Branch: research/a015-unified-agent-runtime
 Activation base: 4ca246df6976c7aa21ad07826017f167f0ee27da
 Approved on: 2026-10-12 (Asia/Bangkok)
@@ -176,3 +176,18 @@ physical capability/efficiency conclusion. Initial portable errors retained in
 private execution evidence and corrected via development regression tests.
 Both audits, frozen aggregate, A011 guard and repository qualification PASS.
 Next: source-bound physical evidence and independent tamper verification.
+
+## Task11 pre-G4 protocol checkpoint
+
+Full suite1427 passed in167.08s; source/evidence/schedule/CLI/CI focused41
+passed in53.54s, plus neutral query/relation/embedding telemetry regressions.
+Source mode/path/blob closure includes thin offline verifier and imported legacy
+initializers; frozen inputs/spec/tag ancestry checked. Bounded per-run snapshot
+artifacts share trace byte budget and permit independent completion replay.
+Resealed individual tamper is rejected; unknown usage remains incomplete.
+Portable replay128 trials retains46/43 correct solvable and zero false success,
+16/16 controls each. Scripted usage is not physical cost evidence.
+Both audits, repository qualification, G2 aggregate and A011 guard pass. Fresh
+Ollama0.32.15/model/embedding identity still matches frozen certificate.
+Next: clean behavior commit/exact feature CI/G4 source fingerprint, fixed384
+physical slots and separate evidence commit. No primary generation yet.

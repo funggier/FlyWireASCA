@@ -103,7 +103,7 @@ class DirectPinnedRunner:
             return AgentResult(request.request_id,c.run_id,status,reason,goal,answer,
                 candidate.data if candidate else None,verification,candidate.evidence_refs if candidate else (),
                 attempt.final_state.snapshot_id if attempt else None,c.ledger.snapshot(),c.trace.freeze(),
-                status is not TerminalStatus.SUCCEEDED and attempt is not None)
+                status is not TerminalStatus.SUCCEEDED and attempt is not None,artifacts=c.trace.artifacts())
         try:
             generated=broker.generate(BaselinePurpose.DIRECT_SOLUTION,render_direct_prompt(request.text,cfg.public),
                                       control=c,max_output_tokens=1024)
@@ -123,7 +123,7 @@ class DirectPinnedRunner:
                 reason=TerminalReason.AMBIGUOUS_INPUT if found.clarification else TerminalReason.UNSUPPORTED_CAPABILITY
                 if dict(proposal)!={"type":"stop","status":status.value,"reason":reason.value}:raise ValueError("contradictory stop")
                 return publish(status,reason)
-            goal=GoalCompiler().compile(found.intent,request,self.schemas)
+            goal=GoalCompiler().compile(found.intent,request,self.schemas);c.capture(goal)
             if proposal.get("type")=="stop":
                 reason=justified_stop(goal,cfg)
                 if reason is None or dict(proposal)!={"type":"stop","status":"BOUNDED_FAILURE","reason":reason.value}:
@@ -138,17 +138,24 @@ class DirectPinnedRunner:
                     {"actual":value,"op":ValueBinding("literal",value="eq"),"value":value}),),{})
             else:plan=parse_plan_proposal(proposal)
             context=PublicBindingContext(cfg.knowledge.snapshot_id,records,EvidenceCoverage(goal.required_evidence,goal.required_evidence,True))
+            c.capture(plan);c.capture(context)
             checked=validate_plan(plan,goal,context,catalog=cfg.catalog,registry=self.registry,control=c)
             if checked.plan is None:
                 c.ledger.record("rejected_proposals");return publish(TerminalStatus.BOUNDED_FAILURE,TerminalReason.INVALID_PLAN)
             c.phase=Phase.EXECUTING
             attempt=execute_attempt(checked.plan,goal,context,initial=cfg.initial_state,catalog=cfg.catalog,
                     registry=self.registry,authorization=StageAAuthorization(),control=c,executor=ProcedureExecutionAdapter())
+            c.capture(attempt);c.capture(c.execution_receipt)
             c.check_dispatch();c.phase=Phase.VERIFYING
             candidate=(CompletionCandidate(data,refs,attempt,records) if proposal["type"]=="structured-answer" else
                        candidate_from_attempt(goal,records,attempt))
+            c.capture(candidate);verification_control=c.snapshot();control_ref=c.capture(verification_control)
             verification=verify_completion(goal,candidate,knowledge=cfg.knowledge,final_state=attempt.final_state,
-                                           control_snapshot=c.snapshot())
+                                           control_snapshot=verification_control)
+            c.capture(verification)
+            c.event("verification",{"control_ref":control_ref,"passed":verification.passed,
+                    "verification_ref":fingerprint(verification),"execution_id":attempt.execution_id,
+                    "state_ref":attempt.final_state.snapshot_id})
             c.ledger.record_span("direct:mechanical",max(0.0,self.clock.now()-mechanical_started))
             if verification.passed:return publish(TerminalStatus.SUCCEEDED,TerminalReason.VERIFIED)
             c.ledger.record("rejected_proposals")

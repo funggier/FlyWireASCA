@@ -34,8 +34,13 @@ class _EmbeddingBridge:
         if request.input_kind is EmbeddingInputKind.QUERY:
             control.ledger.record("query_embedding_calls")
             control.ledger.record("query_embedding_inputs",len(texts))
-        result=port.embed(texts,deadline=min(control.ledger.deadline,control.clock.now()+120),
-                         cancellation=control.cancellation)
+        started=control.clock.now()
+        try:
+            result=port.embed(texts,deadline=min(control.ledger.deadline,control.clock.now()+120),
+                             cancellation=control.cancellation)
+        finally:
+            control.ledger.record_span("embedding:query" if request.input_kind is EmbeddingInputKind.QUERY else "embedding:document",
+                                       max(0.0,control.clock.now()-started))
         if result.model_name!="qwen3-embedding:0.6b" or result.model_digest!=EMBEDDING_DIGEST or result.dimension!=1024:
             raise IntegrityStop(message="embedding identity mismatch")
         if len(result.vectors)!=len(texts):raise IntegrityStop(message="embedding count mismatch")
@@ -110,6 +115,7 @@ class KnowledgeAdapter:
                                 required_entity_ids=wanted,required_context_tags=tags)
         docs=[d for d in self.documents.values() if (d.memory.memory_id.startswith("catalog:"))==(query.index_kind=="catalog")]
         eligible=sum(index._eligible(d,local) for d in docs)
+        query_ref=control.capture(query)
         trace=control.trace.reserve(2048)
         reservations=control.ledger.reserve_bundle({Resource.RETRIEVAL_QUERIES:1,Resource.VECTORS_SCORED:eligible},
                                     attempt_id=getattr(control,"query_round_id",None))
@@ -137,7 +143,7 @@ class KnowledgeAdapter:
                 if r.reservation_id in control.ledger._open:control.ledger.reconcile(r,None if invoked else 0)
             from ..trace import TraceEvent
             control.trace.append(trace,TraceEvent(len(control.trace.freeze()),"retrieval",control.run_id,
-                {"query_id":local.query_id,"query_hash":fingerprint(query),"index":query.index_kind,"invoked":invoked}))
+                {"query_id":local.query_id,"query_hash":fingerprint(query),"query_ref":query_ref,"index":query.index_kind,"invoked":invoked,"eligible_vectors":eligible}))
     def expand(self,seed_ids,route,*,control):
         if not self._ready:raise ValueError("knowledge setup required")
         if not 1<=len(set(seed_ids))<=2 or len(set(seed_ids))!=len(seed_ids):raise ValueError("one/two unique legitimate seeds")
@@ -181,7 +187,12 @@ class KnowledgeAdapter:
             quality=tuple(self.relation_quality.get((seed,relation)) for seed in seed_ids for relation in route.relation_types)
             if not paths and any(q is not None for q in quality) and all(q is None or q<.5 for q in quality):
                 deficits=(Deficit("INSUFFICIENT_CONFIDENCE",explanation="public source relation confidence below declared minimum"),)
-            return RelationBatch(tuple(paths),result.visited_memory_ids,result.scanned_edge_count,deficits)
+            batch=RelationBatch(tuple(paths),result.visited_memory_ids,result.scanned_edge_count,deficits)
+            visited=getattr(control,"relation_visited_nodes",set());visited.update(result.visited_memory_ids)
+            control.relation_visited_nodes=visited;control.ledger.peak("relation_unique_nodes",len(visited))
+            control.event("relation",{"batch_ref":control.capture(batch),"visited":len(result.visited_memory_ids),
+                                      "scanned_edges":result.scanned_edge_count})
+            return batch
         finally:
             for r in reservations:
                 if r.reservation_id in control.ledger._open:control.ledger.reconcile(r,None if invoked else 0)

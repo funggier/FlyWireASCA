@@ -102,6 +102,7 @@ class AgentResult(FrozenRecord):
     trace: tuple = ()
     partial: bool = False
     explanation: str = ""
+    artifacts:Mapping=field(default_factory=dict)
     def __post_init__(self):
         super(AgentResult,self).__post_init__()
         nonblank(self.request_id);nonblank(self.run_id)

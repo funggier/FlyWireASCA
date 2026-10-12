@@ -56,6 +56,11 @@ class RunControl:
                            {r.value:getattr(self.profile,r.value) for r in Resource},
                            self.clock.now(),self.cancellation.cancelled())
 
+    def capture(self,value):
+        self.check_dispatch()
+        ref=self.trace.capture(value);self.ledger.peak("artifact_bytes_peak",self.trace.artifact_bytes)
+        return ref
+
     def event(self,kind,payload,upper_bound=4096):
         self.check_dispatch()
         r=self.trace.reserve(upper_bound)

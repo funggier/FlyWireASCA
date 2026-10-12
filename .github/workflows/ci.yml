@@ -83,5 +83,18 @@ jobs:
           if-no-files-found: error
       - name: Verify committed A014 physical structural routing evidence
         run: python scripts/verify_a014_physical_evidence.py docs/development/qualification/a014-structural-routing-physical-v1.json
+      - name: Freeze check A015 bilingual inputs
+        run: python scripts/freeze_agent_runtime_a015.py --check
+      - name: Audit A015 runtime contract
+        run: python scripts/audit_agent_runtime_contract.py
+      - name: Qualify A015 portable engineering
+        run: python scripts/qualify_agent_runtime_a015.py --output "$RUNNER_TEMP/a015-portable-${{ github.run_id }}-${{ github.run_attempt }}.json"
+      - name: Upload A015 portable engineering evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a015-portable-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/a015-portable-${{ github.run_id }}-${{ github.run_attempt }}.json
+          if-no-files-found: error
       - name: Check whitespace
         run: git diff --check HEAD^ HEAD

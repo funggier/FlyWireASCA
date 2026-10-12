@@ -163,3 +163,27 @@ def test_low_confidence_relation_has_typed_bounded_failure(configuration,clock):
     result=runtime.run("Development evidence check: identify the cause of Echo using the recorded relation.")
     assert result.status.value=="BOUNDED_FAILURE" and result.reason.value=="INSUFFICIENT_CONFIDENCE"
     assert result.metrics.recovery_rounds==0 and result.metrics.relation_invocations==1
+
+
+def test_query_embedding_span_is_measured_without_double_summing(configuration,clock):
+    from .test_knowledge_adapter import Embedding
+    class TimedEmbedding(Embedding):
+        def embed(self,*args,**kwargs):
+            clock.value+=.25;return super().embed(*args,**kwargs)
+    ports=api("ports").RuntimePorts(Model(),TimedEmbedding(),Bounds(),Identity(),clock)
+    runtime=api("factory").build_stage_a_runtime(configuration,ports)
+    result=runtime.run("Please report Nira office for this development check.")
+    assert result.status.value=="SUCCEEDED"
+    assert result.metrics.stage_seconds["embedding:query"]==.25
+    assert result.metrics.stage_seconds["end_to_end"]==.25
+
+def test_retrieval_and_relation_observations_are_referenced_and_bounded(configuration,clock):
+    runtime,_=build(configuration,clock)
+    result=runtime.run("Which company does Ada work for in this development check?")
+    queries=[e for e in result.trace if e.kind=="retrieval"]
+    assert queries and all(e.payload["query_ref"] in result.artifacts for e in queries)
+    relations=[e for e in result.trace if e.kind=="relation"]
+    assert len(relations)==result.metrics.relation_invocations==1
+    batch=result.artifacts[relations[0].payload["batch_ref"]]
+    assert batch.scanned_edges==result.metrics.counters["relation_scanned_edges"]
+    assert result.metrics.counters["relation_unique_nodes"]==len(set(batch.visited_ids))
