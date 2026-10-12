@@ -1,4 +1,4 @@
-# A015 — End-to-End Unified Agent Runtime
+# A015 â€” End-to-End Unified Agent Runtime
 
 Status: ACTIVE
 GitHub Issue: #19
@@ -50,17 +50,33 @@ Ollama 0.32.15; generation/embedding digests match approved spec.
 
 Task 1 complete: commit 82994994195720c99e25dc5676690ca4346448bb.
 Focused lifecycle GREEN 19; full suite GREEN 1163 in 102.93s.
-Task 2: immutable contracts/global ledger/trace and both-namespace guard.
-RED observed for absent modules; 30 contract/control/trace tests GREEN.
-Audit fault suite GREEN 16 after four initializer/alias/path-effect regressions
-observed RED; legacy auditor integration regressions observed RED then GREEN.
-Combined focused regressions: 78 passed in 12.20s. Full completion gate pending.
-No frozen workload, interpreter/ranking/controller or performance run exists.
+Task 2 complete: 3097b2e5bf8e0ad26740f1e61940d9aac6afa1d5.
+Full suite 1211 passed; exact feature CI 38201594388 SUCCESS.
+Task 3 complete: adf470ec4d59ad6c5f277170e1a5dc410edf239a.
+Focused 29 passed; full suite 1240 passed in 105.37s; both audits/guard PASS.
+Metadata-only certificate:
+f68470eb8b0c5bf9e3ee4d4b40b5bdeb06cc614ba151eec71c4eb84fe7ee2bdf.
+Actual GGUF: 256-byte alphabet complete; all 247587 merge products exist;
+11935649 metadata bytes independently hashed. Bound is rendered UTF-8 bytes
+plus two, not reported token usage.
+Task 4 G2 freeze is this commit; its exact SHA is recorded at the next
+checkpoint. Canonical aggregate:
+774bc3352242bee5cb588f499f6597a264c67f612feb518828058dc4c1efa882.
+64 requests /32 EN-TH pairs; private oracle and all public records, schemas,
+assembled role templates, A014 router fingerprint, profile and certificate
+locked. Full direct prompts all fit: maximum upper bound 7145 plus output
+allowance 1024 =8169 <=8192. No workload generation or performance tuning.
+
+Setup correction retained: one generic non-workload token was generated while
+testing a mistaken render-only API flag; setup invocation 1, prompt tokens 23,
+output tokens 1. Excluded from primary benchmark denominators. Correct flag
+_debug_render_only subsequently verified without generation.
 
 ## Next Action
 
-Finish Task 2 full-suite gate, then Task 3 broker/preflight;
-Task 4 freeze precedes interpreter/ranking/controller implementation.
+Read the G2 commit/readback, then Task 5 trusted semantics and interpretation.
+Frozen inputs/templates must remain unchanged; changed inputs require a new
+disclosed workload version.
 
 ## Recovery and Resume
 
@@ -87,3 +103,8 @@ No release/version promotion, Stage B/C or another milestone auto-activation.
 - Add values.py and control.py to keep immutable DTOs separate from mutable
   ledger/lifecycle control and prevent import cycles. Public request/result API
   unchanged; cost if wrong: internal import adaptation.
+
+- Before G2, compact shared typed serialization: optional entity display names,
+  state defaults by entity kind, entity-bound procedure step IDs and concise
+  capability/schema descriptions. Full information remains visible to both
+  variants. Context-fit checks were metadata-only; no benchmark tuning.
