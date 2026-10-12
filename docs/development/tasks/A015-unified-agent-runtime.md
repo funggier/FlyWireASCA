@@ -48,13 +48,18 @@ Ollama 0.32.15; generation/embedding digests match approved spec.
 
 ## Current Action
 
-Task 1 activation: lifecycle tests observed RED (3 missing-A015 failures,
-16 passed), then coherent ACTIVE metadata written. Final verification pending.
-No new runtime source or frozen workload has been created.
+Task 1 complete: commit 82994994195720c99e25dc5676690ca4346448bb.
+Focused lifecycle GREEN 19; full suite GREEN 1163 in 102.93s.
+Task 2: immutable contracts/global ledger/trace and both-namespace guard.
+RED observed for absent modules; 30 contract/control/trace tests GREEN.
+Audit fault suite GREEN 16 after four initializer/alias/path-effect regressions
+observed RED; legacy auditor integration regressions observed RED then GREEN.
+Combined focused regressions: 78 passed in 12.20s. Full completion gate pending.
+No frozen workload, interpreter/ranking/controller or performance run exists.
 
 ## Next Action
 
-Finish Task 1 GREEN/commit, then Task 2 foundations and Task 3 preflight;
+Finish Task 2 full-suite gate, then Task 3 broker/preflight;
 Task 4 freeze precedes interpreter/ranking/controller implementation.
 
 ## Recovery and Resume
@@ -78,3 +83,7 @@ No release/version promotion, Stage B/C or another milestone auto-activation.
   Cost if wrong: repair bookkeeping without changing product behavior.
 - Existing setuptools/pytest environment needs no Poetry installation.
   Cost if wrong: install only a verified missing development dependency.
+
+- Add values.py and control.py to keep immutable DTOs separate from mutable
+  ledger/lifecycle control and prevent import cycles. Public request/result API
+  unchanged; cost if wrong: internal import adaptation.

@@ -10,8 +10,8 @@ Execute the approved A015 Unified Agent Runtime plan using Native.
 Branch: research/a015-unified-agent-runtime
 Activation base: 4ca246df6976c7aa21ad07826017f167f0ee27da
 
-Task 1: lifecycle activation after isolated baseline and approved plan/method.
-Task 2 is next: immutable contracts, ledger, trace and architecture guard.
+Task 1 complete (8299499), full suite 1163 GREEN.
+Task 2 foundations focused 78 GREEN; full-suite completion gate pending.
 No interpreter/controller/ranker tuning or new benchmark performance run before
 the Task 4 freeze commit and complete direct-prompt context certificate.
 
@@ -29,7 +29,7 @@ Historical conclusions, v0.1.0 and all 67 A011 protected paths are preserved.
 
 ## Next Action
 
-Complete Task 1 verification/commit, then Task 2. Work only on the isolated
+Complete Task 2 full-suite gate, then Task 3 broker/preflight. Work only on the isolated
 research branch. Stage A permits configured inference infrastructure and pure/
 in-memory capabilities only; Stage B/C needs a later design gate.
 

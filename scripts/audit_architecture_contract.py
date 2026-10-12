@@ -240,6 +240,18 @@ def _dependency_errors(graph: dict[str, set[str]]) -> list[str]:
 def audit_architecture_contract(root: Path) -> list[str]:
     root = Path(root)
     errors: list[str] = []
+    # The supplemental guard is loaded from this script's owned directory,
+    # even when legacy regression tests audit a temporary source fixture.
+    import importlib.util
+    guard_path = Path(__file__).with_name("audit_agent_runtime_contract.py")
+    guard_spec = importlib.util.spec_from_file_location("asca_agent_runtime_guard", guard_path)
+    if guard_spec is None or guard_spec.loader is None:
+        errors.append("agent runtime guard cannot be loaded")
+    else:
+        guard = importlib.util.module_from_spec(guard_spec)
+        guard_spec.loader.exec_module(guard)
+        errors.extend(guard.audit_agent_runtime_contract(root))
+
 
     pyproject_path = root / "pyproject.toml"
     if not pyproject_path.is_file():

@@ -297,3 +297,18 @@ def test_audit_rejects_relational_activation_reverse_dependency_on_structural_ro
         and "structural_routing" in error
         for error in errors
     )
+def test_audit_covers_new_runtime_oracle_boundary(tmp_path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src/project_asca/agent_runtime/context.py"
+    injected.parent.mkdir(parents=True)
+    injected.write_text("from project_asca.evaluation.oracle import expected\n", encoding="utf-8")
+    assert any("evaluator/oracle" in error for error in audit(root))
+
+
+def test_audit_covers_legacy_to_new_reverse_edge(tmp_path):
+    audit = _load_audit()
+    root = _copy_fixture(tmp_path)
+    injected = root / "src/flywire_asca/model/new_reverse.py"
+    injected.write_text("from project_asca.agent_runtime import AgentRequest\n", encoding="utf-8")
+    assert any("reverse" in error for error in audit(root))
