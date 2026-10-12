@@ -85,6 +85,7 @@ class ModelBroker:
         except CancelledStop:error=TerminalReason.CANCELLED.value
         except IntegrityStop as exc:
             error=exc.reason.value
+            control.integrity_reason=exc.reason
             if not control.ledger.snapshot().integrity_failures:control.ledger.record("integrity_failures")
         except (TimeoutError,ConnectionError) as exc:
             error=TerminalReason.MODEL_UNAVAILABLE.value

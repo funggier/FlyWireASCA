@@ -53,6 +53,7 @@ def _number(text):
     return float(text) if "." in text else int(text)
 
 def _has(text,words):
+    words=tuple(normalize_with_spans(word).text for word in words)
     return any((bool(re.search(r"\b"+re.escape(word)+r"\b",text)) if word.isascii() and word.isalpha()
                 else word in text) for word in words)
 

@@ -47,4 +47,5 @@ class RuntimeProfile:
                 if isinstance(value,bool) or not isinstance(value,(float,int)) or not math.isfinite(value) or not 0<value<=f.default:raise ValueError("invalid deadline")
             elif not isinstance(value,int) or isinstance(value,bool) or not 0<=value<=f.default:
                 raise ValueError("invalid resource limit "+f.name)
+        if self.transitions<1:raise ValueError("terminal transition reserve required")
         if self.trace_events<2 or self.trace_bytes<2048:raise ValueError("terminal trace reserve required")

@@ -133,9 +133,11 @@ class StrategyResolver:
     def resolve(self,goal,context,*,previous,deficits,control):
         control.check_dispatch()
         candidates=[]
+        repair=previous is not None and any(d.kind in ("PRECONDITION_UNSATISFIED","OBSERVED_MISMATCH","INVALID_PLAN") for d in deficits)
         visible={i.payload.get("id") for i in context.items if i.kind is EvidenceKind.CATALOG_ENTRY}
         for descriptor in self.catalog.descriptors:
             if descriptor.root_ref not in visible:continue
+            if repair and descriptor.root_ref==previous.root_ref:continue
             if _root_fits(descriptor.root_ref,goal,self.catalog):
                 coverage=sum(any(i.payload.get("field")==ref for i in context.items)
                              for ref in descriptor.evidence_requirements)
@@ -146,7 +148,7 @@ class StrategyResolver:
             return Resolution(ActionProposal("plan:"+str(uuid.uuid4()),0,(),
                                                {"entity":goal.parameters["entity"]},chosen.root_ref))
         try:
-            composed=self._compose(goal,context)
+            composed=None if repair and previous.steps else self._compose(goal,context)
             if composed:return Resolution(composed)
         except ValueError as exc:
             if str(exc)=="NO_VALID_PLAN":return Resolution(deficits=(Deficit("NO_VALID_PLAN"),))

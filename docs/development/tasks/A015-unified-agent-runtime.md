@@ -1,9 +1,9 @@
-# A015 â€” End-to-End Unified Agent Runtime
+# A015 — End-to-End Unified Agent Runtime
 
 Status: ACTIVE
 GitHub Issue: #19
 Execution method: Native
-Execution checkpoint: user resumed; Task8 verified; next Task9
+Execution checkpoint: user resumed; Task9 verified; next Task10
 Branch: research/a015-unified-agent-runtime
 Activation base: 4ca246df6976c7aa21ad07826017f167f0ee27da
 Approved on: 2026-10-12 (Asia/Bangkok)
@@ -152,3 +152,15 @@ composition factory, public runtime and bounded recovery.
 ChatGPT workflow skill saved and read back; see
 docs/development/reports/ASCA-20261012-chatgpt-workflow-skill-completed.md.
 Earlier pause/draft statements above are historical checkpoints.
+
+## Task9 verified checkpoint
+
+New top-level FSM, factory/public text API, terminal latch, model scopes and
+bounded meaningful recovery verified. Full suite1365 passed in110.45s.
+Development tests demonstrate two real recovery rounds/three attempts/six
+queries, fresh executions, composed plan repair, no-progress, identity drift,
+180-second deadline, immutable request and late dispatch rejection.
+Both audits, frozen aggregate and A01167 protected paths pass. No primary
+workload inference occurred. Next: Task10 shared direct baseline and evaluation.
+Historical pause text above describes the earlier Task7 checkpoint; the
+resumed sections and live Git/ledger now supersede its pending-work statements.

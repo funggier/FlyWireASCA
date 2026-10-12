@@ -47,6 +47,14 @@ class PinnedModelPort:
         self.base_url=base_url;self.control=control;self.identity=identity
         self.log=TransportLog()
         self.transport=transport or DeadlineJsonTransport(base_url,control,self.log)
+    def for_control(self,control):
+        if isinstance(self.transport,DeadlineJsonTransport):
+            transport=DeadlineJsonTransport(self.base_url,control,self.log,
+                                           opener=self.transport.opener,gate=self.transport.gate)
+        else:transport=self.transport
+        bound=PinnedModelPort(self.base_url,control,self.identity,transport=transport)
+        bound.log=self.log
+        return bound
     def generate(self,request,*,deadline,cancellation):
         self.control.check_dispatch()
         self.transport.override_deadline=deadline

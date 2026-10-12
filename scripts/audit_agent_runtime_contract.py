@@ -15,7 +15,7 @@ EDGES={
  "budgets":{"contracts","profile","values"},
  "trace":{"values","budgets","profile"},
  "control":{"contracts","values","profile","budgets","trace","ports"},
- "__init__":{"contracts","controller","factory","values","profile"},
+ "__init__":{"contracts","controller","factory","values","profile","ports"},
  "broker":{"contracts","values","profile","control","budgets","ports","trace"},
  "prompts":{"contracts","values"},
  "domain":{"contracts","values","semantics","plans","profile"},
@@ -27,10 +27,10 @@ EDGES={
  "strategy":{"budgets","values","contracts","semantics","plans","capabilities","goals","control","broker","prompts","domain"},
  "execution":{"budgets","values","contracts","semantics","plans","capabilities","state","control","ports","strategy"},
  "verification":{"contracts","values","semantics","plans","capabilities","domain"},
- "recovery":{"contracts","values","semantics","plans","control"},
+ "recovery":{"contracts","values","semantics","plans","control","budgets"},
  "rendering":{"values","contracts","semantics","plans","verification"},
- "controller":{"contracts","values","semantics","plans","control","interpretation","goals","context","strategy","execution","verification","recovery","rendering","profile","ports","capabilities"},
- "factory":{"contracts","values","semantics","plans","control","interpretation","goals","context","strategy","execution","verification","recovery","rendering","profile","ports","capabilities","controller","domain"},
+ "controller":{"budgets","trace","contracts","values","semantics","plans","control","interpretation","goals","context","strategy","execution","verification","recovery","rendering","profile","ports","capabilities"},
+ "factory":{"broker","contracts","values","semantics","plans","control","interpretation","goals","context","strategy","execution","verification","recovery","rendering","profile","ports","capabilities","controller","domain"},
 }
 ADAPTER_CORE={"strategy","contracts","values","semantics","plans","profile","ports","control","budgets","trace","broker","capabilities","state","domain"}
 LEGACY={"contracts","familiarity","model","embedding","vector_memory","selective_activation","uncertainty_expansion","procedural_memory","relational_activation","structural_routing"}

@@ -46,3 +46,14 @@ class ExecutionPort(Protocol):
     def execute(self,plan:ValidatedPlan,goal:GoalContract,context:WorkingContext,*,
                 initial:StateSnapshot,catalog:StrategyCatalog,registry,authorization:AuthorizationPort,
                 control,attempt_id:str,execution_id:str)->AttemptResult: ...
+
+
+from dataclasses import dataclass
+
+@dataclass(frozen=True,slots=True)
+class RuntimePorts:
+    model:ModelPort
+    embedding:EmbeddingPort
+    token_bounds:TokenBoundPort
+    identity:IdentityPort
+    clock:ClockPort

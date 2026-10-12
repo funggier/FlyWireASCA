@@ -32,6 +32,7 @@ class RunControl:
     terminal:bool=False
     phase_hook:object=None
     execution_receipt:object=None
+    integrity_reason:TerminalReason=TerminalReason.CONTROL_VIOLATION
 
     @classmethod
     def create(cls,request,profile=None,clock=None,cancellation=None,variant=RunVariant.UNIFIED_RUNTIME):
@@ -47,7 +48,7 @@ class RunControl:
         if self.clock.now()>=self.ledger.deadline:
             raise BudgetStop(TerminalReason.DEADLINE_EXCEEDED,"deadline")
         if self.ledger.snapshot().integrity_failures:
-            raise IntegrityStop(message="prior integrity failure")
+            raise IntegrityStop(self.integrity_reason,"prior integrity failure")
 
     def snapshot(self):
         return RunSnapshot(self.run_id,self.phase,self.ledger.snapshot(),self.terminal,
@@ -71,6 +72,8 @@ class RunControl:
         start=self.clock.now()
         if self.phase_hook is not None:self.phase_hook(Phase.MODEL_ASSIST)
         try:
+            self.event("model_scope",{"purpose":purpose.value,"requesting_phase":previous.value,
+                      "prompt_fingerprint":prompt_fingerprint},upper_bound=1024)
             yield
         finally:
             self.ledger.record_span("model_assist",max(0.0,self.clock.now()-start))
