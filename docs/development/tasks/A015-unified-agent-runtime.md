@@ -3,7 +3,7 @@
 Status: ACTIVE
 GitHub Issue: #19
 Execution method: Native
-Execution checkpoint: user resumed; Task11 protocol verified; G4 CI and physical comparison pending
+Execution checkpoint: G4 behavior frozen; complete physical evidence verified; Task11 evidence CI and Task12 review pending
 Branch: research/a015-unified-agent-runtime
 Activation base: 4ca246df6976c7aa21ad07826017f167f0ee27da
 Approved on: 2026-10-12 (Asia/Bangkok)
@@ -191,3 +191,31 @@ Both audits, repository qualification, G2 aggregate and A011 guard pass. Fresh
 Ollama0.32.15/model/embedding identity still matches frozen certificate.
 Next: clean behavior commit/exact feature CI/G4 source fingerprint, fixed384
 physical slots and separate evidence commit. No primary generation yet.
+
+## Task11 physical comparison verified
+
+Behavior commit: c968330cf97d7a7c7893aa70fddd150ce8dd510e.
+G4 exact CI: https://github.com/funggier/ProjectASCA/actions/runs/38247841795 SUCCESS.
+Source124 fingerprint: e5d6f1f08735b8292b05bbf4b40135995af2c62b17e927a6d78c73ddd03c375b.
+Physical run: ef3cc907-b320-4b5d-bf0b-45a23aed8f54,
+2026-10-12 19:21:33 to 20:46:51 Asia/Bangkok.
+Fixed three repetitions completed:384 trials /192 per variant. Offline verifier
+PASS: valid physical evidence, usage complete, no errors.
+Evidence: docs/development/qualification/a015-agent-runtime-physical-v1.json.
+Payload hash:8036befcd0532b59e047ca6fb5c78b5f9a4f6895b2a84bad97b4ee26fc0241ad.
+All checkpoint/raw/reference artifacts retained, including the final partial
+checkpoint from the same run. Behavior, frozen prompts/public data/oracle and
+budgets were not changed from the measured results.
+
+Research outcome: UNIFIED_RUNTIME_NOT_SUPPORTED. Unified correctly completes
+138/144 solvable trials, controls48/48 and bounded failures24/24; zero false
+success and zero invariant failures. Genuine recovery0, despite36 controller
+recovery rounds, fails the predeclared acceptance rule. Direct produces192
+rejected proposals and correctly completes0/144; its model calls192 and all
+prompt/output costs are retained. Unified generation calls0; query embedding
+costs remain separate. Do not interpret this as universal efficiency or general
+conversational capability. A valid negative research result may close engineering
+qualification after independent review, exact CI and authorized integration.
+
+Task12 reports/whole-branch independent review/integration remain pending.
+Status stays ACTIVE. No release, Stage B/C or subsequent milestone activation.
