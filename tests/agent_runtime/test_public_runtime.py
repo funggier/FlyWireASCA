@@ -144,3 +144,22 @@ def test_late_callback_cannot_dispatch_after_terminal(configuration,clock):
         c.event("late",{})
     assert c.ledger.snapshot()==before and c.trace.freeze()==trace and c.terminal
     assert result.trace[-1].kind=="terminal"
+
+
+def test_normalized_thai_threshold_cannot_silently_drop_filter(configuration,clock):
+    runtime,_=build(configuration,clock)
+    result=runtime.run("ช่วยเก็บตัวเลข 10, 20, 60 ที่ต่ำกว่า 30 แล้วเรียงและหาผลรวม")
+    assert result.status.value=="SUCCEEDED"
+    assert result.data["list"]==(10,20) and result.data["sum"]==30
+
+def test_publicly_absent_fact_stops_as_missing_evidence(configuration,clock):
+    runtime,_=build(configuration,clock)
+    result=runtime.run("Report Nira temperature limit for this development evidence check.")
+    assert result.status.value=="BOUNDED_FAILURE" and result.reason.value=="MISSING_EVIDENCE"
+    assert result.metrics.recovery_rounds==0
+
+def test_low_confidence_relation_has_typed_bounded_failure(configuration,clock):
+    runtime,_=build(configuration,clock)
+    result=runtime.run("Development evidence check: identify the cause of Echo using the recorded relation.")
+    assert result.status.value=="BOUNDED_FAILURE" and result.reason.value=="INSUFFICIENT_CONFIDENCE"
+    assert result.metrics.recovery_rounds==0 and result.metrics.relation_invocations==1

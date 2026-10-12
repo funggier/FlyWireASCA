@@ -6,7 +6,7 @@ import uuid
 from ..contracts import AgentRequest,SetupMetrics
 from ..control import RunControl
 from ..values import EvidenceKind,canonical_bytes,fingerprint
-from ..semantics import EvidenceRecord,RetrievalHit,RetrievalBatch,RelationBatch
+from ..semantics import EvidenceRecord,RetrievalHit,RetrievalBatch,RelationBatch,Deficit
 from ..budgets import Resource,IntegrityStop
 from ..profile import EMBEDDING_DIGEST
 from flywire_asca.contracts.memory import MemoryRecord,AssociationEdge
@@ -86,6 +86,10 @@ class KnowledgeAdapter:
         edges=tuple(AssociationEdge(e["id"],e["source"],e["target"],RelationType(e["relation"].lower()),
                                     e["activation_weight"],e["confidence"],("evidence:"+e["id"],))
                     for e in self.snapshot.edges)
+        self.relation_quality={}
+        for edge in self.snapshot.edges:
+            key=(edge["source"],edge["relation"])
+            self.relation_quality[key]=max(self.relation_quality.get(key,0),edge["confidence"])
         self.relation_index=TargetFreeRelationIndex(tuple(self.relation_records.values()),edges)
         self.setup_metrics=SetupMetrics(len(self.bridge.calls),total,time.monotonic()-started,
                                        {"embedding_calls":tuple(self.bridge.calls)})
@@ -173,7 +177,11 @@ class KnowledgeAdapter:
                 paths.append(EvidenceRecord(identifier,EvidenceKind.RELATION_PATH,identifier,self.snapshot.snapshot_id,
                     {"record_kind":"path","node_ids":path.memory_ids,"edge_ids":path.edge_ids,
                      "evidence_ids":path.evidence_ids,"records":tuple(records)},tuple(r.evidence_id for r in records)))
-            return RelationBatch(tuple(paths),result.visited_memory_ids,result.scanned_edge_count)
+            deficits=()
+            quality=tuple(self.relation_quality.get((seed,relation)) for seed in seed_ids for relation in route.relation_types)
+            if not paths and any(q is not None for q in quality) and all(q is None or q<.5 for q in quality):
+                deficits=(Deficit("INSUFFICIENT_CONFIDENCE",explanation="public source relation confidence below declared minimum"),)
+            return RelationBatch(tuple(paths),result.visited_memory_ids,result.scanned_edge_count,deficits)
         finally:
             for r in reservations:
                 if r.reservation_id in control.ledger._open:control.ledger.reconcile(r,None if invoked else 0)

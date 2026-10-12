@@ -195,6 +195,7 @@ class RelationBatch(FrozenRecord):
     paths: tuple
     visited_ids: tuple[str,...]
     scanned_edges: int
+    deficits:tuple[Deficit,...]=()
 
 @dataclass(frozen=True, slots=True)
 class Interpretation(FrozenRecord):

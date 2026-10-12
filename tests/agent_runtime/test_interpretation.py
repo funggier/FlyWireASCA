@@ -65,3 +65,27 @@ def test_valid_model_source_span_is_accepted_with_immutable_values(schemas):
          "spans":[{"name":"source","value":[8,3],"start":4,"end":11}]}
     out=api("interpretation").validate_intent_proposal(raw,api("contracts").AgentRequest(text),schemas)
     assert out.intent.bindings["parameters"]["source"]["literal"]==(8,3)
+
+
+def test_model_relation_enum_list_is_bound_to_original_language(configuration,schemas):
+    from tests.a015.conftest import wire_intent
+    text="Which company does Ada work for in this development check?"
+    request=api("contracts").AgentRequest(text)
+    raw=wire_intent(text,configuration)
+    found=api("interpretation").validate_intent_proposal(raw,request,schemas)
+    assert tuple(found.intent.bindings["parameters"]["relations"])==("WORKS_AT",)
+    raw["parameters"]["relations"]=["USED_FOR"]
+    for span in raw["spans"]:
+        if span["name"]=="relations":span["value"]=["USED_FOR"]
+    with pytest.raises(ValueError):
+        api("interpretation").validate_intent_proposal(raw,request,schemas)
+
+
+@pytest.mark.parametrize("text,relations",[
+    ("For this development query, what caused Delta and what happened after it?",{"CAUSED_BY","OCCURRED_BEFORE"}),
+    ("Which organization is Ada employed by in this development query?",{"WORKS_AT"}),
+    ("Where Ada works is requested for this development query.",{"WORKS_AT"})])
+def test_english_relation_inflections_retain_every_requested_relation(text,relations,schemas):
+    found=api("interpretation").deterministic_intent(api("contracts").AgentRequest(text),schemas)
+    assert found is not None and found.intent is not None
+    assert set(found.intent.bindings["parameters"]["relations"])==relations

@@ -39,7 +39,7 @@ class ContextAcquirer:
             new_ids={i.evidence_id for i in selected}
             selected+=tuple(i for i in previous.items if i.evidence_id not in new_ids and
                             i.kind.value not in ("USER_INPUT","RELATION_PATH"))
-        paths=()
+        paths=();relation_deficits=()
         if goal.kind is TaskKind.RELATION:
             route=self.routing.route(request,control=control)
             if route.status not in ("DECIDED_RELATIONAL","DECIDED_NON_RELATIONAL"):
@@ -49,8 +49,16 @@ class ContextAcquirer:
                 self._account(context,control);return context
             if route.relational:
                 seeds=(entity,) if entity else ()
-                if seeds:paths=self.relations.expand(seeds,route,control=control).paths
+                if seeds:
+                    expansion=self.relations.expand(seeds,route,control=control)
+                    paths=expansion.paths;relation_deficits=expansion.deficits
         context=self.selection.assemble(goal,selected,paths,snapshot=snapshot,capacity=capacity)
+        available={f["subject"]+"."+f["field"] for f in snapshot.facts}
+        absent=tuple(ref for ref in goal.required_evidence if "." in ref and not ref.startswith("relation:") and ref not in available)
+        if absent or relation_deficits:
+            context=WorkingContext(context.context_id,context.snapshot_id,context.items,context.coverage,
+                 context.deficits+relation_deficits+((Deficit("MISSING_EVIDENCE_UNAVAILABLE",absent,
+                     explanation="declared public snapshot has no such factual field"),) if absent else ()))
         self._account(context,control);return context
     @staticmethod
     def _account(context,control):

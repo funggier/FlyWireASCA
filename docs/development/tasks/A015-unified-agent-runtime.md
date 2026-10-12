@@ -3,7 +3,7 @@
 Status: ACTIVE
 GitHub Issue: #19
 Execution method: Native
-Execution checkpoint: user resumed; Task9 verified; next Task10
+Execution checkpoint: user resumed; Task10 verified; next Task11
 Branch: research/a015-unified-agent-runtime
 Activation base: 4ca246df6976c7aa21ad07826017f167f0ee27da
 Approved on: 2026-10-12 (Asia/Bangkok)
@@ -164,3 +164,15 @@ Both audits, frozen aggregate and A01167 protected paths pass. No primary
 workload inference occurred. Next: Task10 shared direct baseline and evaluation.
 Historical pause text above describes the earlier Task7 checkpoint; the
 resumed sections and live Git/ledger now supersede its pending-work statements.
+
+## Task10 G3 verified checkpoint
+
+Independent offline oracle, complete-public one-shot direct runner and ordered
+research decision rules verified. Full suite1402 passed in111.71s.
+Portable128 trials disclose scripted usage/constant embedding vectors: zero
+false success each,16/16 controls each,8/8 bounded failures each. Correct
+solvable counts46 unified/43 direct of48 are engineering replay only. No
+physical capability/efficiency conclusion. Initial portable errors retained in
+private execution evidence and corrected via development regression tests.
+Both audits, frozen aggregate, A011 guard and repository qualification PASS.
+Next: source-bound physical evidence and independent tamper verification.

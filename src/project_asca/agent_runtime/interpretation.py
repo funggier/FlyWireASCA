@@ -20,7 +20,7 @@ FIELD_ALIASES={
 OP_ALIASES={"sum":("sum","add","บวก","ผลรวม"),"sort":("sort","ascending","เรียง","น้อยไปมาก"),
 "filter":("keep","filter","เก็บ","เฉพาะ"),"group":("group","จัดกลุ่ม"),
 "format":("format","จัดรูปแบบ"),"select":("show","names","ชื่อ")}
-RELATION_ALIASES={"WORKS_AT":("work","employ","ทำงาน"),"CAUSED_BY":("cause","สาเหตุ"),
+RELATION_ALIASES={"WORKS_AT":("work","works","working","employ","employed","employment","ทำงาน"),"CAUSED_BY":("cause","caused","causes","causing","สาเหตุ"),
 "OCCURRED_BEFORE":("after","before","หลัง","ก่อน"),"PART_OF":("part of","ส่วนหนึ่ง"),
 "USED_FOR":("used for","ใช้ทำ","ใช้สำหรับ")}
 ACTION_ALIASES={"pack":("pack","แพ็ก","แพ็ค"),"approve":("approve","อนุมัติ"),
@@ -87,7 +87,7 @@ def _thresholds(text):
               ("gt",r"(?:above|more than|มากกว่า)\s*("+NUMBER+r")")]
     values=[]
     for comparison,pattern in patterns:
-        for match in re.finditer(pattern,text):values.append((comparison,_number(match.group(1)),match.span(1)))
+        for match in re.finditer(unicodedata.normalize("NFKC",pattern).casefold(),text):values.append((comparison,_number(match.group(1)),match.span(1)))
     return sorted(values,key=lambda v:v[2][0])
 
 def deterministic_intent(request,schemas):
@@ -188,6 +188,8 @@ def _span_matches(value,fragment,schemas):
             return all(v in numbers for v in value["sum"]) and ("verify" not in value or value["verify"] in numbers)
         return False
     if isinstance(value,(tuple,list)):
+        if value and all(isinstance(v,str) and v in RELATION_ALIASES for v in value):
+            return all(_has(text,RELATION_ALIASES[v]) for v in value)
         return tuple(value)==tuple(_number(m.group()) for m in NUMBER_PATTERN.finditer(text))
     if isinstance(value,(int,float)) and not isinstance(value,bool):
         return value in tuple(_number(m.group()) for m in NUMBER_PATTERN.finditer(text))

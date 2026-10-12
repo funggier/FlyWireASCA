@@ -10,6 +10,7 @@ from .execution import execute_attempt
 from .strategy import validate_plan
 from .verification import verify_completion,candidate_from_attempt
 from .rendering import render_result_data
+from .recovery import context_fingerprint,plan_fingerprint
 
 NEXT={
  Phase.RECEIVED:{Phase.INTERPRETING,Phase.TERMINAL},
@@ -143,7 +144,7 @@ class _Run:
         self.pending=None
         if not self.context.coverage.complete:
             self.deficits=tuple(d for d in self.context.deficits if d.kind in
-                                ("MISSING_EVIDENCE","CONTEXT_CAPACITY","ROUTING_UNRESOLVED","PROVENANCE_INVALID"))
+                                ("MISSING_EVIDENCE","MISSING_EVIDENCE_UNAVAILABLE","INSUFFICIENT_CONFIDENCE","CONTEXT_CAPACITY","ROUTING_UNRESOLVED","PROVENANCE_INVALID"))
             return self.recover()
         self.machine.move(Phase.RESOLVING);return None
     def resolve(self):
@@ -167,6 +168,11 @@ class _Run:
         self.attempt=execute_attempt(checked.plan,self.goal,self.context,initial=self.configuration.initial_state,
              catalog=self.configuration.catalog,registry=self.parts.registry,authorization=self.parts.authorization,
              control=self.control,executor=self.parts.executor)
+        self.control.event("attempt",{"goal":self.goal.goal_id,"execution_id":self.attempt.execution_id,
+             "plan_fingerprint":plan_fingerprint(self.proposal),"context_fingerprint":context_fingerprint(self.context),
+             "initial_state":self.configuration.initial_state.snapshot_id,
+             "observation_refs":tuple(fingerprint(o) for o in self.attempt.observations),
+             "completed":self.attempt.procedure_state=="COMPLETED"})
         self.machine.move(Phase.OBSERVING);self.check()
         self.candidate=candidate_from_attempt(self.goal,self.context,self.attempt)
         self.machine.move(Phase.VERIFYING);self.check()
