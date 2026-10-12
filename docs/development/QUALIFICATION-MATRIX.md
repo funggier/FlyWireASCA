@@ -1,6 +1,6 @@
 # FlyWireASCA Qualification Matrix
 
-Date: 2026-10-11
+Date: 2026-10-12
 Purpose: canonical map of portable CI gates, local physical gates, frozen
 outcome roles, and A011 qualification claims boundaries.
 
@@ -30,6 +30,8 @@ outcome roles, and A011 qualification claims boundaries.
 | A013 | target-free relational-activation qualifier | none required | `SIGNAL_GATED_RELATION_JUSTIFIED` |
 | A014 | target-free structural-need routing qualifier | pinned `qwen3.5:4b` routing qualifier | `HYBRID_STRUCTURAL_ROUTING_JUSTIFIED` |
 
+| A015 | portable engineering, bilingual freeze, new runtime audit and offline evidence verification | pinned unified/direct Stage A comparison, 384 trials | `UNIFIED_RUNTIME_NOT_SUPPORTED` |
+
 ## 3. Portable GitHub CI commands
 
 These commands are intended to remain network/model independent after package
@@ -48,6 +50,10 @@ python scripts/qualify_relational_reasoning_a012.py --output "$RUNNER_TEMP/a012-
 python scripts/qualify_relational_activation_a013.py --output "$RUNNER_TEMP/a013-relational-activation-${{ github.run_id }}-${{ github.run_attempt }}.json"
 python scripts/qualify_structural_routing_a014.py --output "$RUNNER_TEMP/a014-structural-routing-${{ github.run_id }}-${{ github.run_attempt }}.json"
 python scripts/verify_a014_physical_evidence.py docs/development/qualification/a014-structural-routing-physical-v1.json
+python scripts/freeze_agent_runtime_a015.py --check
+python scripts/audit_agent_runtime_contract.py
+python scripts/qualify_agent_runtime_a015.py --output "$RUNNER_TEMP/a015-portable-${{ github.run_id }}-${{ github.run_attempt }}.json"
+python scripts/verify_a015_physical_evidence.py docs/development/qualification/a015-agent-runtime-physical-v1.json
 ```
 
 A004-A007, A009/A010, and A012 physical scripts are intentionally absent from
@@ -69,6 +75,7 @@ python scripts/qualify_integrated_loop_a009_physical.py --portable-primary-outco
 python scripts/qualify_baseline_comparison_a010_physical.py --portable-primary-outcome NOT_SUPPORTED
 python scripts/qualify_relational_reasoning_a012_physical.py
 python scripts/qualify_structural_routing_a014_physical.py --expected-source-sha <exact-implementation-sha> --output docs/development/qualification/a014-structural-routing-physical-v1.json
+python scripts/qualify_agent_runtime_a015_physical.py --fixture fixtures/a015/stage-a-v1 --repetitions 3 --seed 0 --output docs/development/qualification/a015-agent-runtime-physical-v1.json
 ```
 
 These commands require the pinned local Ollama/model prerequisites and are
@@ -258,3 +265,43 @@ HYBRID_RULE_THEN_MODEL on 32/32. Hybrid records zero false/missed activations
 and invokes the model on 9/32 cases versus 32/32 for model-only. This establishes
 a routing/control-flow trade-off for the frozen workload, not general latency,
 FLOP, energy, RAM, token, or production-safety superiority.
+## 12. A015 unified runtime Stage A
+
+A015 is a separate post-A011 runtime gate. Stage A permits PURE and IN_MEMORY
+capabilities with no real external actions. Ordinary English/Thai text is bound
+to closed public schemas; model/embedding inference is configured infrastructure.
+The new top-level controller owns observation, independent verification and
+bounded recovery. A001-A014 outcomes and all67 A011 protected paths are retained.
+
+Portable engineering uses scripted ports to qualify contracts, provenance,
+terminal control, semantic operations, changed-context/changed-plan recovery and
+budget accounting. It does not establish physical model capability or savings.
+
+The physical comparison freezes64 requests /32 bilingual pairs and three
+repetitions,384 trials /192 per variant. Each repetition has48 solvable and16
+non-success controls, including8 bounded failures. Direct uses one model call
+with the complete identical public information and1024 output tokens. Unified
+permits4 calls /2048 output tokens, at most6 retrieval queries across3 rounds,
+24 context items /16384 bytes,3 relation invocations /24 visits /96 scanned
+edges,3 strategy validations /2 recovery rounds /96 primitive executions and
+180 seconds per request. Failed work and null usage retain costs.
+
+The ordered decision requires genuine successful recovery after a real failed
+observation with meaningful context or plan change. The verified physical
+outcome is UNIFIED_RUNTIME_NOT_SUPPORTED: unified138/144 solvable completions,
+48/48 controls and24/24 bounded failures, zero false success/invariant failures,
+but zero genuine successful recovery despite36 controller recovery rounds.
+Direct returns192 INVALID_PLAN proposals and completes0/144; retained outputs
+show protocol failures, not general absence of model knowledge.
+Unified generation calls/tokens0; direct192 calls,358653 prompt and46976 output
+tokens. Unified query embedding calls216 /9015 prompt tokens remain separate;
+setup and latency are measured separately. No universal efficiency, FLOPs,
+energy, process-RAM or real-effects safety claim follows.
+
+[Report](reports/ASCA-20261012-A015-unified-agent-runtime.md),
+[architecture](../architecture/A015-UNIFIED-AGENT-RUNTIME.md),
+[physical artifact](qualification/a015-agent-runtime-physical-v1.json).
+The offline verifier recomputes raw verdicts/counters/outcome and source identity,
+and is unconditional in CI. CI remains Ollama-free and never reruns physical
+generation. A valid negative research outcome permits engineering qualification
+only after independent whole-branch review, exact CI and authorized integration.

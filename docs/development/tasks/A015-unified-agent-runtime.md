@@ -219,3 +219,16 @@ qualification after independent review, exact CI and authorized integration.
 
 Task12 reports/whole-branch independent review/integration remain pending.
 Status stays ACTIVE. No release, Stage B/C or subsequent milestone activation.
+
+## Task12 integration-review preparation
+
+Task11 physical evidence commit: 42d7dffd4eca3d41245cb875e9b3781a92111566.
+Exact evidence CI: https://github.com/funggier/ProjectASCA/actions/runs/38261192267
+(running at this draft checkpoint; use live status before advancing the gate).
+Task11 named protocol/CLI/CI verification:42 passed in54.80s.
+Report: docs/development/reports/ASCA-20261012-A015-unified-agent-runtime.md
+Architecture: docs/architecture/A015-UNIFIED-AGENT-RUNTIME.md
+Physical source/hash and negative research outcome remain unchanged.
+Task12 acceptance checks first failed only for missing report and A015 matrix
+coverage; ACTIVE ownership and A001-A014 completion assertions stay intact.
+No integration or Issue closure is claimed at this checkpoint.

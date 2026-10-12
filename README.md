@@ -36,9 +36,17 @@ The existing Python namespace `flywire_asca` and distribution identity
 `FlyWireASCA` / `0.1.0.dev0` are retained for frozen-source compatibility.
 See [Repository rename record](docs/development/reports/ASCA-20261012-repository-rename-projectasca.md).
 
-A015 is in conversational architecture design for a new unified agent runtime;
-its task is not activated. The selected direction is Approach 3, targeting
-Stage C while qualifying internal Stage A first.
+A015 is ACTIVE on `research/a015-unified-agent-runtime`. Approach 3 implements
+a new `project_asca.agent_runtime` for ordinary English/Thai Stage A requests,
+verified pure/in-memory execution and bounded recovery. Physical evidence is
+valid and usage-complete, with research outcome `UNIFIED_RUNTIME_NOT_SUPPORTED`
+because genuine successful recovery was not observed. Independent whole-branch
+review and authorized integration remain pending.
+
+See [A015 architecture](docs/architecture/A015-UNIFIED-AGENT-RUNTIME.md),
+[measured report](docs/development/reports/ASCA-20261012-A015-unified-agent-runtime.md),
+and [Issue #19](https://github.com/funggier/ProjectASCA/issues/19).
+Stage B/C is not activated.
 
 ## Development method
 
@@ -57,7 +65,7 @@ Start with:
 ## Preserved release
 
 `v0.1.0` is the first preserved post-A014 / pre-A015 baseline. It contains the
-qualified A001-A014 system and evidence while A015 remains unactivated. See
+qualified A001-A014 system and evidence; A015 was unactivated at that release checkpoint. See
 docs/development/reports/ASCA-20261011-v0.1.0-release.md for the release
 record.
 
