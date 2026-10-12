@@ -1,0 +1,4 @@
+interface:
+  display_name: "คิด วางแผน และทำงานจนจบ"
+  short_description: "วางแผนตามงาน ลงมือ ตรวจหลักฐาน และทำต่อจนจบ"
+  default_prompt: "ใช้ $working-from-goals-to-completion ช่วยคิด วางแผน และดำเนินงานนี้ให้จบ โดยเลือกความละเอียดและใช้ subagents ตามความเหมาะสม"

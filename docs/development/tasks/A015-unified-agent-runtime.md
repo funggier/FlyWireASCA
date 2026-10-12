@@ -3,6 +3,7 @@
 Status: ACTIVE
 GitHub Issue: #19
 Execution method: Native
+Execution checkpoint: PAUSED by user after Task7; resume at Task8
 Branch: research/a015-unified-agent-runtime
 Activation base: 4ca246df6976c7aa21ad07826017f167f0ee27da
 Approved on: 2026-10-12 (Asia/Bangkok)
@@ -80,7 +81,8 @@ Task 5 complete: 006ab4353ba1b7fec186fcef390dd9eebf15cbc3;
 Task 6: bounded knowledge/routing/context adapters; focused 13 plus
 broker/transport 16 passed. Full suite 1294 passed in 106.29s;
 freeze, both audits and A011 guard PASS.
-Task 7: focused35 and full1312 passed in107.05s; validated strategy/CHUNKED
+Task 7: commit5f527628602309592bb0c8538e6cfc2b18549cac;
+exact CI38212420311 SUCCESS; focused35 and full1312 passed in107.05s; validated strategy/CHUNKED
 execution, fresh attempts, goal/context-bound one-use permits and actual action
 provenance checked. Next: Task 8 independent completion and rendering.
 Frozen inputs/templates must remain unchanged; changed inputs require a new
@@ -129,3 +131,12 @@ No release/version promotion, Stage B/C or another milestone auto-activation.
   path identities omit CALL-site IDs; preserve the frozen engine and never
   accept ambiguous observation ownership. Cost if wrong: add instance-qualified
   adapter compilation without changing legacy source.
+
+## Pause handoff
+
+User requested a rest at the verified Task7 checkpoint on2026-10-12.
+Read docs/development/reports/ASCA-20261012-full-session-handoff-a015-task7-paused.md
+when resuming. Task8 has not started. A015 remains ACTIVE, not DONE.
+The generalized ChatGPT workflow skill is a separate preserved draft in
+docs/development/skill-drafts/working-from-goals-to-completion; tests/deployment
+remain pending. Appropriate subagents were explicitly requested by the user.
