@@ -203,3 +203,21 @@ class SetupMetrics(FrozenRecord):
     document_count: int = 0
     setup_seconds: float = 0.0
     metadata: Mapping = field(default_factory=dict)
+
+@dataclass(frozen=True,slots=True)
+class EmbeddingBatch(FrozenRecord):
+    model_name:str
+    model_digest:str
+    dimension:int
+    vectors:tuple
+    prompt_tokens:int|None
+    timings:Mapping=field(default_factory=dict)
+    def __post_init__(self):
+        import math
+        super(EmbeddingBatch,self).__post_init__()
+        nonblank(self.model_name);nonblank(self.model_digest);count(self.dimension)
+        if self.dimension!=1024 or not 0<len(self.vectors)<=256:raise ValueError("embedding shape")
+        for vector in self.vectors:
+            if len(vector)!=self.dimension or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in vector):
+                raise ValueError("finite embedding vector")
+        if self.prompt_tokens is not None:count(self.prompt_tokens)

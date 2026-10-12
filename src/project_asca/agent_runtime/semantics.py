@@ -208,3 +208,19 @@ class RecoveryDecision(FrozenRecord):
     baseline_context_fingerprint: str
     baseline_plan_fingerprint: str
     reason: str
+
+@dataclass(frozen=True,slots=True)
+class RetrievalHit(FrozenRecord):
+    evidence:EvidenceRecord
+    similarity:float
+    query_id:str
+    entity_ids:tuple[str,...]
+    embedding_name:str
+    embedding_digest:str
+    embedding_profile:str="a015-qwen-embedding-v1"
+    def __post_init__(self):
+        import math
+        super(RetrievalHit,self).__post_init__()
+        if isinstance(self.similarity,bool) or not isinstance(self.similarity,(int,float)) or not math.isfinite(self.similarity) or not -1<=self.similarity<=1:
+            raise ValueError("retrieval similarity")
+        for value in (self.query_id,self.embedding_name,self.embedding_digest,self.embedding_profile):nonblank(value)

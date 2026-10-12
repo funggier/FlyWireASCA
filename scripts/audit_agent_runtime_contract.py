@@ -23,7 +23,7 @@ EDGES={
  "state":{"values","semantics","profile"},
  "goals":{"values","semantics","plans","domain"},
  "interpretation":{"values","contracts","semantics","goals","broker","prompts","domain","control"},
- "context":{"values","contracts","semantics","plans","control","broker","ports","prompts","domain"},
+ "context":{"values","contracts","semantics","plans","control","broker","ports","prompts","domain","budgets"},
  "strategy":{"values","contracts","semantics","plans","capabilities","goals","control","broker","prompts","domain"},
  "execution":{"values","contracts","semantics","plans","capabilities","state","control","ports","strategy"},
  "verification":{"contracts","values","semantics","plans","capabilities","domain"},

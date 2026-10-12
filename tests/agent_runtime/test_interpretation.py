@@ -28,7 +28,7 @@ def test_bilingual_development_transform_compiles_without_answers(text,schemas,c
     assert out.goal.parameters["source"]["literal"] in ((11,19,2),(9,1,4))
     assert "expected" not in repr(out.goal).lower()
 
-@pytest.mark.parametrize("text",["Where does Alex work?","Set the in-memory tray to 18.","ตั้งค่าถาดในหน่วยความจำเป็น 18"])
+@pytest.mark.parametrize("text",["Which employer does the person Alex work for?","Set the in-memory tray to 18.","ตั้งค่าถาดในหน่วยความจำเป็น 18"])
 def test_material_ambiguity_never_tie_breaks(text,schemas,clock):
     out=interpret(text,schemas,clock)
     assert out.terminal_status==api("values").TerminalStatus.NEEDS_CLARIFICATION

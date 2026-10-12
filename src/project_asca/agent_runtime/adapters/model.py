@@ -72,3 +72,38 @@ class PinnedModelPort:
             {key:getattr(response,key) for key in
              ("total_duration_ns","load_duration_ns","prompt_eval_duration_ns","eval_duration_ns")},
             transport_dispatches=1)
+
+from ..contracts import EmbeddingBatch
+from .transport import BoundedWorkerGate
+from flywire_asca.embedding.ollama import OllamaEmbeddingAdapter
+from flywire_asca.embedding.contracts import EmbeddingRequest,EmbeddingInputKind
+import uuid
+
+class PinnedEmbeddingPort:
+    def __init__(self,base_url,control,identity,*,transport=None,gate=None,log=None):
+        self.base_url=base_url;self.control=control;self.identity=identity
+        self.gate=gate or BoundedWorkerGate();self.log=log or TransportLog()
+        self.transport=transport or DeadlineJsonTransport(base_url,control,self.log,gate=self.gate)
+    def for_control(self,control):
+        # Indexes are immutable and shared; each dispatch retains its owning
+        # request's single ledger/deadline. The worker limit is shared as well.
+        if isinstance(self.transport,DeadlineJsonTransport):
+            transport=DeadlineJsonTransport(self.base_url,control,self.log,
+                                            opener=self.transport.opener,gate=self.gate)
+        else:transport=self.transport
+        return PinnedEmbeddingPort(self.base_url,control,self.identity,
+                                    transport=transport,gate=self.gate,log=self.log)
+    def embed(self,texts,*,deadline,cancellation):
+        self.control.check_dispatch()
+        self.transport.override_deadline=deadline;self.transport.override_cancellation=cancellation
+        _validate_identity(probe_physical_identity(self.base_url,transport=self.transport),self.identity)
+        adapter=OllamaEmbeddingAdapter(self.identity.embedding_name,
+            expected_digest=self.identity.embedding_digest,expected_dimension=1024,
+            timeout_seconds=min(120,max(.001,deadline-self.control.clock.now())),transport=self.transport)
+        response=adapter.embed(EmbeddingRequest(self.control.run_id+":"+str(uuid.uuid4()),
+                                               EmbeddingInputKind.DOCUMENT,tuple(texts)))
+        self.control.check_dispatch()
+        _validate_identity(probe_physical_identity(self.base_url,transport=self.transport),self.identity)
+        return EmbeddingBatch(response.model_name,response.model_digest,1024,
+            tuple(v.values for v in response.vectors),response.prompt_tokens,
+            {"total_duration_ns":response.total_duration_ns,"load_duration_ns":response.load_duration_ns})

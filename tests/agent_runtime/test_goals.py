@@ -8,7 +8,7 @@ def test_every_requested_output_becomes_a_goal_predicate(schemas,clock):
     assert {p.arguments.get("output") for p in predicates}>={"list","sum"}
 
 def test_state_goal_includes_every_requested_property(schemas,clock):
-    out=interpret("Prepare bench B1 so it is calibrated and ready.",schemas,clock)
+    out=interpret("Please prepare bench B1 until calibration is done and it is ready.",schemas,clock)
     assert {p.arguments.get("field") for p in out.goal.predicates}>={"calibrated","ready"}
 
 def test_fact_goal_is_a_grounded_lookup_not_a_literal_answer(schemas,clock):

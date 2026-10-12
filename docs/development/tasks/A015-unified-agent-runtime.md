@@ -59,8 +59,9 @@ f68470eb8b0c5bf9e3ee4d4b40b5bdeb06cc614ba151eec71c4eb84fe7ee2bdf.
 Actual GGUF: 256-byte alphabet complete; all 247587 merge products exist;
 11935649 metadata bytes independently hashed. Bound is rendered UTF-8 bytes
 plus two, not reported token usage.
-Task 4 G2 freeze is this commit; its exact SHA is recorded at the next
-checkpoint. Canonical aggregate:
+Task 4 G2 freeze: 7fc3c0ea901bfe49f9e788065bfc7de3626c0984.
+GitHub lock blob readback: 3b20d3c77a6ca63e144f88337eadf8585db5ae97.
+Full suite 1252 passed in 103.03s. Canonical aggregate:
 774bc3352242bee5cb588f499f6597a264c67f612feb518828058dc4c1efa882.
 64 requests /32 EN-TH pairs; private oracle and all public records, schemas,
 assembled role templates, A014 router fingerprint, profile and certificate
@@ -74,7 +75,12 @@ _debug_render_only subsequently verified without generation.
 
 ## Next Action
 
-Read the G2 commit/readback, then Task 5 trusted semantics and interpretation.
+Task 5 complete: 006ab4353ba1b7fec186fcef390dd9eebf15cbc3;
+29 focused tests and 1281 full-suite tests passed in 105.95s.
+Task 6: bounded knowledge/routing/context adapters; focused 13 plus
+broker/transport 16 passed. Full suite 1294 passed in 106.29s;
+freeze, both audits and A011 guard PASS.
+Next: Task 7 strategy validation and CHUNKED execution.
 Frozen inputs/templates must remain unchanged; changed inputs require a new
 disclosed workload version.
 
@@ -108,3 +114,9 @@ No release/version promotion, Stage B/C or another milestone auto-activation.
   state defaults by entity kind, entity-bound procedure step IDs and concise
   capability/schema descriptions. Full information remains visible to both
   variants. Context-fit checks were metadata-only; no benchmark tuning.
+
+- Task 6 uses neutral EmbeddingBatch/RetrievalHit DTOs and an explicit
+  configured snapshot for core acquisition. Cost if wrong: internal port typing.
+- Bind shared immutable indexes to each owning RunControl via
+  PinnedEmbeddingPort.for_control while sharing the bounded worker gate.
+  Deployment setup remains separate. Cost if wrong: infrastructure wiring.

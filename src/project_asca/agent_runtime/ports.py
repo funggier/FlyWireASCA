@@ -1,7 +1,7 @@
 """Infrastructure/effect seams. No concrete transport or external action."""
 from __future__ import annotations
 from typing import Protocol
-from .contracts import (PhysicalIdentity,ModelPrompt,PromptBound,BrokerModelRequest,BrokerModelResponse)
+from .contracts import (PhysicalIdentity,ModelPrompt,PromptBound,BrokerModelRequest,BrokerModelResponse,EmbeddingBatch)
 from .semantics import (RetrievalQuery,RetrievalBatch,RouteDecision,RelationBatch,StateSnapshot)
 from .plans import CapabilityDescriptor,AuthorizationDecision,EffectEntry,CompensationProposal
 
@@ -37,3 +37,6 @@ class EffectJournalPort(Protocol):
 
 class CompensationPort(Protocol):
     def propose(self,entry:EffectEntry)->CompensationProposal|None: ...
+
+class EmbeddingPort(Protocol):
+    def embed(self,texts:tuple[str,...],*,deadline:float,cancellation:CancellationToken)->EmbeddingBatch: ...
