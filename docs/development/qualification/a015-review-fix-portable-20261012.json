@@ -1,0 +1,88 @@
+{
+  "evidence_kind": "PORTABLE_ENGINEERING_AND_HISTORICAL_PRESERVATION",
+  "machine": "CDQ-P",
+  "executed_from_head": "5b33baaf9f9e3978fc3e15261ef7fdc0e7ac6ebe",
+  "working_tree_correction": true,
+  "complete_tests": 1454,
+  "test_seconds": 227.09,
+  "checks": [
+    {
+      "name": "full-suite",
+      "exit_code": 0
+    },
+    {
+      "name": "architecture",
+      "exit_code": 0
+    },
+    {
+      "name": "agent-runtime-audit",
+      "exit_code": 0
+    },
+    {
+      "name": "repository",
+      "exit_code": 0
+    },
+    {
+      "name": "a003",
+      "exit_code": 0
+    },
+    {
+      "name": "a008",
+      "exit_code": 0
+    },
+    {
+      "name": "a009",
+      "exit_code": 0
+    },
+    {
+      "name": "a010",
+      "exit_code": 0
+    },
+    {
+      "name": "a011-preservation",
+      "exit_code": 0
+    },
+    {
+      "name": "a012",
+      "exit_code": 0
+    },
+    {
+      "name": "a013",
+      "exit_code": 0
+    },
+    {
+      "name": "a014",
+      "exit_code": 0
+    },
+    {
+      "name": "a014-physical-offline",
+      "exit_code": 0
+    },
+    {
+      "name": "a015-freeze",
+      "exit_code": 0
+    },
+    {
+      "name": "a015-portable",
+      "exit_code": 0
+    },
+    {
+      "name": "a015-historical-v1-original-source",
+      "exit_code": 0
+    },
+    {
+      "name": "diff-check",
+      "exit_code": 0
+    },
+    {
+      "name": "commit-diff-check",
+      "exit_code": 0
+    }
+  ],
+  "all_passed": true,
+  "current_physical_qualified": false,
+  "independent_review": "six Important; first five corrected, sixth protocol gate pending",
+  "protocol_v1_frozen_hash": "774bc3352242bee5cb588f499f6597a264c67f612feb518828058dc4c1efa882",
+  "new_physical_generation_calls": 0,
+  "new_physical_embedding_calls": 0
+}

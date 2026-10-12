@@ -30,7 +30,7 @@ outcome roles, and A011 qualification claims boundaries.
 | A013 | target-free relational-activation qualifier | none required | `SIGNAL_GATED_RELATION_JUSTIFIED` |
 | A014 | target-free structural-need routing qualifier | pinned `qwen3.5:4b` routing qualifier | `HYBRID_STRUCTURAL_ROUTING_JUSTIFIED` |
 
-| A015 | portable engineering, bilingual freeze, new runtime audit and offline evidence verification | pinned unified/direct Stage A comparison, 384 trials | `UNIFIED_RUNTIME_NOT_SUPPORTED` |
+| A015 | corrected portable engineering, preserved bilingual freeze, runtime audit and historical v1 offline replay | v1 preserved 384 trials; corrected current-source physical qualification pending | historical v1 `UNIFIED_RUNTIME_NOT_SUPPORTED`; independent review BLOCKED |
 
 ## 3. Portable GitHub CI commands
 
@@ -53,7 +53,7 @@ python scripts/verify_a014_physical_evidence.py docs/development/qualification/a
 python scripts/freeze_agent_runtime_a015.py --check
 python scripts/audit_agent_runtime_contract.py
 python scripts/qualify_agent_runtime_a015.py --output "$RUNNER_TEMP/a015-portable-${{ github.run_id }}-${{ github.run_attempt }}.json"
-python scripts/verify_a015_physical_evidence.py docs/development/qualification/a015-agent-runtime-physical-v1.json
+python scripts/verify_agent_runtime_a015_history.py docs/development/qualification/a015-agent-runtime-physical-v1.json
 ```
 
 A004-A007, A009/A010, and A012 physical scripts are intentionally absent from
@@ -305,3 +305,8 @@ The offline verifier recomputes raw verdicts/counters/outcome and source identit
 and is unconditional in CI. CI remains Ollama-free and never reruns physical
 generation. A valid negative research outcome permits engineering qualification
 only after independent whole-branch review, exact CI and authorized integration.
+
+
+### A015 independent-review amendment status
+
+The preserved v1 artifact is replayed using its original behavior commit c968330cf97d7a7c7893aa70fddd150ce8dd510e and original verifier. That historical check does not qualify corrected HEAD or resolve the incomplete v1 wire contract. Current portable tests and audits exercise the corrected source; A015 stays ACTIVE/BLOCKED until an approved new freeze and full physical qualification. Raw v1 evidence and its reported values remain unchanged.

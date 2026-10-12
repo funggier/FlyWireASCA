@@ -7,7 +7,7 @@ from .conftest import api
 def source_repo(tmp_path_factory):
     root=tmp_path_factory.mktemp("a015-source")/"repo"
     actual=Path(__file__).resolve().parents[2]
-    subprocess.run(["git","clone","--quiet","--local","--no-hardlinks",str(actual),str(root)],check=True,capture_output=True)
+    subprocess.run(["git","clone","-c","core.longpaths=true","--quiet","--local","--no-hardlinks",str(actual),str(root)],check=True,capture_output=True)
     paths=set(actual.glob("src/project_asca/**/*.py"))|set(actual.glob("scripts/*agent_runtime*a015*.py"))
     extra=actual/"scripts/verify_a015_physical_evidence.py"
     if extra.exists():paths.add(extra)

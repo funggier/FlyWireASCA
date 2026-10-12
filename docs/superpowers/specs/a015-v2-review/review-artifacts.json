@@ -1,0 +1,53 @@
+{
+  "admitted_12288": 64,
+  "admitted_8192": 0,
+  "approval": "PENDING",
+  "embedding_calls": 0,
+  "files": {
+    "complete-wire-v2.txt": {
+      "bytes": 3936,
+      "sha256": "f2d67c5145501c13c3832f40673b7f1a850f4747607bd84538ba8fdbb9142ead"
+    },
+    "direct-v2-system.txt": {
+      "bytes": 4118,
+      "sha256": "809cf70bad70697c70aec121aaa2fd11641575bdc9bbfefbc80715e1b2da97b9"
+    },
+    "lossless-public-bounds.json": {
+      "bytes": 5804,
+      "sha256": "f7f6cb1d943600e6b84b7ec6e35d2b24f01d5b3f1bb3edd79b8a2aedc9214f1f"
+    },
+    "lossless-public-candidate.json": {
+      "bytes": 4959,
+      "sha256": "9200eb5943e16035c828de6c19113f29c70bd008ac9d41121ec5a665cef47b50"
+    },
+    "lossless-public-decoder.txt": {
+      "bytes": 271,
+      "sha256": "fc0660d8040863677761faaa41d48c532f508920c19419871826cec930fe7cca"
+    },
+    "lossless_probe.py": {
+      "bytes": 3461,
+      "sha256": "78c3681b369897275a4cd75de9ac165f6225cd225278d9a9ac7e9f27d452a456"
+    },
+    "profile-v2-proposed.json": {
+      "bytes": 672,
+      "sha256": "aedc86e10081a3c1a2efcbd6176829e0187355d371d89b83df513f218c51189a"
+    },
+    "qwen-show-metadata.json": {
+      "bytes": 2696,
+      "sha256": "4cf38e47d1977722c418eadfc25a0454de4c24c6fa5ceca412633e75e389c66e"
+    },
+    "static-bounds.json": {
+      "bytes": 18970,
+      "sha256": "26993e3fac1fc41ce7cfdcce3d6fbb2ca669f779599f4fac125744f61b030fae"
+    },
+    "static_probe.py": {
+      "bytes": 4529,
+      "sha256": "10277506fef3660a5c487ecceaaee3d855b259a2ef0876b331e5cb41881adff9"
+    }
+  },
+  "generation_calls": 0,
+  "headroom_12288": 1469,
+  "max_input_plus_output": 10819,
+  "product_protocol_changed": false,
+  "status": "WRITTEN_SPEC_STATIC_READBACK_PASS"
+}

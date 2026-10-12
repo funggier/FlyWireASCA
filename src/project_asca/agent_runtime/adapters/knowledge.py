@@ -31,6 +31,8 @@ class _EmbeddingBridge:
         texts=request.texts
         if request.input_kind is EmbeddingInputKind.QUERY:texts=tuple(QUERY_INSTRUCTION+t for t in texts)
         port=self.port.for_control(control) if hasattr(self.port,"for_control") else self.port
+        query_event=control.trace.reserve(2048) if request.input_kind is EmbeddingInputKind.QUERY else None
+        result=None
         if request.input_kind is EmbeddingInputKind.QUERY:
             control.ledger.record("query_embedding_calls")
             control.ledger.record("query_embedding_inputs",len(texts))
@@ -41,6 +43,15 @@ class _EmbeddingBridge:
         finally:
             control.ledger.record_span("embedding:query" if request.input_kind is EmbeddingInputKind.QUERY else "embedding:document",
                                        max(0.0,control.clock.now()-started))
+            if query_event is not None:
+                from ..trace import TraceEvent
+                tokens=getattr(result,"prompt_tokens",None)
+                if tokens is None:control.ledger._unknown.add("embedding_prompt_tokens")
+                else:control.ledger.record("embedding_prompt_tokens",tokens)
+                control.trace.append(query_event,TraceEvent(len(control.trace.freeze()),"embedding",control.run_id,
+                    {"kind":"query","inputs":len(texts),"prompt_tokens":tokens,"returned":result is not None,
+                     "model":getattr(result,"model_name",None),"digest":getattr(result,"model_digest",None),
+                     "dimension":getattr(result,"dimension",None)}))
         if result.model_name!="qwen3-embedding:0.6b" or result.model_digest!=EMBEDDING_DIGEST or result.dimension!=1024:
             raise IntegrityStop(message="embedding identity mismatch")
         if len(result.vectors)!=len(texts):raise IntegrityStop(message="embedding count mismatch")
@@ -48,8 +59,6 @@ class _EmbeddingBridge:
         self.calls.append({"run_id":control.run_id,"request_id":request.request_id,"kind":request.input_kind.value,
                            "inputs":len(texts),"prompt_tokens":result.prompt_tokens,"timings":dict(result.timings),
                            "model_name":result.model_name,"model_digest":result.model_digest,"dimension":result.dimension})
-        if request.input_kind is EmbeddingInputKind.QUERY and result.prompt_tokens is not None:
-            control.ledger.record("embedding_prompt_tokens",result.prompt_tokens)
         return EmbeddingResponse(request.request_id,result.model_name,result.model_digest,vectors,len(texts),
                                  result.prompt_tokens,result.timings.get("total_duration_ns"),result.timings.get("load_duration_ns"))
 
@@ -105,6 +114,8 @@ class KnowledgeAdapter:
         key=(control.run_id,self.snapshot.snapshot_id,fingerprint(query))
         if key in self.cache:
             control.ledger.record("retrieval_cache_hits")
+            control.event("retrieval",{"query_ref":control.capture(query),"query_hash":fingerprint(query),
+                "index":query.index_kind,"invoked":False,"eligible_vectors":0,"vectors_scored":0,"cache_hit":True})
             return replace(self.cache[key],actual_queries=0,cache_hits=1,vectors_scored=0)
         if set(query.filters)-{"entity_ids","task","entity_kind"}:raise ValueError("query metadata filters")
         index=self.memory_index if query.index_kind=="memory" else self.catalog_index
@@ -119,15 +130,15 @@ class KnowledgeAdapter:
         trace=control.trace.reserve(2048)
         reservations=control.ledger.reserve_bundle({Resource.RETRIEVAL_QUERIES:1,Resource.VECTORS_SCORED:eligible},
                                     attempt_id=getattr(control,"query_round_id",None))
-        token=self.bridge.control.set(control);invoked=False
+        token=self.bridge.control.set(control);invoked=False;scored=0
         try:
-            control.check_dispatch();invoked=True
+            control.check_dispatch();invoked=True;scored=None
             control.ledger.record("actual_retrieval_queries")
             control.ledger.reconcile(reservations[0],1)
             result=index.search(local)
-            control.check_dispatch()
             control.ledger.reconcile(reservations[1],result.scored_vector_count)
-            control.ledger.record("vectors_scored",result.scored_vector_count)
+            control.ledger.record("vectors_scored",result.scored_vector_count);scored=result.scored_vector_count
+            control.check_dispatch()
             hits=[]
             for hit in result.hits:
                 evidence=self.evidence[hit.memory_id]
@@ -143,7 +154,7 @@ class KnowledgeAdapter:
                 if r.reservation_id in control.ledger._open:control.ledger.reconcile(r,None if invoked else 0)
             from ..trace import TraceEvent
             control.trace.append(trace,TraceEvent(len(control.trace.freeze()),"retrieval",control.run_id,
-                {"query_id":local.query_id,"query_hash":fingerprint(query),"query_ref":query_ref,"index":query.index_kind,"invoked":invoked,"eligible_vectors":eligible}))
+                {"query_id":local.query_id,"query_hash":fingerprint(query),"query_ref":query_ref,"index":query.index_kind,"invoked":invoked,"eligible_vectors":eligible,"vectors_scored":scored,"cache_hit":False}))
     def expand(self,seed_ids,route,*,control):
         if not self._ready:raise ValueError("knowledge setup required")
         if not 1<=len(set(seed_ids))<=2 or len(set(seed_ids))!=len(seed_ids):raise ValueError("one/two unique legitimate seeds")

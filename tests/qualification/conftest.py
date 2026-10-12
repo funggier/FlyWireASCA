@@ -436,7 +436,7 @@ def qualification_context(tmp_path):
     from flywire_asca.qualification.portable import RunContext
     from flywire_asca.qualification.profile import DEFAULT_PROFILE_PATH
     root = tmp_path/"candidate"
-    result = subprocess.run(["git","-c","core.autocrlf=false","clone","--depth=1",
+    result = subprocess.run(["git","clone","-c","core.autocrlf=false","-c","core.longpaths=true","--depth=1",
         "--no-tags",ROOT.as_uri(),str(root)],capture_output=True)
     assert result.returncode == 0, result.stderr
     commit = _prepare_frozen_a011_candidate(root)

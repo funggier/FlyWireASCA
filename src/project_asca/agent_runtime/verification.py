@@ -256,9 +256,13 @@ def verify_completion(goal,candidate,*,knowledge,final_state,control_snapshot):
         entity=goal.parameters.get("entity")
         if entity is not None and not any(e["id"]==entity for e in knowledge.entities):raise ProvenanceError("goal entity identity")
         expected_outputs=tuple(p.arguments["output"] for p in goal.predicates if p.operator is PredicateOperator.TRANSFORM_RESULT)
+        transformed=_transform(goal.parameters,knowledge,records) if goal.kind is TaskKind.TRANSFORM else {}
         if len(expected_outputs)>1 and (not isinstance(candidate.data,Mapping) or set(candidate.data)!=set(expected_outputs)):
             raise ValueError("all requested outputs required")
-        transformed=_transform(goal.parameters,knowledge,records) if goal.kind is TaskKind.TRANSFORM else {}
+        if len(expected_outputs)==1 and isinstance(candidate.data,Mapping):
+            output=expected_outputs[0]
+            if not _same(candidate.data,transformed[output]) and set(candidate.data)!={output}:
+                raise ValueError("unsupported additional output claim")
         if goal.kind is TaskKind.STATE_GOAL and not _same(candidate.data,{"entity":entity,"state":final_state.values[entity]}):
             raise ValueError("unsupported state claim")
         allowed={TaskKind.FACT:{PredicateOperator.FACT_EQUALS},TaskKind.RELATION:{PredicateOperator.RELATION_PATH},

@@ -67,9 +67,23 @@ def _entities(text,schemas):
     if any(e["id"]!=e["name"] for e in exact):return tuple(exact)
     return tuple({e["id"]:e for e in named or exact}.values())
 
+def _separator(text):
+    aliases={",":("comma","commas","จุลภาค"),";":("semicolon","semicolons","อัฒภาค"),
+             ":":("colon","colons","ทวิภาค"),"|":("pipe","pipes"),"\t":("tab","tabs")}
+    for separator,words in aliases.items():
+        if _has(text,words):return separator
+    quoted=re.search(r"""(?:separator|separated|delimiter|คั่นด้วย|ตัวคั่น)(?:\s+(?:by|with|ด้วย))?\s+['"]([^'"]{0,64})['"]""",text)
+    if quoted:return quoted.group(1)
+    if _has(text,("separator","separated","delimiter","คั่นด้วย","ตัวคั่น")):return None
+    return ","
+
 def request_control(request,schemas):
     text=normalize_with_spans(request.text).text
     if _has(text,("email","delete","อีเมล","ลบไฟล์","ลบไฟล์ชื่อ")):
+        return Interpretation(unsupported=TerminalReason.UNSUPPORTED_CAPABILITY.value)
+    if _has(text,OP_ALIASES["sort"]) and _has(text,("descending","largest to smallest","มากไปน้อย")):
+        return Interpretation(unsupported=TerminalReason.UNSUPPORTED_CAPABILITY.value)
+    if _has(text,OP_ALIASES["format"]) and (_has(text,OP_ALIASES["sum"]) or _separator(text) is None):
         return Interpretation(unsupported=TerminalReason.UNSUPPORTED_CAPABILITY.value)
     entities=_entities(text,schemas)
     by_name={}
@@ -150,8 +164,7 @@ def deterministic_intent(request,schemas):
         elif numeric:source={"literal":[value for _,value in numeric]}
         if source is not None:
             span("source",source)
-            if thresholds:
-                comparison,value,(a,b)=thresholds[0]
+            for comparison,value,(a,b) in thresholds:
                 field="cost" if "collection" in source else None
                 operations.append({"op":"filter","field":field,"comparison":comparison,"value":value})
                 span("threshold",value,a,b)
@@ -160,7 +173,7 @@ def deterministic_intent(request,schemas):
             if _has(text,OP_ALIASES["group"]):
                 operations.append({"op":"group","key":"destination","value":"quantity"});outputs=["map"]
             elif _has(text,OP_ALIASES["format"]):
-                operations.append({"op":"format","separator":","});outputs=["value"]
+                operations.append({"op":"format","separator":_separator(text)});outputs=["value"]
             elif _has(text,("names only","เฉพาะชื่อ","showing names")):
                 operations.append({"op":"select","fields":["name"]});outputs=["names"]
             elif _has(text,OP_ALIASES["sum"]):
@@ -230,8 +243,15 @@ def validate_intent_proposal(raw,request,schemas):
             raise ValueError("unbound material parameter "+name)
     if raw["task"]=="transform":
         normalized=normalize_with_spans(request.text).text
-        for op in raw["parameters"]["operations"]:
+        operations=raw["parameters"]["operations"]
+        numeric_filters={(op["comparison"],op["value"]) for op in operations if op["op"]=="filter"
+                         and isinstance(op["value"],(int,float)) and not isinstance(op["value"],bool)}
+        if any((comparison,value) not in numeric_filters for comparison,value,_ in _thresholds(normalized)):
+            raise ValueError("omitted requested threshold")
+        for op in operations:
             if not _has(normalized,OP_ALIASES[op["op"]]):raise ValueError("unbound requested operator")
+            if op["op"]=="format" and op["separator"]!=_separator(normalized):
+                raise ValueError("unbound requested separator")
             if op["op"]=="filter" and isinstance(op["value"],(int,float)) and not isinstance(op["value"],bool):
                 if not any(_span_matches(op["value"],request.text[s.original_start:s.original_end],schemas) for s in spans):
                     raise ValueError("unbound threshold")

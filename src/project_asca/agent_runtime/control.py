@@ -1,5 +1,5 @@
 """One run's mutable control; DTOs remain immutable and dependency acyclic."""
-from contextlib import contextmanager
+from contextlib import contextmanager,nullcontext
 from dataclasses import dataclass
 import threading
 import time
@@ -14,9 +14,15 @@ class MonotonicClock:
     def now(self):return time.monotonic()
 
 class Cancellation:
-    def __init__(self):self._event=threading.Event()
-    def cancel(self):self._event.set()
+    def __init__(self):self._event=threading.Event();self._publication_lock=threading.RLock()
+    def cancel(self):
+        with self._publication_lock:self._event.set()
     def cancelled(self):return self._event.is_set()
+    @contextmanager
+    def publication_guard(self):
+        # Cancellation is accepted before or after this terminal linearization,
+        # never in the middle of committing a coherent published result.
+        with self._publication_lock:yield
 
 @dataclass
 class RunControl:
@@ -49,6 +55,13 @@ class RunControl:
             raise BudgetStop(TerminalReason.DEADLINE_EXCEEDED,"deadline")
         if self.ledger.snapshot().integrity_failures:
             raise IntegrityStop(self.integrity_reason,"prior integrity failure")
+
+    @contextmanager
+    def publication_guard(self,require_success):
+        guard=getattr(self.cancellation,"publication_guard",None)
+        with guard() if guard is not None else nullcontext():
+            if require_success:self.check_dispatch()
+            yield
 
     def snapshot(self):
         return RunSnapshot(self.run_id,self.phase,self.ledger.snapshot(),self.terminal,

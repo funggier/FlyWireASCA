@@ -3,7 +3,7 @@
 Status: ACTIVE
 GitHub Issue: #19
 Execution method: Native
-Execution checkpoint: G4 behavior frozen; complete physical evidence verified; Task11 evidence CI and Task12 review pending
+Execution checkpoint: independent whole-branch review BLOCKED; consolidated correction verification and v2 written-spec review
 Branch: research/a015-unified-agent-runtime
 Activation base: 4ca246df6976c7aa21ad07826017f167f0ee27da
 Approved on: 2026-10-12 (Asia/Bangkok)
@@ -232,3 +232,17 @@ Physical source/hash and negative research outcome remain unchanged.
 Task12 acceptance checks first failed only for missing report and A015 matrix
 coverage; ACTIVE ownership and A001-A014 completion assertions stay intact.
 No integration or Issue closure is claimed at this checkpoint.
+
+## Independent-review correction and next gate — 2026-10-12
+
+Evidence commit42d7dffd4eca3d41245cb875e9b3781a92111566 and report commit5b33baaf9f9e3978fc3e15261ef7fdc0e7ac6ebe received exact feature CI success. The subsequent independent reviewer found six Important defects; integration is BLOCKED, no Critical or Minor findings.
+
+The Native fix pass preserves compound numeric constraints and requested separators, rejects unsupported descending/format-plus-sum honestly, closes single-output claims, arbitrates final cancellation/publication, resolves exact execution/observation/verification references, derives resource counters from event records and public eligible-vector metadata, and rerenders verified answers offline. Regression cases were watched RED before correction. Historical v1 replay runs at original c968330 with its original verifier; strict current-source equality is retained for new evidence. Windows test clones persist core.longpaths before checkout and later Git status.
+
+Corrected source passed1452 tests and all audits/preservation/portable/historical checks before the final separator escape correction; two added tab/quoted-separator cases were watched RED. Final verification of that small delta is required before committing the correction. No new primary inference has run.
+
+Finding6 remains a written protocol amendment: [complete v2 design](../../superpowers/specs/2026-10-12-a015-v2-wire-contract-design.md). Exact full-public static bound9795 input+1024 output=10819 does not fit8192. Proposed12288 for both variants admits all64 with1469 headroom, preserving all64 bilingual requests, public/oracle bytes, model digests, call/output/deadline budgets and384-trial protocol. The context increase and full wire schema need written-spec review, then written-plan review. Native selection persists.
+
+Next action: finish correction verification and exact feature CI, review the committed written v2 amendment, then execute only the approved protocol/plan. Current physical qualification, final integration/main CI, Issue#19 closure and any release remain pending. A015 stays ACTIVE; A001-A014 remain DONE.
+
+Correction verification checkpoint:1454 tests passed in227.09s, all listed audits/freeze/preservation/portable/history commands exit0. New physical generation/embedding calls0. Sixth review finding and v2 written-spec approval remain pending.

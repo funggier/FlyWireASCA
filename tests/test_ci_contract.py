@@ -215,12 +215,16 @@ def test_ci_adds_a015_portable_freeze_and_audit_without_physical_generation():
 
 def test_ci_verifies_committed_a015_physical_evidence_unconditionally():
     text = WORKFLOW.read_text(encoding="utf-8")
-    heading = "      - name: Verify committed A015 physical unified runtime evidence"
+    heading = "      - name: Verify historical A015 v1 physical evidence at recorded source"
     assert heading in text
     step = text.split(heading, 1)[1].split("      - name:", 1)[0]
     assert (
-        "python scripts/verify_a015_physical_evidence.py "
+        "python scripts/verify_agent_runtime_a015_history.py "
         "docs/development/qualification/a015-agent-runtime-physical-v1.json"
     ) in step
     assert "if:" not in step
     assert "continue-on-error:" not in step
+
+def test_ci_discloses_pending_current_a015_physical_qualification():
+    text=WORKFLOW.read_text(encoding="utf-8")
+    assert "Historical v1 replay does not qualify corrected HEAD" in text

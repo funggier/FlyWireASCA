@@ -108,18 +108,20 @@ class _Run:
         answer=(render_result_data(self.candidate,self.verification,language=language) if status is TerminalStatus.SUCCEEDED else
                 ("งานยังไม่เสร็จ: " if language=="th" else "Task not completed: ")+reason.value+
                 ("; "+explanation if explanation else ""))
-        self.machine.finish()
-        c.ledger.record_span("end_to_end",max(0.0,c.clock.now()-self.start))
-        c.trace.terminal(TraceEvent(len(c.trace.freeze()),"terminal",c.run_id,
-            {"status":status.value,"reason":reason.value,"goal":self.goal.goal_id if self.goal else None,
-             "verification":fingerprint(self.verification) if self.verification else None}))
-        result=AgentResult(c.request.request_id,c.run_id,status,reason,self.goal,answer,
-            self.candidate.data if self.candidate else None,self.verification,
-            self.candidate.evidence_refs if self.candidate else (),
-            self.attempt.final_state.snapshot_id if self.attempt else None,
-            c.ledger.snapshot(),c.trace.freeze(),status is not TerminalStatus.SUCCEEDED and self.attempt is not None,
-            explanation,artifacts=c.trace.artifacts())
-        return self.latch.publish(result)
+        with c.publication_guard(status is TerminalStatus.SUCCEEDED):
+            if status is TerminalStatus.SUCCEEDED:self.check()
+            self.machine.finish()
+            c.ledger.record_span("end_to_end",max(0.0,c.clock.now()-self.start))
+            c.trace.terminal(TraceEvent(len(c.trace.freeze()),"terminal",c.run_id,
+                {"status":status.value,"reason":reason.value,"goal":self.goal.goal_id if self.goal else None,
+                 "verification":fingerprint(self.verification) if self.verification else None}))
+            result=AgentResult(c.request.request_id,c.run_id,status,reason,self.goal,answer,
+                self.candidate.data if self.candidate else None,self.verification,
+                self.candidate.evidence_refs if self.candidate else (),
+                self.attempt.final_state.snapshot_id if self.attempt else None,
+                c.ledger.snapshot(),c.trace.freeze(),status is not TerminalStatus.SUCCEEDED and self.attempt is not None,
+                explanation,artifacts=c.trace.artifacts())
+            return self.latch.publish(result)
     def interpret(self):
         self.machine.move(Phase.INTERPRETING);self.check()
         found=self.parts.interpreter.interpret(self.control.request,control=self.control);self.check()

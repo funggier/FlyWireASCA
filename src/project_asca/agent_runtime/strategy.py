@@ -16,6 +16,7 @@ def charge_candidate(control):
     control.check_dispatch()
     r=control.ledger.reserve(Resource.STRATEGY_ATTEMPTS,1)
     control.ledger.reconcile(r,1);control.ledger.record("strategy_attempts")
+    control.event("strategy_attempt",{})
 
 def parse_plan_proposal(raw):
     if not isinstance(raw,Mapping):raise ValueError("plan object")
@@ -100,6 +101,8 @@ def validate_plan(proposal,goal,context,*,catalog,registry,control):
     charge_candidate(control)
     try:
         if not isinstance(proposal,ActionProposal):raise ValueError("typed proposal")
+        control.event("plan_validation",{"proposal_ref":control.capture(proposal),"context_ref":control.capture(context),
+                                       "goal":fingerprint(goal)})
         if proposal.root_ref is not None:
             if proposal.steps or not _root_fits(proposal.root_ref,goal,catalog):raise ValueError("root goal compatibility")
             layout,depth=root_layout(catalog,proposal.root_ref)
@@ -143,6 +146,7 @@ class StrategyResolver:
                              for ref in descriptor.evidence_requirements)
                 candidates.append((-coverage,descriptor.cost,descriptor.strategy_id,descriptor))
         control.ledger.record("strategy_candidates_considered",len(candidates))
+        control.event("strategy_candidates",{"count":len(candidates)})
         if candidates:
             chosen=min(candidates,key=lambda c:c[:3])[-1]
             return Resolution(ActionProposal("plan:"+str(uuid.uuid4()),0,(),

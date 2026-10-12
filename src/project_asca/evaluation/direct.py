@@ -97,13 +97,14 @@ class DirectPinnedRunner:
             if status is TerminalStatus.SUCCEEDED:c.check_dispatch()
             language="th" if any("\u0e00"<=x<="\u0e7f" for x in request.text) else "en"
             answer=render_result_data(candidate,verification,language=language) if status is TerminalStatus.SUCCEEDED else "Task not completed: "+reason.value
-            c.terminal=True;c.phase=Phase.TERMINAL
-            c.ledger.record_span("end_to_end",max(0.0,self.clock.now()-start))
-            c.trace.terminal(TraceEvent(len(c.trace.freeze()),"terminal",c.run_id,{"status":status.value,"reason":reason.value}))
-            return AgentResult(request.request_id,c.run_id,status,reason,goal,answer,
-                candidate.data if candidate else None,verification,candidate.evidence_refs if candidate else (),
-                attempt.final_state.snapshot_id if attempt else None,c.ledger.snapshot(),c.trace.freeze(),
-                status is not TerminalStatus.SUCCEEDED and attempt is not None,artifacts=c.trace.artifacts())
+            with c.publication_guard(status is TerminalStatus.SUCCEEDED):
+                c.terminal=True;c.phase=Phase.TERMINAL
+                c.ledger.record_span("end_to_end",max(0.0,self.clock.now()-start))
+                c.trace.terminal(TraceEvent(len(c.trace.freeze()),"terminal",c.run_id,{"status":status.value,"reason":reason.value}))
+                return AgentResult(request.request_id,c.run_id,status,reason,goal,answer,
+                    candidate.data if candidate else None,verification,candidate.evidence_refs if candidate else (),
+                    attempt.final_state.snapshot_id if attempt else None,c.ledger.snapshot(),c.trace.freeze(),
+                    status is not TerminalStatus.SUCCEEDED and attempt is not None,artifacts=c.trace.artifacts())
         try:
             generated=broker.generate(BaselinePurpose.DIRECT_SOLUTION,render_direct_prompt(request.text,cfg.public),
                                       control=c,max_output_tokens=1024)

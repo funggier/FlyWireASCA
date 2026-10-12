@@ -14,6 +14,7 @@ class ContextAcquirer:
         resource=control.ledger.reserve(Resource.CONTEXT_ROUNDS,1)
         control.ledger.reconcile(resource,1);control.ledger.record("context_rounds")
         round_number=control.ledger.snapshot().counters["context_rounds"]
+        control.event("context_round",{"round":round_number})
         control.query_round_id=control.run_id+":context:"+str(round_number)
         capacity=min(control.profile.context_items,8 if previous is None else min(24,8*round_number))
         if previous is not None and not deficits and not previous.deficits:capacity=min(8,control.profile.context_items)

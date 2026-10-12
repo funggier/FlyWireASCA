@@ -101,12 +101,14 @@ class ContextBoundProcedureExecutor:
              observed_step_id,step.capability_id,step.capability_version,result.executed,result.result,error,
              result.state.snapshot_id,result.state.revision)
         self.observations.append(observation)
+        self.control.trace.capture(observation)
+        self.control.ledger.peak("artifact_bytes_peak",self.control.trace.artifact_bytes)
         if result.error:
             self.deficits.append(Deficit(result.error,result.unmet_evidence,(fingerprint(observation),),
                                          "registered operation precondition/result failed"))
         from ..trace import TraceEvent
         self.control.trace.append(trace,TraceEvent(len(self.control.trace.freeze()),"action",self.control.run_id,
-            {"execution_id":self.execution_id,"step_id":step.step_id,"capability":step.capability_id,
+            {"execution_id":self.execution_id,"step_id":observed_step_id,"capability":step.capability_id,
              "executed":result.executed,"error":error,"observation_ref":fingerprint(observation)}))
         self.control.check_dispatch()
         return LegacyObservation("operation-observation:"+fingerprint(observation),
@@ -139,6 +141,8 @@ class ProcedureExecutionAdapter:
         control.ledger.record("a008_attempted_actions",result.metrics.primitive_action_count)
         control.ledger.record("procedure_calls",result.metrics.procedure_call_count)
         control.ledger.record("procedure_attempts")
+        control.event("procedure_summary",{"execution_id":execution_id,
+            "attempted_actions":result.metrics.primitive_action_count,"calls":result.metrics.procedure_call_count})
         output=executor.observations[-1].result if executor.observations else None
         return AttemptResult(execution_id,result.state.value,tuple(executor.observations),output,
                              session.snapshot(),tuple(executor.deficits))

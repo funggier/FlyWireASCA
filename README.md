@@ -38,10 +38,13 @@ See [Repository rename record](docs/development/reports/ASCA-20261012-repository
 
 A015 is ACTIVE on `research/a015-unified-agent-runtime`. Approach 3 implements
 a new `project_asca.agent_runtime` for ordinary English/Thai Stage A requests,
-verified pure/in-memory execution and bounded recovery. Physical evidence is
-valid and usage-complete, with research outcome `UNIFIED_RUNTIME_NOT_SUPPORTED`
-because genuine successful recovery was not observed. Independent whole-branch
-review and authorized integration remain pending.
+verified pure/in-memory execution and bounded recovery. Independent whole-branch
+review blocked integration on six Important findings. The first five are corrected and verified through development regressions and
+1454 passing portable tests; the complete model-facing wire
+contract requires the [written v2 protocol amendment](docs/superpowers/specs/2026-10-12-a015-v2-wire-contract-design.md).
+Original v1 evidence remains historical with reported outcome
+`UNIFIED_RUNTIME_NOT_SUPPORTED`; it does not qualify corrected current source.
+See the [review record](docs/development/reports/ASCA-20261012-A015-independent-review-blocked.md).
 
 See [A015 architecture](docs/architecture/A015-UNIFIED-AGENT-RUNTIME.md),
 [measured report](docs/development/reports/ASCA-20261012-A015-unified-agent-runtime.md),
@@ -156,3 +159,4 @@ Repository source code is licensed under the MIT License. See [LICENSE](LICENSE)
 
 External datasets, model weights, third-party code, and research artifacts keep
 their own licenses and terms; repository MIT licensing does not relicense them.
+Correction verification checkpoint:1454 tests passed in227.09s, all listed audits/freeze/preservation/portable/history commands exit0. New physical generation/embedding calls0. Sixth review finding and v2 written-spec approval remain pending.

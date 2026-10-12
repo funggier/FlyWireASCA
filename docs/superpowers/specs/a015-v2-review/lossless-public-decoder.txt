@@ -1,0 +1,1 @@
+Public is losslessly encoded: replace every "#i" string/key with symbols[i]; "##" escapes a literal leading "#". Other strings, numbers, bools, null, arrays and objects retain their JSON types. Decode recursively before reasoning; same dictionary/data for all requests.

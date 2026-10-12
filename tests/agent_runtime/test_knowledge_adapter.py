@@ -66,3 +66,28 @@ def test_collection_query_uses_public_entity_metadata_not_answer_ids(configurati
     allowed={e["id"] for e in configuration.knowledge.entities if e["kind"]=="component"}
     assert batch.hits and all(set(h.entity_ids)<=allowed for h in batch.hits)
     assert batch.vectors_scored<len(configuration.knowledge.entities)+len(configuration.knowledge.facts)
+
+def test_returned_embedding_usage_is_retained_even_when_identity_is_rejected(configuration,clock):
+    k,e,_=knowledge(configuration);c=control(clock)
+    original=e.embed
+    def mismatched(*args,**kwargs):
+        from dataclasses import replace
+        return replace(original(*args,**kwargs),model_digest="development-wrong-digest",prompt_tokens=7)
+    e.embed=mismatched
+    with pytest.raises(api("budgets").IntegrityStop):
+        k.search(api("semantics").RetrievalQuery("policy","memory",{"entity_ids":["I1"]},8),control=c)
+    assert c.snapshot().metrics.counters.get("embedding_prompt_tokens",0)==7
+    event=next(e for e in c.trace.freeze() if e.kind=="embedding")
+    assert event.payload["prompt_tokens"]==7
+
+def test_unavailable_embedding_usage_is_explicit_and_keeps_query_dispatch(configuration,clock):
+    k,e,_=knowledge(configuration);c=control(clock)
+    original=e.embed
+    def unknown(*args,**kwargs):
+        from dataclasses import replace
+        return replace(original(*args,**kwargs),prompt_tokens=None)
+    e.embed=unknown
+    k.search(api("semantics").RetrievalQuery("policy","memory",{"entity_ids":["I1"]},8),control=c)
+    metrics=c.snapshot().metrics
+    assert "embedding_prompt_tokens" in metrics.unavailable and metrics.actual_retrieval_queries==1
+    assert next(e for e in c.trace.freeze() if e.kind=="embedding").payload["prompt_tokens"] is None

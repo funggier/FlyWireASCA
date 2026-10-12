@@ -96,7 +96,8 @@ jobs:
           name: a015-portable-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/a015-portable-${{ github.run_id }}-${{ github.run_attempt }}.json
           if-no-files-found: error
-      - name: Verify committed A015 physical unified runtime evidence
-        run: python scripts/verify_a015_physical_evidence.py docs/development/qualification/a015-agent-runtime-physical-v1.json
+      # Historical v1 replay does not qualify corrected HEAD; current physical qualification is pending.
+      - name: Verify historical A015 v1 physical evidence at recorded source
+        run: python scripts/verify_agent_runtime_a015_history.py docs/development/qualification/a015-agent-runtime-physical-v1.json
       - name: Check whitespace
         run: git diff --check HEAD^ HEAD

@@ -10,15 +10,17 @@ from .fixture import load_frozen_workload,bounds_from_workload,render_direct_pro
 from .freeze import validate_freeze
 from . import codec
 from project_asca.agent_runtime.values import canonical_bytes,fingerprint,thaw_json,TerminalStatus,Phase
-from project_asca.agent_runtime.contracts import PhysicalIdentity
+from project_asca.agent_runtime.contracts import PhysicalIdentity,AgentRequest
 from project_asca.agent_runtime.profile import RuntimeProfile,GENERATION_DIGEST,EMBEDDING_DIGEST
 from project_asca.agent_runtime.verification import CompletionCandidate,verify_completion
 from project_asca.agent_runtime.control import RunControl
 from project_asca.agent_runtime.domain import load_public_configuration
 from project_asca.agent_runtime.capabilities import CapabilityRegistry
 from project_asca.agent_runtime.strategy import validate_plan
-from project_asca.agent_runtime.plans import ActionProposal,AttemptResult,ExecutionReceipt
-from project_asca.agent_runtime.semantics import VerificationRecord
+from project_asca.agent_runtime.plans import ActionProposal,AttemptResult,ExecutionReceipt,Observation
+from project_asca.agent_runtime.semantics import VerificationRecord,RetrievalQuery,RelationBatch
+from project_asca.agent_runtime.rendering import render_result_data
+from project_asca.agent_runtime.recovery import context_fingerprint,plan_fingerprint
 from project_asca.agent_runtime.prompts import template
 SCHEMA="a015-physical-evidence-v1"
 @dataclass(frozen=True,slots=True)
@@ -71,7 +73,8 @@ def _references(trials):
     return references,contents,tuple(rows)
 def build_evidence(trials,metadata):
     trials=tuple(trials);totals=aggregate_trials(trials)
-    usage=all(t.result.metrics.reported_prompt_tokens is not None and t.result.metrics.reported_output_tokens is not None for t in trials)
+    usage=all(t.result.metrics.reported_prompt_tokens is not None and t.result.metrics.reported_output_tokens is not None
+              and not ({"embedding_prompt_tokens","vectors_scored"} & set(t.result.metrics.unavailable)) for t in trials)
     outcome=classify_comparison(totals,EvidenceValidation(metadata.complete,metadata.physical,usage))
     refs,contents,rows=_references(trials)
     e=PhysicalEvidence(SCHEMA,metadata,trials,totals,outcome,refs,rows,"",contents)
@@ -116,6 +119,111 @@ def load_evidence(output):
     return decode_evidence(raw,reference_contents=contents)
 def _assert(value,message):
     if not value:raise ValueError(message)
+def _event_replay(r,cfg):
+    """Derive work from owned events/references, rather than trusting totals."""
+    m=r.metrics;counts={}
+    def add(name,value=1):counts[name]=counts.get(name,0)+value
+    def peak(name,value):counts[name]=max(counts.get(name,0),value)
+    def ref(key,kind=None):
+        value=r.artifacts.get(key)
+        _assert(value is not None and (kind is None or isinstance(value,kind)),"unresolved event reference")
+        return value
+    actions={};visited=set();unknown_vectors=False;unknown_embeddings=False
+    for event in r.trace:
+        p=event.payload
+        if event.kind=="action":
+            observation=ref(p["observation_ref"],Observation)
+            _assert(observation.run_id==r.run_id and observation.execution_id==p["execution_id"]
+                and observation.step_id==p["step_id"] and observation.capability_id==p["capability"]
+                and observation.executed is p["executed"] and observation.error==p["error"],"action observation ownership")
+            key=(observation.execution_id,observation.step_id)
+            _assert(key not in actions,"duplicate action observation")
+            actions[key]=p["observation_ref"]
+        elif event.kind=="attempt":
+            attempt=ref(p["attempt_ref"],AttemptResult);receipt=ref(p["receipt_ref"],ExecutionReceipt)
+            plan=ref(p["plan_ref"],ActionProposal);context=ref(p["context_ref"])
+            goal=r.interpreted_goal
+            _assert(goal is not None and p["goal"]==goal.goal_id and receipt.run_id==r.run_id
+                and receipt.goal_fingerprint==fingerprint(goal) and receipt.execution_id==attempt.execution_id==p["execution_id"]
+                and receipt.initial_state_ref==p["initial_state"]==cfg.initial_state.snapshot_id
+                and p["plan_fingerprint"]==plan_fingerprint(plan)
+                and p["context_fingerprint"]==context_fingerprint(context),"attempt identity")
+            observations=tuple(fingerprint(o) for o in attempt.observations)
+            _assert(observations==tuple(p["observation_refs"])
+                and observations==tuple(v for (execution,_),v in actions.items() if execution==attempt.execution_id)
+                and receipt.observation_fingerprint==fingerprint(attempt.observations)
+                and receipt.final_state_ref==attempt.final_state.snapshot_id
+                and receipt.final_state_revision==attempt.final_state.revision
+                and p["completed"] is (attempt.procedure_state=="COMPLETED"),"attempt observations/state")
+            replay=validate_plan(plan,goal,context,catalog=cfg.catalog,registry=CapabilityRegistry(cfg),
+                                 control=RunControl.create(AgentRequest("Offline validation"),cfg.profile))
+            _assert(replay.plan is not None and fingerprint(replay.plan)==receipt.plan_fingerprint,"attempt validated plan")
+        elif event.kind=="retrieval":
+            query=ref(p["query_ref"],RetrievalQuery)
+            _assert(p["query_hash"]==fingerprint(query) and p["index"]==query.index_kind,"retrieval reference")
+            _assert(type(p["invoked"]) is bool and type(p["cache_hit"]) is bool
+                and not (p["invoked"] and p["cache_hit"]),"retrieval dispatch/cache")
+            add("actual_retrieval_queries",int(p["invoked"]));add("retrieval_cache_hits",int(p["cache_hit"]))
+            wanted=set(query.filters.get("entity_ids",()));task=query.filters.get("task");kind=query.filters.get("entity_kind")
+            _assert(not (set(query.filters)-{"entity_ids","task","entity_kind"}),"retrieval filters")
+            if query.index_kind=="catalog":
+                eligible=sum(not wanted and not kind and (not task or row["task"]==task) for row in cfg.catalog.procedures)
+            else:
+                entities={row["id"]:row["kind"] for row in cfg.knowledge.entities}
+                subjects=tuple(entities)+tuple(row["subject"] for row in cfg.knowledge.facts)
+                eligible=sum(wanted<={subject} and not task and (not kind or entities[subject]==kind) for subject in subjects)
+            _assert(p["eligible_vectors"]==(0 if p["cache_hit"] else eligible),"independent eligible vector work")
+            scored=p["vectors_scored"]
+            if p["invoked"] and scored is None:unknown_vectors=True
+            else:
+                _assert(type(scored) is int and scored==(eligible if p["invoked"] else 0),"retrieval actual work")
+                add("vectors_scored",scored)
+        elif event.kind=="embedding":
+            _assert(p["kind"]=="query" and type(p["inputs"]) is int and p["inputs"]>0,"query embedding event")
+            add("query_embedding_calls");add("query_embedding_inputs",p["inputs"])
+            tokens=p["prompt_tokens"]
+            if tokens is None:unknown_embeddings=True
+            else:
+                _assert(type(tokens) is int and tokens>=0,"embedding raw usage")
+                add("embedding_prompt_tokens",tokens)
+            if p["returned"]:
+                _assert((p["model"],p["digest"],p["dimension"])==("qwen3-embedding:0.6b",EMBEDDING_DIGEST,1024),
+                        "embedding response identity")
+        elif event.kind=="relation":
+            batch=ref(p["batch_ref"],RelationBatch)
+            _assert(p["visited"]==len(batch.visited_ids) and p["scanned_edges"]==batch.scanned_edges,"relation raw work")
+            add("relation_invocations");add("relation_visit_events",len(batch.visited_ids));add("relation_scanned_edges",batch.scanned_edges)
+            visited.update(batch.visited_ids)
+        elif event.kind=="context_round":add("context_rounds")
+        elif event.kind=="context":
+            context=ref(p["context_ref"])
+            _assert(p["context_fingerprint"]==context.fingerprint and p["items"]==len(context.items)
+                and p["bytes"]==context.canonical_bytes,"active context reference")
+            peak("active_context_peak",len(context.items));peak("active_context_bytes_peak",context.canonical_bytes)
+        elif event.kind=="strategy_attempt":add("strategy_attempts")
+        elif event.kind=="plan_validation":
+            ref(p["proposal_ref"],ActionProposal);ref(p["context_ref"])
+            _assert(p["goal"]==fingerprint(r.interpreted_goal),"validation goal reference")
+        elif event.kind=="strategy_candidates":
+            _assert(type(p["count"]) is int and p["count"]>=0,"strategy candidate count")
+            add("strategy_candidates_considered",p["count"])
+        elif event.kind=="recovery":add("recovery_rounds")
+        elif event.kind=="procedure_summary":
+            _assert(type(p["attempted_actions"]) is int and p["attempted_actions"]>=0
+                and type(p["calls"]) is int and p["calls"]>=0,"procedure work event")
+            add("procedure_attempts");add("a008_attempted_actions",p["attempted_actions"]);add("procedure_calls",p["calls"])
+        elif event.kind=="phase":add("transitions",len(p["unwind"]) if "unwind" in p else 1)
+    counts["relation_unique_nodes"]=len(visited)
+    counts["artifact_bytes_peak"]=sum(len(canonical_bytes(v)) for v in r.artifacts.values())
+    names=("actual_retrieval_queries","retrieval_cache_hits","vectors_scored","query_embedding_calls",
+        "query_embedding_inputs","embedding_prompt_tokens","relation_invocations","relation_visit_events",
+        "relation_scanned_edges","relation_unique_nodes","context_rounds","active_context_peak","active_context_bytes_peak",
+        "artifact_bytes_peak","strategy_attempts","strategy_candidates_considered","recovery_rounds",
+        "procedure_attempts","a008_attempted_actions","procedure_calls","transitions")
+    for name in names:_assert(m.counters.get(name,0)==counts.get(name,0),"event-derived counter: "+name)
+    _assert(("vectors_scored" in m.unavailable)==unknown_vectors,"unknown vector work flag")
+    _assert(("embedding_prompt_tokens" in m.unavailable)==unknown_embeddings,"unknown embedding usage flag")
+    return not unknown_vectors and not unknown_embeddings
 def _records_and_metrics(t,case,cfg,bounds,physical):
     r=t.result;m=r.metrics;profile=cfg.profile
     for name,value in m.counters.items():
@@ -147,7 +255,7 @@ def _records_and_metrics(t,case,cfg,bounds,physical):
                 and m.recovery_rounds==0,"baseline selective control leakage")
         _assert(len(t.model_records)==1,"one-shot baseline record")
     else:_assert(m.context_applicable,"runtime context metric applicability")
-    usage=True;prompt_sum=output_sum=0
+    work_usage=_event_replay(r,cfg);usage=True;prompt_sum=output_sum=0
     for record in t.model_records:
         _assert(record["run_id"]==r.run_id and record["subrequest_id"].startswith(r.run_id+":"),"model call ownership")
         prompt=record["prompt"]
@@ -192,24 +300,36 @@ def _records_and_metrics(t,case,cfg,bounds,physical):
     for name,seconds in m.stage_seconds.items():_assert(isinstance(seconds,(float,int)) and not isinstance(seconds,bool) and math.isfinite(seconds) and seconds>=0,"stage timing")
     if "end_to_end" in m.stage_seconds:
         _assert(sum(v for k,v in m.stage_seconds.items() if k.startswith("phase:"))<=m.stage_seconds["end_to_end"]+.001,"exclusive stage timing")
-    return usage
-def _completion_replay(t,cfg):
-    r=t.result
+    return usage and work_usage
+def _completion_replay(t,cfg,case):
+    r=t.result;matched=[]
     for event in r.trace:
         if event.kind!="verification":continue
         snapshot=r.artifacts.get(event.payload["control_ref"])
         original=r.artifacts.get(event.payload["verification_ref"])
         _assert(snapshot is not None and isinstance(original,VerificationRecord),"verification references")
         candidate=r.artifacts.get(original.candidate_fingerprint)
-        _assert(isinstance(candidate,CompletionCandidate),"candidate reference")
+        _assert(isinstance(candidate,CompletionCandidate) and isinstance(candidate.attempt,AttemptResult),"candidate reference")
+        _assert(snapshot.run_id==original.run_id==r.run_id
+            and original.execution_id==candidate.attempt.execution_id==event.payload["execution_id"]
+            and original.state_ref==candidate.attempt.final_state.snapshot_id==event.payload["state_ref"],
+            "verification run/execution/state ownership")
         replay=verify_completion(r.interpreted_goal,candidate,knowledge=cfg.knowledge,
             final_state=candidate.attempt.final_state,control_snapshot=snapshot)
-        _assert(fingerprint(replay)==fingerprint(original),"independent completion replay")
+        _assert(fingerprint(replay)==fingerprint(original) and event.payload["passed"] is replay.passed,
+                "independent completion replay")
         if r.status is TerminalStatus.SUCCEEDED and original.execution_id==r.verification.execution_id:
             _assert(replay.passed and fingerprint(replay)==fingerprint(r.verification)
-                    and fingerprint(candidate.data)==fingerprint(r.data),"verified terminal candidate")
+                and fingerprint(candidate.data)==fingerprint(r.data)
+                and tuple(candidate.evidence_refs)==tuple(r.provenance)
+                and candidate.attempt.final_state.snapshot_id==r.final_state_ref,"verified terminal candidate")
+            _assert(render_result_data(candidate,replay,language=case.language)==r.answer,"verified terminal rendering")
+            matched.append(original)
     if r.status is TerminalStatus.SUCCEEDED:
-        _assert(any(e.kind=="verification" for e in r.trace),"missing verification event")
+        _assert(len(matched)==1,"exactly one terminal execution verification")
+        terminal=r.trace[-1].payload
+        if "verification" in terminal:_assert(terminal["verification"]==fingerprint(r.verification)
+            and terminal["goal"]==r.interpreted_goal.goal_id,"terminal verification reference")
 def verify_evidence(evidence,*,root):
     e=evidence;m=e.metadata;errors=[];usage=True;source_valid=True;identity_valid=True
     try:
@@ -247,7 +367,7 @@ def verify_evidence(evidence,*,root):
             ids.add(t.result.run_id)
             _assert(fingerprint(evaluate_trial(slot.case,w.oracle[t.case_id],t.result))==fingerprint(t.oracle_verdict),"independent oracle verdict")
             usage=_records_and_metrics(t,slot.case,cfg,bounds,m.physical) and usage
-            _completion_replay(t,cfg)
+            _completion_replay(t,cfg,slot.case)
         totals=aggregate_trials(e.trials)
         _assert(fingerprint(totals)==fingerprint(e.totals),"recomputed denominators/counters/paired totals")
         outcome=classify_comparison(totals,EvidenceValidation(m.complete,m.physical,usage))

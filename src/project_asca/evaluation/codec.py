@@ -42,7 +42,7 @@ def identity(raw):return dto(c.PhysicalIdentity,raw)
 ARTIFACT_TYPES={frozenset(f.name for f in fields(cls)):fn for cls,fn in (
     (s.GoalContract,goal),(s.WorkingContext,context),(PublicBindingContext,public_context),
     (p.ActionProposal,proposal),(s.StateSnapshot,state),(p.AttemptResult,attempt),
-    (p.ExecutionReceipt,receipt),(c.RunSnapshot,snapshot),(s.VerificationRecord,verification),
+    (p.ExecutionReceipt,receipt),(p.Observation,lambda raw:dto(p.Observation,raw)),(c.RunSnapshot,snapshot),(s.VerificationRecord,verification),
     (s.RetrievalQuery,lambda raw:dto(s.RetrievalQuery,raw)),(s.RelationBatch,lambda raw:dto(s.RelationBatch,raw,paths=many(evidence_record),deficits=many(deficit))),
     (CompletionCandidate,candidate),(c.ModelPrompt,lambda raw:dto(c.ModelPrompt,raw,messages=many(lambda v:dto(c.ModelMessage,v)))))}
 def artifact(raw):
