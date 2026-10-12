@@ -16,7 +16,7 @@ EDGES={
  "trace":{"values","budgets","profile"},
  "control":{"contracts","values","profile","budgets","trace","ports"},
  "__init__":{"contracts","controller","factory","values","profile"},
- "broker":{"contracts","values","profile","control","budgets","ports"},
+ "broker":{"contracts","values","profile","control","budgets","ports","trace"},
  "prompts":{"contracts","values"},
  "domain":{"contracts","values","semantics","plans","profile"},
  "capabilities":{"values","plans","semantics","state","contracts","profile"},
