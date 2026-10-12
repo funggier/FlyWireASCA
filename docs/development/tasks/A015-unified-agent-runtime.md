@@ -80,7 +80,9 @@ Task 5 complete: 006ab4353ba1b7fec186fcef390dd9eebf15cbc3;
 Task 6: bounded knowledge/routing/context adapters; focused 13 plus
 broker/transport 16 passed. Full suite 1294 passed in 106.29s;
 freeze, both audits and A011 guard PASS.
-Next: Task 7 strategy validation and CHUNKED execution.
+Task 7: focused35 and full1312 passed in107.05s; validated strategy/CHUNKED
+execution, fresh attempts, goal/context-bound one-use permits and actual action
+provenance checked. Next: Task 8 independent completion and rendering.
 Frozen inputs/templates must remain unchanged; changed inputs require a new
 disclosed workload version.
 
@@ -120,3 +122,10 @@ No release/version promotion, Stage B/C or another milestone auto-activation.
 - Bind shared immutable indexes to each owning RunControl via
   PinnedEmbeddingPort.for_control while sharing the bounded worker gate.
   Deployment setup remains separate. Cost if wrong: infrastructure wiring.
+
+- Inject neutral ExecutionPort into core execute_attempt; only composition root
+  selects the concrete A008 adapter. Cost if wrong: internal wiring only.
+- Reject duplicate canonical legacy CALL paths before dispatch because A008
+  path identities omit CALL-site IDs; preserve the frozen engine and never
+  accept ambiguous observation ownership. Cost if wrong: add instance-qualified
+  adapter compilation without changing legacy source.

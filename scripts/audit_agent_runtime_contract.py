@@ -24,15 +24,15 @@ EDGES={
  "goals":{"values","semantics","plans","domain"},
  "interpretation":{"values","contracts","semantics","goals","broker","prompts","domain","control"},
  "context":{"values","contracts","semantics","plans","control","broker","ports","prompts","domain","budgets"},
- "strategy":{"values","contracts","semantics","plans","capabilities","goals","control","broker","prompts","domain"},
- "execution":{"values","contracts","semantics","plans","capabilities","state","control","ports","strategy"},
+ "strategy":{"budgets","values","contracts","semantics","plans","capabilities","goals","control","broker","prompts","domain"},
+ "execution":{"budgets","values","contracts","semantics","plans","capabilities","state","control","ports","strategy"},
  "verification":{"contracts","values","semantics","plans","capabilities","domain"},
  "recovery":{"contracts","values","semantics","plans","control"},
  "rendering":{"values","contracts","semantics","plans","verification"},
  "controller":{"contracts","values","semantics","plans","control","interpretation","goals","context","strategy","execution","verification","recovery","rendering","profile","ports","capabilities"},
  "factory":{"contracts","values","semantics","plans","control","interpretation","goals","context","strategy","execution","verification","recovery","rendering","profile","ports","capabilities","controller","domain"},
 }
-ADAPTER_CORE={"contracts","values","semantics","plans","profile","ports","control","budgets","trace","broker","capabilities","state","domain"}
+ADAPTER_CORE={"strategy","contracts","values","semantics","plans","profile","ports","control","budgets","trace","broker","capabilities","state","domain"}
 LEGACY={"contracts","familiarity","model","embedding","vector_memory","selective_activation","uncertainty_expansion","procedural_memory","relational_activation","structural_routing"}
 BANNED_MODULES={"subprocess","shlex","os","ctypes","winreg","flywire_llm","FlyWireLLM","importlib"}
 NETWORK_MODULES={"urllib","http","requests","socket","aiohttp","ftplib"}
