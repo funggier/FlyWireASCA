@@ -90,7 +90,7 @@ def load_public_configuration(public,profile):
     if not reachable:raise ValueError("declared policy dependency unreachable")
     if len(facts)+len(entities)+len(descriptors)>p.indexed_records:raise ValueError("search universe limit")
     digest=fingerprint(public)
-    snapshot=KnowledgeSnapshot("public:"+digest,entities,facts,edges,facts)
+    snapshot=KnowledgeSnapshot("public:"+digest,entities,facts,edges,facts,caps)
     state=StateSnapshot("initial:"+fingerprint(initial_values),0,initial_values)
     return PublicConfiguration(public,p,snapshot,state,StrategyCatalog(descriptors,procedures),
                                caps,public["task_schemas"],reachable)

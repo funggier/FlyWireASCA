@@ -4,8 +4,9 @@ from dataclasses import dataclass, field
 from collections.abc import Mapping
 import uuid
 from .values import (FrozenRecord, FrozenMap, TerminalStatus, TerminalReason, Phase,
-                     ModelPurpose, BaselinePurpose, RunVariant, count, nonblank)
+                     ModelPurpose, BaselinePurpose, RunVariant, count, nonblank, fingerprint)
 from .semantics import GoalContract, VerificationRecord
+from .plans import ExecutionReceipt
 
 @dataclass(frozen=True, slots=True)
 class AgentRequest:
@@ -80,6 +81,10 @@ class RunSnapshot(FrozenRecord):
     terminal: bool
     deadline: float
     integrity: bool
+    execution_receipt:ExecutionReceipt|None=None
+    limits:Mapping=field(default_factory=dict)
+    observed_at:float=0.0
+    cancelled:bool=False
 
 @dataclass(frozen=True,slots=True)
 class AgentResult(FrozenRecord):
@@ -105,7 +110,12 @@ class AgentResult(FrozenRecord):
         if self.status is TerminalStatus.SUCCEEDED:
             if (not self.interpreted_goal or not self.verification or not self.verification.passed
                 or self.verification.goal_id!=self.interpreted_goal.goal_id
-                or self.reason is not TerminalReason.VERIFIED or self.partial):
+                or self.reason is not TerminalReason.VERIFIED or self.partial
+                or self.verification.run_id!=self.run_id
+                or self.verification.goal_fingerprint!=fingerprint(self.interpreted_goal)
+                or self.verification.data_fingerprint!=fingerprint(self.data)
+                or self.final_state_ref!=self.verification.state_ref
+                or tuple(p.predicate_id for p in self.verification.predicates)!=tuple(p.predicate_id for p in self.interpreted_goal.predicates)):
                 raise ValueError("success requires a matching verified nonempty goal")
         elif self.reason is TerminalReason.VERIFIED:
             raise ValueError("verified reason contradicts non-success status")

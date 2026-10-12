@@ -108,10 +108,12 @@ class Observation(FrozenRecord):
     result:object=None
     error:str|None=None
     state_ref:str|None=None
+    state_revision:int|None=None
     def __post_init__(self):
         super(Observation,self).__post_init__()
         for v in (self.run_id,self.attempt_id,self.execution_id,self.step_id,self.capability_id,self.capability_version):nonblank(v)
         if not isinstance(self.executed,bool):raise ValueError("executed flag")
+        if self.state_revision is not None:count(self.state_revision)
         if not self.executed and self.error is None:raise ValueError("blocked observation requires reason")
 
 @dataclass(frozen=True,slots=True)
@@ -155,3 +157,19 @@ class RetryDescriptor:
     idempotency_class:str="INTERNAL"
     def __post_init__(self):
         if self.max_automatic_retries!=0:raise ValueError("Stage A has no hidden retry")
+
+
+@dataclass(frozen=True,slots=True)
+class ExecutionReceipt(FrozenRecord):
+    run_id:str
+    goal_fingerprint:str
+    plan_fingerprint:str
+    plan_revision:int
+    capability_fingerprint:str
+    attempt_id:str
+    execution_id:str
+    expected_steps:tuple
+    initial_state_ref:str
+    final_state_ref:str|None=None
+    final_state_revision:int|None=None
+    observation_fingerprint:str|None=None

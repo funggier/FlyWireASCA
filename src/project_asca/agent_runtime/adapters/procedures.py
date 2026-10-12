@@ -99,7 +99,7 @@ class ContextBoundProcedureExecutor:
         observed_step_id=path if self.plan.proposal.root_ref else step.step_id
         observation=Observation(self.control.run_id,self.attempt_id,self.execution_id,
              observed_step_id,step.capability_id,step.capability_version,result.executed,result.result,error,
-             result.state.snapshot_id)
+             result.state.snapshot_id,result.state.revision)
         self.observations.append(observation)
         if result.error:
             self.deficits.append(Deficit(result.error,result.unmet_evidence,(fingerprint(observation),),

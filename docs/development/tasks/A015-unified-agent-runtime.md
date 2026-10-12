@@ -3,7 +3,7 @@
 Status: ACTIVE
 GitHub Issue: #19
 Execution method: Native
-Execution checkpoint: PAUSED by user after Task7; resume at Task8
+Execution checkpoint: user resumed; Task8 verified; next Task9
 Branch: research/a015-unified-agent-runtime
 Activation base: 4ca246df6976c7aa21ad07826017f167f0ee27da
 Approved on: 2026-10-12 (Asia/Bangkok)
@@ -140,3 +140,15 @@ when resuming. Task8 has not started. A015 remains ACTIVE, not DONE.
 The generalized ChatGPT workflow skill is a separate preserved draft in
 docs/development/skill-drafts/working-from-goals-to-completion; tests/deployment
 remain pending. Appropriate subagents were explicitly requested by the user.
+
+## Resumed work
+
+User resumed2026-10-12 15:44 Asia/Bangkok. Task8 independent verifier/rendering
+passed20 new tests, focused37 and full1332 in103.78s. Execution receipts,
+observation revisions, typed evidence/public registry metadata and run/goal/
+candidate/data bindings satisfy spec6.4/10 without changing plain-text input.
+Both audits, G2 inputs and67-path guard remain preserved. Next: Task9 FSM,
+composition factory, public runtime and bounded recovery.
+ChatGPT workflow skill saved and read back; see
+docs/development/reports/ASCA-20261012-chatgpt-workflow-skill-completed.md.
+Earlier pause/draft statements above are historical checkpoints.

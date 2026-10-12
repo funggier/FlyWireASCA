@@ -10,7 +10,7 @@ EDGES={
  "profile":{"values"},
  "semantics":{"values"},
  "plans":{"values","semantics"},
- "contracts":{"values","semantics"},
+ "contracts":{"values","semantics","plans"},
  "ports":{"contracts","semantics","plans","values"},
  "budgets":{"contracts","profile","values"},
  "trace":{"values","budgets","profile"},

@@ -31,6 +31,7 @@ class RunControl:
     phase:Phase=Phase.RECEIVED
     terminal:bool=False
     phase_hook:object=None
+    execution_receipt:object=None
 
     @classmethod
     def create(cls,request,profile=None,clock=None,cancellation=None,variant=RunVariant.UNIFIED_RUNTIME):
@@ -50,7 +51,9 @@ class RunControl:
 
     def snapshot(self):
         return RunSnapshot(self.run_id,self.phase,self.ledger.snapshot(),self.terminal,
-                           self.ledger.deadline,not bool(self.ledger.snapshot().integrity_failures))
+                           self.ledger.deadline,not bool(self.ledger.snapshot().integrity_failures),self.execution_receipt,
+                           {r.value:getattr(self.profile,r.value) for r in Resource},
+                           self.clock.now(),self.cancellation.cancelled())
 
     def event(self,kind,payload,upper_bound=4096):
         self.check_dispatch()

@@ -118,6 +118,7 @@ class KnowledgeSnapshot(FrozenRecord):
     facts: tuple
     edges: tuple
     memories: tuple
+    capabilities:tuple=()
     def __post_init__(self):
         super(KnowledgeSnapshot,self).__post_init__(); nonblank(self.snapshot_id)
 
@@ -149,6 +150,11 @@ class VerificationRecord(FrozenRecord):
     observation_refs: tuple[str,...]
     state_ref: str | None
     integrity: bool
+    run_id:str=""
+    execution_id:str|None=None
+    goal_fingerprint:str=""
+    candidate_fingerprint:str=""
+    data_fingerprint:str=""
     def __post_init__(self):
         super(VerificationRecord,self).__post_init__()
         nonblank(self.goal_id)
